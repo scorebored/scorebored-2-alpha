@@ -33,7 +33,7 @@ var blackchip = blackchip || {};
  * Loggers only print information to the console if enabled. To obtain a 
  * named logger:
  * 
- *      var log = Logging.get("myLogger");
+ *      var log = blackchip.Logging.get("myLogger");
  * 
  * The there are only four logging levels:
  * 
@@ -44,7 +44,7 @@ var blackchip = blackchip || {};
  * 
  * Example to enable debug logging on the above logger:
  * 
- *      Logging.debug("myLogger");
+ *      blackchip.Logging.debug("myLogger");
  * 
  * There is only one instance of a logger for each name. This is NOT like
  * log4j and there is no "hierarchy"
