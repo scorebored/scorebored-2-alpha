@@ -38,34 +38,34 @@ buster.testCase("score.models.TokenRing", {
     },
     
     "Advances to the next player": function() {
-        var tokenRing = new score.models.TokenRing(players, token);
+        var tokenRing = new score.models.TokenRing(players(), token);
         token(players(0));
         tokenRing.next();
         assert.equals(token().id(), 1);
     },
     
     "Selects the first player if no token is held": function() {
-        var tokenRing = new score.models.TokenRing(players, token);
+        var tokenRing = new score.models.TokenRing(players(), token);
         tokenRing.next();
         assert.equals(token().id(), 0);
     },
     
     "Circles on next at end": function() {
-        var tokenRing = new score.models.TokenRing(players, token);
+        var tokenRing = new score.models.TokenRing(players(), token);
         token(players(3));
         tokenRing.next();
         assert.equals(token().id(), 0);        
     },
     
     "Moves back to previous player": function() {
-        var tokenRing = new score.models.TokenRing(players, token);
+        var tokenRing = new score.models.TokenRing(players(), token);
         token(players(2));
         tokenRing.previous();
         assert.equals(token().id(), 1);
     },
     
     "Circles on previous at the beginning": function() {
-        var tokenRing = new score.models.TokenRing(players, token);
+        var tokenRing = new score.models.TokenRing(players(), token);
         token(players(0));
         tokenRing.previous();
         assert.equals(token().id(), 3);           
