@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Horseshoes</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />      
+	    
+    	<link href="common/lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+    	<link href="app.css" rel="stylesheet" media="screen">
+		
+		<!-- link.dev --> <script src="common/lib/jquery.js"></script>
+		<!-- link.dev --> <script src="common/lib/lodash.js"></script>
+		<!-- link.dev --> <script src="common/lib/bootstrap/js/bootstrap.js"></script>
+		
+		<!-- link.dev --> <script src="common/js/blackchip/Console.js"></script>
+		<!-- link.dev --> <script src="common/js/blackchip/Events.js"></script>
+		<!-- link.dev --> <script src="common/js/blackchip/Logging.js"></script>
+
+		<!-- link.dev --> <script src="common/js/score/module.js"></script>		
+		<!-- link.dev --> <script src="common/js/score/models/Match.js"></script>
+		<!-- link.dev --> <script src="common/js/score/models/Players.js"></script>
+		<!-- link.dev --> <script src="common/js/score/models/Points.js"></script>
+		<!-- link.dev --> <script src="common/js/score/models/Round.js"></script>
+		<!-- link.dev --> <script src="common/js/score/models/Token.js"></script>
+
+		<!-- link.dev --> <script src="common/js/score/rules/BestOf.js"></script>		
+		<!-- link.dev --> <script src="common/js/score/rules/ByTwo.js"></script>
+		
+		<!-- link.dev --> <script src="common/js/score/talkers/Console.js"></script> 
+
+		<!-- link.dev --> <script src="js/Driver.js"></script> 
+		<!-- link.dev --> <script src="js/App.js"></script> 
+		
+	</head>
+	
+	<body id="scores">
+	    <div class="navbar navbar-inverse navbar-fixed-top">
+	      <div class="container">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" href="#">Score</a>
+	        </div>
+	        <div class="collapse navbar-collapse">
+	          <ul class="nav navbar-nav">
+	            <li class="active"><a href="#">Undo</a></li>
+	            <li><a href="#about">Settings</a></li>
+	          </ul>
+	        </div><!--/.nav-collapse -->
+	      </div>
+	    </div>
+	    
+	    <!-- <div class="container"> -->
+	    	<div class="container scores">
+	    		<div class="row">
+					<div class="col-xs-6 name">Player 1</div>
+					<div class="col-xs-6 name">Player 2</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6 score left">X</div>
+					<div class="col-xs-6 score right">X</div>
+				</div>
+			</div>
+	    <!--</div>--><!-- /.container -->
+	</body>
+	
+</html>

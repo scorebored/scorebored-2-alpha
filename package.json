@@ -1,0 +1,21 @@
+{
+	"name": "scorebored",
+	"description": "Scorebored",
+	"homePage": "http://example.com",
+	"license": "MIT",
+	"version": "2.0.0-0.alpha",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/blackchip-org/scorebored"
+	},
+	"dependencies": {
+		"lodash":  "2.2.x",
+		"twitter-bootstrap-3.0.0": "3.0.x"
+	},
+	"devDependencies": {
+		"buster": "0.6.x",
+		"grunt": "0.4.x",
+	    "grunt-contrib-yuidoc": "~0.4.0",
+    	"yuidocjs": "0.3.x"
+	}
+}
