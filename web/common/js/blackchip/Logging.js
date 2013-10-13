@@ -155,7 +155,6 @@ blackchip.Logging = blackchip.Logging || function() {
     };
     
     var trace = function(logger) {
-        enable(logger);
         debug(logger);
         logger.trace = blackchip.Console.log;
     };
