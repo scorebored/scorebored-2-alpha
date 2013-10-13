@@ -52,11 +52,13 @@ var blackchip = blackchip || {};
  * 
  * Example:
  * 
- *      events.on("foo", function() { 
- *          console.log("foo"); 
- *      }).on("bar", function() {
- *          console.log("bar");
- *      });
+ *      events
+ *          .on("foo", function() { 
+ *              console.log("foo"); 
+ *          })
+ *          .on("bar", function() {
+ *              console.log("bar");
+ *          });
  * 
  * @class Events
  */

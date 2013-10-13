@@ -48,8 +48,8 @@ blackchip.Console = blackchip.Console || (function() {
          * @param {object} [arguments*] Arguments to pass to console.log
          */
         self.log = ( console && console.log ) 
-            ? console.log.bind(console) 
-            : _.identity;
+                ? console.log.bind(console) 
+                : _.identity;
     
         /**
          * Writes an error message to the console. If console or console.error
@@ -61,8 +61,8 @@ blackchip.Console = blackchip.Console || (function() {
          * @param {object} [arguments*] Arguments to pass to console.error
          */
         self.error = ( console && console.error ) 
-            ? console.error.bind(console) 
-            : self.log;
+                ? console.error.bind(console) 
+                : self.log;
         
         /**
          * Writes a warning message to the console. If console or console.warn
@@ -74,8 +74,8 @@ blackchip.Console = blackchip.Console || (function() {
          * @param {object} [arguments*] Arguments to pass to console.warn
          */  
         self.warn = ( console && console.warn ) 
-            ? console.warn.bind(console) 
-            : self.log;      
+                ? console.warn.bind(console) 
+                : self.log;      
                 
         /**
          * Writes an informational message to the console. If console or 
@@ -87,8 +87,8 @@ blackchip.Console = blackchip.Console || (function() {
          * @param {object} [arguments*] Arguments to pass to console.warn
          */          
         self.info = ( console && console.info ) 
-            ? console.info.bind(console) 
-            : self.log;
+                ? console.info.bind(console) 
+                : self.log;
   
     };
     
