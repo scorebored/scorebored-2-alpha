@@ -93,7 +93,7 @@ blackchip.Console = blackchip.Console || (function() {
     };
     
     /**
-     * Reloads the functions with current definitions foundin the global 
+     * Reloads the functions with current definitions found in the global 
      * console object.
      * 
      * @method reload
