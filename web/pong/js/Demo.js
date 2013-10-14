@@ -1,11 +1,12 @@
-var pong = score.pong.Driver();
-//score.pong.Announcer(pong, score.talkers.Console());
+var pong = score.pong.Game();
+score.pong.Announcer(pong, score.talkers.Console());
 
 (function() {
     var listener = function(event, name) { console.log(name, event); };
 
     //pong.events.all(function(event, name) { console.log("ALL", name, event); });
     
+    /*
     pong.events
         .on("player", listener)
         .on("server", listener)
@@ -22,6 +23,7 @@ var pong = score.pong.Driver();
         .on("undo switchSides", listener)
         .on("undo score", listener)
         .on("undo server", listener);
+    */
                      
 })();
 
@@ -37,7 +39,7 @@ pong.demo = function() {
     
     var point = function(player) {
         game.scores[player]++;
-        game.status();
+        //game.status();
     };
     
     for ( var i = 0; i < 11; i++ ) {
@@ -54,7 +56,7 @@ pong.demo.undo = function() {
     
     for ( var i = 0; i < 11 + 11; i++ ) {
         game.undo();
-        game.status();
+        //game.status();
     }
 };
 

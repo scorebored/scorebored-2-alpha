@@ -24,39 +24,23 @@
 
 score.pong = score.pong || {};
 
-score.pong.Announcer = score.pong.Announcer || function(pong, talker) {
+score.pong.Announcer = score.pong.Announcer || function(game, talker) {
 
-    var say = talker.say;
+    self = {};
+    self.game = game;
+    self.talker = talker;
     
-    pong.points.events.on("before_points", function() {
-        var serviceChange = false;
-        var pointsEvent;
-        
-        var onPoints = function(event) {
-            pointsEvent = event;
-        };
-        pong.points.events.on("points", onPoints);
-        
-        var onServiceChange = function() {
-            serviceChange = true;
-        };
-        pong.server.events.on("change", onServiceChange);
-        
-        var onAfterPoints = function() {
-            say("Point", pointsEvent.player.name());
-            if ( serviceChange ) {
-                say("Change servers");
-            }
-            say(pong.points(0) + " - " + pong.points(1));
-            
-            pong.points.events.off("points", onPoints);
-            pong.points.events.off("change", onServiceChange);
-            pong.points.events.off("after_points", onAfterPoints);   
-        };
-        pong.points.events.on("after_points", onAfterPoints);
-    });
+    score.Announcer(self);
     
+    score.announcers.PlayerPoint(self);
+    score.announcers.ChangeServers(self);
+    score.announcers.ScoreByServer(self);
+    score.announcers.GamePoint(self);
+    score.announcers.GameWinner(self);
+    score.announcers.SwitchSides(self);
+    score.announcers.MatchPoint(self);
+    score.announcers.MatchWinner(self);
     
-            
+    return self;
 };
 

@@ -91,6 +91,7 @@ blackchip.Console = blackchip.Console || (function() {
                 : self.log;
   
     };
+    init();
     
     /**
      * Reloads the functions with current definitions found in the global 

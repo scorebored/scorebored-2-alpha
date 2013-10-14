@@ -22,40 +22,40 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-(function() {
-    
-    blackchip.ScriptLoader.load([
-        "common/lib/jquery.js",
-        "common/lib/lodash.js",
-        "common/lib/bootstrap/js/bootstrap.js",    
-        
-        "common/js/blackchip/module.js",
-        "common/js/blackchip/Console.js",
-        "common/js/blackchip/Events.js",
-        "common/js/blackchip/Logging.js",
-        "common/js/blackchip/Properties.js",
+var score = score || {};
 
-        "common/js/score/Announcer.js",
-        "common/js/score/Game.js",    
-
-        "common/js/score/announcers/ChangeServers.js",        
-        "common/js/score/announcers/GamePoint.js",        
-        "common/js/score/announcers/GameWinner.js",        
-        "common/js/score/announcers/MatchPoint.js",        
-        "common/js/score/announcers/MatchWinner.js",        
-        "common/js/score/announcers/PlayerPoint.js",        
-        "common/js/score/announcers/ScoreByServer.js",
-        "common/js/score/announcers/SwitchSides.js",
+score.Game = score.Game || function(self) {
         
-        "common/js/score/features/Match.js", 
-        "common/js/score/features/Scores.js", 
-        "common/js/score/features/Server.js", 
-        "common/js/score/features/Sides.js", 
+    (function() {
+        var players = {};
         
-        "common/js/score/rules/WinGameByTwo.js", 
-        "common/js/score/rules/WinMatchBestOf.js", 
-        
-        "common/js/score/talkers/Console.js"
-    ]);
+        for ( var i = 0; i < self.options.maxPlayers; i++ ) {
+            var playerNumber = i + 1;
+            players[i] = "Player " + playerNumber;
+        }
+        self.players = blackchip.Properties(players, self.events, "player");
+    })();    
+            
+    self.rollback = 0;
+    self.history = [];
     
-})();
+    self.record = function(name, event) {
+        if ( !self.rollback ) {
+            self.history.push({name: name, event: event});
+        }
+    };
+    
+    self.undo = function() {
+        if ( self.history.length === 0 ) {
+            return;
+        }
+        self.rollback++;
+        var item = self.history.pop();
+        self.events.trigger("undo " + item.name, item.event); 
+        self.rollback--;   
+    };
+    
+    
+    return self;
+    
+};

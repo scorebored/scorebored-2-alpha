@@ -49,8 +49,11 @@ score.features.Match = score.features.Match || function(self) {
     self.next = function() {
         self.events.trigger("before nextGame");
         self.currentGame++;
+        self.events.quiet = true;
         self.scores[0] = self.options.startingScore || 0;
         self.scores[1] = self.options.startingScore || 0;
+        self.events.quiet = false;
+        self.events.trigger("nextGame");
         self.record("nextGame");
     };
           

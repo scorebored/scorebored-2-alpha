@@ -3,17 +3,25 @@ score.rules = score.rules || {};
 
 score.rules.WinMatchBestOf = score.rules.WinMatchBestOf || function(self) {
 
-    var matchOver = false;
+    self.matchOver = false;
     
-    self.events.on("after match", function(event, name) {
+    var isWinner = function(score) {
+        return ( score / self.options.matchLength >= .5 ) ;
+    };
+    
+    self.isMatchPoint = function() {
+        return ( isWinner(self.match[0] + 1) || isWinner(self.match[1] + 1) );
+    };
+    
+    self.events.on("match", function(event, name) {
         if ( self.rollback ) {
             return;
         }
-        if ( matchOver ) {
+        if ( self.matchOver ) {
             throw new Error("Match is over");
         }
-        if ( event.value / self.options.matchLength >= .5 ) {
-            matchOver = true;
+        if ( isWinner(event.value) ) {
+            self.matchOver = true;
             var winEvent = { player: event.name };
             self.events.trigger("matchWin", winEvent);
             self.events.trigger("after matchWin", winEvent);
@@ -22,7 +30,7 @@ score.rules.WinMatchBestOf = score.rules.WinMatchBestOf || function(self) {
     });
     
     self.events.on("undo matchWin", function(event) {
-        matchOver = false;
+        self.matchOver = false;
         self.undo();    
     });
     

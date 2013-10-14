@@ -22,39 +22,50 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
+score.pong = score.pong || {};
 
-score.Engine = score.Engine || function(self) {
+score.pong.Game = score.pong.Game || function() {
+
+    var self = {};
+    self.events = blackchip.Events(); 
         
-    (function() {
-        var players = {};
-        
-        for ( var i = 0; i < self.options.maxPlayers; i++ ) {
-            var playerNumber = i + 1;
-            players[i] = "Player " + playerNumber;
-        }
-        self.players = blackchip.Properties(players, self.events, "player");
-    })();    
-            
-    self.rollback = 0;
-    self.history = [];
+    self.options = blackchip.Properties({
+        maxPlayers: 2,
+        gameLength: 11,
+        matchLength: 3
+    }, self.events, "options");
     
-    self.record = function(name, event) {
-        if ( !self.rollback ) {
-            self.history.push({name: name, event: event});
-        }
-    };
+    score.Game(self);
     
-    self.undo = function() {
-        if ( self.history.length === 0 ) {
+    score.features.Scores(self);
+    score.features.Server(self);
+    score.features.Match(self); 
+    score.features.Sides(self);
+               
+    score.rules.WinGameByTwo(self);
+    score.rules.WinMatchBestOf(self); 
+    
+    var changeServer = function() {
+        if ( self.gameOver ) {
             return;
         }
-        self.rollback++;
-        var item = self.history.pop();
-        self.events.trigger("undo " + item.name, item.event); 
-        self.rollback--;   
+        var at = ( self.options.gameLength === 11 ) ? 2 : 5;
+        if ( (self.scores[0] + self.scores[1]) % at === 0 ) {
+            self.changeServer();
+        }    
+    };  
+    self.events.on("after score", changeServer);
+      
+    self.status = function() {
+        console.log("Game ", self.currentGame, ":",
+                    self.players[0], self.scores[0], "-", 
+                    self.players[1], self.scores[1], 
+                    "; Match:", 
+                    self.players[0], self.match[0], "-",
+                    self.players[1], self.match[1],
+                    "; Server:", 
+                    self.players[self.server.is]);
     };
-    
     
     return self;
     

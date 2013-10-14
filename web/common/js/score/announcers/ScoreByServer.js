@@ -22,40 +22,23 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-(function() {
-    
-    blackchip.ScriptLoader.load([
-        "common/lib/jquery.js",
-        "common/lib/lodash.js",
-        "common/lib/bootstrap/js/bootstrap.js",    
-        
-        "common/js/blackchip/module.js",
-        "common/js/blackchip/Console.js",
-        "common/js/blackchip/Events.js",
-        "common/js/blackchip/Logging.js",
-        "common/js/blackchip/Properties.js",
+var score = score || {};
+score.announcers = score.announcers || {};
 
-        "common/js/score/Announcer.js",
-        "common/js/score/Game.js",    
-
-        "common/js/score/announcers/ChangeServers.js",        
-        "common/js/score/announcers/GamePoint.js",        
-        "common/js/score/announcers/GameWinner.js",        
-        "common/js/score/announcers/MatchPoint.js",        
-        "common/js/score/announcers/MatchWinner.js",        
-        "common/js/score/announcers/PlayerPoint.js",        
-        "common/js/score/announcers/ScoreByServer.js",
-        "common/js/score/announcers/SwitchSides.js",
-        
-        "common/js/score/features/Match.js", 
-        "common/js/score/features/Scores.js", 
-        "common/js/score/features/Server.js", 
-        "common/js/score/features/Sides.js", 
-        
-        "common/js/score/rules/WinGameByTwo.js", 
-        "common/js/score/rules/WinMatchBestOf.js", 
-        
-        "common/js/score/talkers/Console.js"
-    ]);
+score.announcers.ScoreByServer = score.announcers.ScoreByServer || function(self) {
     
-})();
+    var game = self.game;
+    
+    self.events.on("after score", function(event) {
+        if ( game.gameOver ) {
+            return;
+        }
+        var server = game.server.is;
+        var score1 = server === 0 ? game.scores[0] : game.scores[1];
+        var score2 = server === 0 ? game.scores[1] : game.scores[0];
+        self.say(score1 + " - " + score2);    
+    });
+    
+    return self;
+        
+};

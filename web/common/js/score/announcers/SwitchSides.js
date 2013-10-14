@@ -22,48 +22,17 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-score.pong = score.pong || {};
+var score = score || {};
+score.announcers = score.announcers || {};
 
-score.pong.Driver = score.pong.Driver|| function() {
-
-    var self = {};
-    self.events = blackchip.Events(); 
-        
-    self.options = blackchip.Properties({
-        maxPlayers: 2,
-        gameLength: 11,
-        matchLength: 3
-    }, self.events, "options");
+score.announcers.SwitchSides = score.announcers.SwitchSides || function(self) {
     
-    score.Engine(self);
+    var game = self.game;
     
-    score.features.Scores(self);
-    score.features.Server(self);
-    score.features.Match(self); 
-    score.features.Sides(self);
-               
-    score.rules.WinGameByTwo(self);
-    score.rules.WinMatchBestOf(self); 
-    
-    var changeServer = function() {
-        var at = ( self.options.gameLength === 11 ) ? 2 : 5;
-        if ( (self.scores[0] + self.scores[1]) % at === 0 ) {
-            self.changeServer();
-        }    
-    };  
-    self.events.on("after score", changeServer);
-      
-    self.status = function() {
-        console.log("Game ", self.currentGame, ":",
-                    self.players[0], self.scores[0], "-", 
-                    self.players[1], self.scores[1], 
-                    "; Match:", 
-                    self.players[0], self.match[0], "-",
-                    self.players[1], self.match[1],
-                    "; Server:", 
-                    self.players[self.server.is]);
-    };
+    self.events.on("switchSides", function(event) {
+        self.say("Switch sides");    
+    });
     
     return self;
-    
+        
 };
