@@ -22,20 +22,11 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.announcers = score.announcers || {};
-
-score.announcers.GameWinner = score.announcers.GameWinner || function(self) {
+(function() {
     
-    var game = self.game;
+    blackchip.ScriptLoader.load([
+        "pong/js/Announcer.js",
+        "pong/js/Game.js"
+    ]);
     
-    self.events.on("after gameWin", function(event) {
-        if ( game.matchOver ) {
-            return;
-        }
-        self.say(game.players[event.player] + " has won the game");
-    });
-    
-    return self;
-        
-};
+})();
