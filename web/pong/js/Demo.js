@@ -1,21 +1,60 @@
 var pong = score.pong.Driver();
-score.pong.Announcer(pong, score.talkers.Console());
+//score.pong.Announcer(pong, score.talkers.Console());
 
-pong.players.events.on("name", function(event) {
-    console.log(event.previous, "is now", event.name);        
-});
+(function() {
+    var listener = function(event, name) { console.log(name, event); };
+
+    //pong.events.all(function(event, name) { console.log("ALL", name, event); });
+    
+    pong.events
+        .on("player", listener)
+        .on("server", listener)
+        .on("score", listener)
+        .on("switchSides", listener)
+        .on("match", listener)
+        .on("gameWin", listener)
+        .on("matchWin", listener);
+    
+    pong.events
+        .on("undo matchWin", listener)
+        .on("undo gameWin", listener)
+        .on("undo match", listener)
+        .on("undo score", listener);
+                     
+})();
 
 pong.demo = function() {    
-    var ken = pong.players(0);
-    ken.name("Ken");
-    var mcg = pong.players(1);
-    mcg.name("McG");
+    var game = pong;
 
-    pong.server(ken);
+    var ken = 0;
+    game.players[ken] = "Ken";
+    var mcg = 1;
+    game.players[mcg] = "McG";
     
-    pong.points.award(ken);
-    pong.points.award(ken);
-    pong.points.award(mcg);
+    game.server.is = ken;
+    
+    var point = function(player) {
+        game.scores[player]++;
+        game.status();
+    };
+    
+    for ( var i = 0; i < 11; i++ ) {
+        point(ken);
+    }
+    game.next();
+    for ( var i = 0; i < 11; i++ ) {
+        point(ken);
+    }
 };
+
+pong.demo.undo = function() {
+    var game = pong;
+    
+    for ( var i = 0; i < 11 + 11; i++ ) {
+        game.undo();
+        game.status();
+    }
+};
+
 
 

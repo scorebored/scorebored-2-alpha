@@ -23,57 +23,27 @@
  *****************************************************************************/
 
 var score = score || {};
-score.models = score.models || {};
+score.features = score.features || {};
 
-score.models.Players = score.models.Players || function(arg) {
-
-    var players = [];
-    var events = blackchip.Events();
+score.features.Scores = score.features.Scores || function(self) {
     
-    var Player = function(id, spec) {
-        var me = {};
-        var name = spec.name || "Player " + id;
+    (function() {
+        var scores = {};
         
-        me.id = function() {
-            return id;
-        };
-        
-        me.name = function(value) {
-            if ( !value ) {
-                return name;
-            }
-            if ( name === value ) {
-                return;
-            }
-            var previous = name;
-            name = value;
-            events.trigger("name", {
-                previous: previous,
-                name: name,
-                player: me
-            });
-        };
-        
-        return me;      
-    };
-    
-    var init = function() {
-        var specs = ( arg.length ) ? arg : _.times(arg, _.identity);
-        _.each(specs, function(spec, i) {
-            players[i] = Player(i, spec);
-        });
-    };
-    
-    var self = function(id) {
-        if ( _.isUndefined(id) ) {
-            return players;
+        for ( var i = 0; i < self.options.maxPlayers; i++ ) {
+            scores[i] = self.options.startingScore || 0;
         }
-        return players[id];
-    };
+        self.scores = blackchip.Properties(scores, self.events, "score");
+    })();    
+        
+    self.events.on("score", function(event, name) {
+        self.record(name, event);
+    });
     
-    self.events = events;
-    
-    init();
+    self.events.on("undo score", function(event) {
+        self.scores[event.name] = event.previous;
+    });    
+             
     return self;
+    
 };
-

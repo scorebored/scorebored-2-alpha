@@ -23,33 +23,39 @@
  *****************************************************************************/
 
 var score = score || {};
-score.models = score.models || {};
 
-score.models.Token = score.models.Token || function() {
-
-    var holder = null;
-    var events = blackchip.Events();
+score.Engine = score.Engine || function(self) {
+        
+    (function() {
+        var players = {};
+        
+        for ( var i = 0; i < self.options.maxPlayers; i++ ) {
+            var playerNumber = i + 1;
+            players[i] = "Player " + playerNumber;
+        }
+        self.players = blackchip.Properties(players, self.events, "player");
+    })();    
+            
+    self.rollback = 0;
+    self.history = [];
     
-    self = function(player, adjust) {
-        if ( _.isUndefined(player) ) {
-            return holder;
+    self.record = function(name, event) {
+        if ( !self.rollback ) {
+            self.history.push({name: name, event: event});
         }
-        
-        if ( player === holder ) {
-            return;
-        }
-        
-        var previous = holder;
-        holder = player;
-        events.trigger("change", {
-            adjust: adjust,
-            previous: previous,
-            holder: holder
-        });            
     };
     
-    self.events = events;
-      
+    self.undo = function() {
+        if ( self.history.length === 0 ) {
+            return;
+        }
+        self.rollback++;
+        var item = self.history.pop();
+        self.events.trigger("undo " + item.name, item.event); 
+        self.rollback--;   
+    };
+    
+    
     return self;
-      
+    
 };

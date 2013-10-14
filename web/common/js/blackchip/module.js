@@ -28,5 +28,18 @@
  * @module blackchip
  * @main blackchip
  */
+var blackchip;
+
+(function(self) {
+        
+    self.always = function(value) {
+        return function() { return value; };
+    };
+    
+    self.set = function(array) {
+        return _.object(array, _.times(array.length, self.always(true)));   
+    };
+   
+})(blackchip = blackchip || {});
 
 

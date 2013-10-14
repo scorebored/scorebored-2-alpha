@@ -23,33 +23,17 @@
  *****************************************************************************/
 
 buster.testCase("blackchip.Logging", {
-    
-    originalConsole: null,
-
-    calledError : null,
-    calledWarn  : null,
-    calledInfo  : null,
-    calledLog   : null,
-    
+        
     setUp: function() {
-        originalConsole = console;
-        
-        calledError = 0;
-        calledWarn  = 0;
-        calledInfo  = 0;
-        calledLog   = 0;
-        
-        console = {
-            error: function() { calledError += 1; },
-            warn:  function() { calledWarn  += 1; },
-            info:  function() { calledInfo  += 1; },
-            log:   function() { calledLog   += 1; }   
-        }; 
+        this.stub(console, "error");
+        this.stub(console, "warn");
+        this.stub(console, "info");
+        this.stub(console, "log");
         blackchip.Console.reload();
     },
     
     tearDown: function() {
-        console = originalConsole;
+        blackchip.Console.reload();
     },
     
     "Same names are same instance": function() {
@@ -66,6 +50,7 @@ buster.testCase("blackchip.Logging", {
     
     "Disabled by default": function() {
         var log = blackchip.Logging.get("test1");
+        
         log.error("error");
         log.warn("warn");
         log.info("info");
@@ -73,10 +58,10 @@ buster.testCase("blackchip.Logging", {
         log.debug("debug");
         log.trace("trace");
         
-        assert.equals(calledError, 0);
-        assert.equals(calledWarn, 0);
-        assert.equals(calledInfo, 0);
-        assert.equals(calledLog, 0);
+        refute.called(console.error);
+        refute.called(console.warn);
+        refute.called(console.info);
+        refute.called(console.log);
     },
     
     "Enabled logger is active": function() {
@@ -88,12 +73,12 @@ buster.testCase("blackchip.Logging", {
         log.info("info");
         log.log("log");
         
-        assert.equals(calledError, 1);
-        assert.equals(calledWarn, 1);
-        assert.equals(calledInfo, 1);
-        assert.equals(calledLog, 1);        
+        assert.calledOnce(console.error);
+        assert.calledOnce(console.warn);
+        assert.calledOnce(console.info);
+        assert.calledOnce(console.log);       
     },
-    
+
     "Debug/trace silent when enabled": function() {
         var log = blackchip.Logging.get("test3");
         blackchip.Logging.enable("test3");
@@ -101,7 +86,7 @@ buster.testCase("blackchip.Logging", {
         log.debug("debug");
         log.trace("trace");
 
-        assert.equals(calledLog, 0);        
+        refute.called(console.log);      
     },
     
     "Debug logging when enabled": function() {
@@ -115,10 +100,10 @@ buster.testCase("blackchip.Logging", {
         log.debug("debug");
         log.trace("trace");
         
-        assert.equals(calledError, 1);
-        assert.equals(calledWarn, 1);
-        assert.equals(calledInfo, 1);
-        assert.equals(calledLog, 2);    
+        assert.calledOnce(console.error);
+        assert.calledOnce(console.warn);
+        assert.calledOnce(console.info);
+        assert.calledTwice(console.log); 
     },
     
     "Trace logging when enabled": function() {
@@ -132,10 +117,9 @@ buster.testCase("blackchip.Logging", {
         log.debug("debug");
         log.trace("trace");
         
-        assert.equals(calledError, 1);
-        assert.equals(calledWarn, 1);
-        assert.equals(calledInfo, 1);
-        assert.equals(calledLog, 3);    
+        assert.calledOnce(console.error);
+        assert.calledOnce(console.warn);
+        assert.calledOnce(console.info);
+        assert.calledThrice(console.log); 
     }
-    
 });

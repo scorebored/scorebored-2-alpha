@@ -22,43 +22,22 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.rules = score.rules || {};
+buster.testCase("blackchip.always", {
+    
+    "Returns the given value": function() {
+        var f = blackchip.always(42);
+        assert.equals(42, f());
+    }
 
-score.rules.ByTwo = score.rules.ByTwo || function(points, options) {
-    
-    var self = {};
-    
-    var isWinner = function(winner, loser, gameLength) {
-        if ( Math.abs(winner - loser) < 2 ) {
-            return false;
-        }
-        if ( winner >= options.gameLength ) {
-            return true;
-        }
-        return false;
-    };
-       
-    self.winner = function() { 
-        if ( isWinner(points(0), points(1), options.gameLength) ) {
-            return points.players(0);
-        }
-        if ( isWinner(points(1), points(0), options.gameLength) ) {
-            return points.players(1);
-        }
-    };
-    
-    self.overtime = function() {
-        return points(0) >= options.gameLength || 
-               points(1) >= options.gameLength();
-    };
-    
-    self.gamePoint = function() {
-        return isWinner(points(0) + 1, points(1), options.gameLength) ||
-               isWinner(points(1) + 1, points(0), options.gameLength);    
-    };
-    
-    return self;
-    
-};
+});
 
+buster.testCase("blackchip.set", {
+    
+    "Array is converted to a set like object": function() {
+        var o = blackchip.set(["a", "b"]);
+        assert(o.a);
+        assert(o.b);
+        refute(o.c);    
+    }
+    
+});

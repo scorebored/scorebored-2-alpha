@@ -166,6 +166,6 @@ blackchip.Events = blackchip.Events || function() {
         });
         return self;     
     };
-    
+
     return self;
 };

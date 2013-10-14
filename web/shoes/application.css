@@ -1,4 +1,9 @@
 
+@font-face {
+    font-family: DS-Digital;
+    src: url('common/fonts/DS-Digital.ttf');	
+}
+
 body#setup {
 	padding-top: 50px;	
 }
@@ -13,6 +18,9 @@ body#scores {
 	text-align: center
 }
 
+.score {
+    font-family: "DS-Digital";
+}
 
 /* For debugging */
 /*

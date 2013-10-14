@@ -22,48 +22,57 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-score.pong = score.pong || {};
+/**
+ * @module blackchip
+ */
+var blackchip = blackchip || {};
 
-score.pong.Driver = score.pong.Driver|| function() {
+blackchip.Properties = blackchip.Properties || 
+        function(initial, events, context) {
 
+    var events = events || blackchip.Events();
+    var properties = {}; 
     var self = {};
-    self.events = blackchip.Events(); 
-        
-    self.options = blackchip.Properties({
-        maxPlayers: 2,
-        gameLength: 11,
-        matchLength: 3
-    }, self.events, "options");
-    
-    score.Engine(self);
-    
-    score.features.Scores(self);
-    score.features.Server(self);
-    score.features.Match(self); 
-    score.features.Sides(self);
-               
-    score.rules.WinGameByTwo(self);
-    score.rules.WinMatchBestOf(self); 
-    
-    var changeServer = function() {
-        var at = ( self.options.gameLength === 11 ) ? 2 : 5;
-        if ( (self.scores[0] + self.scores[1]) % at === 0 ) {
-            self.changeServer();
-        }    
-    };  
-    self.events.on("after score", changeServer);
-      
-    self.status = function() {
-        console.log("Game ", self.currentGame, ":",
-                    self.players[0], self.scores[0], "-", 
-                    self.players[1], self.scores[1], 
-                    "; Match:", 
-                    self.players[0], self.match[0], "-",
-                    self.players[1], self.match[1],
-                    "; Server:", 
-                    self.players[self.server.is]);
+     
+    var init = function() {
+        _.each(initial, function(value, name) {
+            properties[name] = value;
+            var def = {};
+            def[name] = { 
+                get: function() { return properties[name]; },
+                set: _.partial(setValue, name)
+            };
+            Object.defineProperties(self, def);     
+        });    
     };
     
-    return self;
+    var setValue = function(name, value) {
+        if ( properties[name] === value ) {
+            return;
+        }    
+        var previous = properties[name];
+        properties[name] = value;
+        event = {
+            name: name,
+            value: value,
+            previous: previous,
+            properties: properties
+        };
+        if ( context ) {
+            events.trigger(context, event);
+            events.trigger(context + "." + name, event); 
+            events.trigger("after " + context, event);   
+            events.trigger("after " + context + "." + name, event);
+        } else {
+            events.trigger(name, event);
+            events.trigger("after " + name, event);
+        }
+    };
     
+    init();
+    
+    self.events = events;
+    
+    return self;    
 };
+

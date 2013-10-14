@@ -29,19 +29,21 @@
         "common/lib/lodash.js",
         "common/lib/bootstrap/js/bootstrap.js",    
         
+        "common/js/blackchip/module.js",
         "common/js/blackchip/Console.js",
         "common/js/blackchip/Events.js",
         "common/js/blackchip/Logging.js",
+        "common/js/blackchip/Properties.js",
+
+        "common/js/score/Engine.js",    
         
-        "common/js/score/models/Match.js",
-        "common/js/score/models/Players.js",
-        "common/js/score/models/Points.js",
-        "common/js/score/models/Round.js",
-        "common/js/score/models/Token.js",
-        "common/js/score/models/TokenRing.js",
+        "common/js/score/features/Match.js", 
+        "common/js/score/features/Scores.js", 
+        "common/js/score/features/Server.js", 
+        "common/js/score/features/Sides.js", 
         
-        "common/js/score/rules/BestOf.js",
-        "common/js/score/rules/ByTwo.js",
+        "common/js/score/rules/WinGameByTwo.js", 
+        "common/js/score/rules/WinMatchBestOf.js", 
         
         "common/js/score/talkers/Console.js"
     ]);

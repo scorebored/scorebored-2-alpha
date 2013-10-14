@@ -23,106 +23,56 @@
  *****************************************************************************/
 
 buster.testCase("blackchip.Console", {
-    
-    originalConsole: null,
-    
-    setUp: function() {
-        originalConsole = console;    
-    },
-    
-    tearDown: function() {
-        console = originalConsole;
-    },
-    
+            
     "Correct method called for error": function() {
-        var called = false;
-        console.error = function() {
-            called = true;
-        };
+        this.stub(console, "error");
         blackchip.Console.reload();
         blackchip.Console.error("test");
-        assert(called);
+        assert.called(console.error);
     },
     
     "Correct method called for warn": function() {
-        var called = false;
-        console.warn = function() {
-            called = true;
-        };
+        this.stub(console, "warn");
         blackchip.Console.reload();
         blackchip.Console.warn("test");
-        assert(called);
+        assert.called(console.warn);
     },    
     
     "Correct method called for info": function() {
-        var called = false;
-        console.info = function() {
-            called = true;
-        };
+        this.stub(console, "info");
         blackchip.Console.reload();
         blackchip.Console.info("test");
-        assert(called);
+        assert.called(console.info);
     },    
     
     "Correct method called for log": function() {
-        var called = false;
-        console.log = function() {
-            called = true;
-        };
+        this.stub(console, "log");
         blackchip.Console.reload();
         blackchip.Console.log("test");
-        assert(called);
+        assert.called(console.log);
     },
     
-    "Error does not crash if there is no console": function() {
-        console = null;
-        blackchip.Console.reload();
-        blackchip.Console.error("test");
-    },
-    
-    "Error does not crash if there is no function": function() {
-        console.error = null;
-        console.log = null;
+    "Error does nothing if there is no function": function() {
+        this.stub(window, "console");
         blackchip.Console.reload();
         blackchip.Console.error("error");
     },
-    
-    "Warn does not crash if there is no console": function() {
-        console = null;
-        blackchip.Console.reload();
-        blackchip.Console.warn("test");
-    },
-    
-    "Warn does not crash if there is no function": function() {
-        console.warn = null;
-        console.log = null;
+
+    "Warn does nothing if there is no function": function() {
+        this.stub(window, "console");
         blackchip.Console.reload();
         blackchip.Console.warn("warn");
-    },
-        
-    "Info does not crash if there is no console": function() {
-        console = null;
-        blackchip.Console.reload();
-        blackchip.Console.info("test");
-    },
+    },   
     
-    "Info does not crash if there is no function": function() {
-        console.info = null;
-        console.log = null;
+    "Info does nothing if there is no function": function() {
+        this.stub(window, "console");
         blackchip.Console.reload();
         blackchip.Console.info("info");
     },
     
-    "Log does not crash if there is no console": function() {
-        console = null;
-        blackchip.Console.reload();
-        blackchip.Console.log("test");
-    },
-    
-    "Log does not crash if there is no function": function() {
-        console.log = null;
+    "Log does nothing if there is no function": function() {
+        this.stub(window, "console");
         blackchip.Console.reload();
         blackchip.Console.log("log");
     }
-    
 });

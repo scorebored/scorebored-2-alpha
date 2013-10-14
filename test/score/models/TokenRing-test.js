@@ -22,6 +22,7 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/*
 buster.testCase("score.models.TokenRing", {
     
     players: null,
@@ -72,5 +73,5 @@ buster.testCase("score.models.TokenRing", {
     }
     
 });
-
+*/
     

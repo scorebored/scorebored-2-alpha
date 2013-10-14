@@ -22,42 +22,49 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-/**
- * @module score.models
- */
 var score = score || {};
-score.models = score.models || {};
+score.features = score.features || {};
 
-score.models.Round = score.models.Round || function(spec) {
-
-    var players = spec.players;
-    var points = spec.points;
-    var current = [];
-    var history = [];
-    var self = {};
-    self.events = blackchip.Events();
+score.features.Match = score.features.Match || function(self) {
     
-    self.award = function(spec) {
-        current.push({
-            value: spec.value || 1,
-            player: spec.player,
-            type: spec.type || undefined,
-            id: spec.id || undefined
-        });    
-    };
+    (function() {
+        var match = {};
+        
+        for ( var i = 0; i < self.options.maxPlayers; i++ ) {
+            match[i] = 0;
+        }
+        self.match = blackchip.Properties(match, self.events, "match");
+    })();    
+       
+    self.currentGame = 1;
     
-    self.commit = function() {
-        self.events.trigger("before_round");
-        historyItem = [];
-        _.each(current, function(award) {
-            points.award(award);
-            historyItem.push(award);     
-        });
-        history.push(historyItem);
-        current = [];
-        self.events.trigger("round", historyItem);
-        self.events.trigger("after_round");
+    self.events.on("after gameWin", function(event) {
+        self.match[event.player]++;
+    });
+    
+    self.events.on("match", function(event, name) {
+        self.record(name, event);
+    });
+    
+    self.next = function() {
+        self.events.trigger("before nextGame");
+        self.currentGame++;
+        self.scores[0] = self.options.startingScore || 0;
+        self.scores[1] = self.options.startingScore || 0;
+        self.record("nextGame");
     };
+          
+    self.events.on("undo match", function(event) {
+        self.match[event.name] = event.previous;  
+        self.undo();  
+    });
+    
+    self.events.on("undo nextGame", function() {
+        self.currentGame--;
+        self.undo();
+        self.undo();
+    });
         
     return self;
+    
 };
