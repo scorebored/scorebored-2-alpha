@@ -19,7 +19,9 @@ var pong = score.pong.Driver();
         .on("undo matchWin", listener)
         .on("undo gameWin", listener)
         .on("undo match", listener)
-        .on("undo score", listener);
+        .on("undo switchSides", listener)
+        .on("undo score", listener)
+        .on("undo server", listener);
                      
 })();
 
