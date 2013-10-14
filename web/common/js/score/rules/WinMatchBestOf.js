@@ -1,18 +1,19 @@
-var score = score || {}; 
+var score = score || {};
 score.rules = score.rules || {};
 
 score.rules.WinMatchBestOf = score.rules.WinMatchBestOf || function(self) {
 
     self.matchOver = false;
-    
+
     var isWinner = function(score) {
         return ( score / self.options.matchLength >= .5 ) ;
     };
-    
+
     self.isMatchPoint = function() {
-        return ( isWinner(self.match[0] + 1) || isWinner(self.match[1] + 1) );
+        return self.isGamePoint() &&
+            ( isWinner(self.match[0] + 1) || isWinner(self.match[1] + 1) );
     };
-    
+
     self.events.on("match", function(event, name) {
         if ( self.rollback ) {
             return;
@@ -28,11 +29,11 @@ score.rules.WinMatchBestOf = score.rules.WinMatchBestOf || function(self) {
             self.record("matchWin", winEvent);
         }
     });
-    
+
     self.events.on("undo matchWin", function(event) {
         self.matchOver = false;
-        self.undo();    
+        self.undo();
     });
-    
-    return self;             
+
+    return self;
 };

@@ -22,27 +22,36 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-score.pong = score.pong || {};
+var score = score || {};
+score.announcers = score.announcers || {};
 
-score.pong.Announcer = score.pong.Announcer || function(game, talker) {
+score.announcers.Deuce = score.announcers.Deuce || function(self) {
 
-    self = {};
-    self.game = game;
-    self.talker = talker;
+    var game = self.game;
 
-    score.Announcer(self);
+    var allowed = function(event) {
+        if ( game.gameOver ) {
+            return false;
+        }
+        if ( !game.isOverTime() ) {
+            return false;
+        }
+        return true;
+    };
 
-    score.announcers.PlayerPoint(self,   { noOverTime: true });
-    score.announcers.ChangeServers(self, { noOverTime: true });
-    score.announcers.ScoreByServer(self, { noOverTime: true });
-    score.announcers.GamePoint(self);
-    score.announcers.GameWinner(self);
-    score.announcers.MatchStandings(self);
-    score.announcers.SwitchSides(self);
-    score.announcers.MatchPoint(self);
-    score.announcers.MatchWinner(self);
-    score.announcers.Deuce(self);
+    self.events.on("after score", function(event) {
+        if ( !allowed(event) ) {
+            return;
+        }
+        if ( game.scores[0] === game.scores[1] ) {
+            self.say("Deuce");
+        } else if ( game.scores[0] > game.scores[1] ) {
+            self.say("Advantage " + game.players[0]);
+        } else if ( game.scores[1] > game.scores[0] ) {
+            self.say("Advantage " + game.players[1]);
+        }
+    });
 
     return self;
-};
 
+};

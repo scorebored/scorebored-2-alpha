@@ -22,27 +22,45 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-score.pong = score.pong || {};
+var score = score || {};
+score.announcers = score.announcers || {};
 
-score.pong.Announcer = score.pong.Announcer || function(game, talker) {
+score.announcers.MatchStandings = score.announcers.MatchStandings || function(self) {
 
-    self = {};
-    self.game = game;
-    self.talker = talker;
+    var game = self.game;
 
-    score.Announcer(self);
+    var allowed = function(event) {
+        if ( game.matchOver ) {
+            return false;
+        }
+        return true;
+    };
 
-    score.announcers.PlayerPoint(self,   { noOverTime: true });
-    score.announcers.ChangeServers(self, { noOverTime: true });
-    score.announcers.ScoreByServer(self, { noOverTime: true });
-    score.announcers.GamePoint(self);
-    score.announcers.GameWinner(self);
-    score.announcers.MatchStandings(self);
-    score.announcers.SwitchSides(self);
-    score.announcers.MatchPoint(self);
-    score.announcers.MatchWinner(self);
-    score.announcers.Deuce(self);
+    self.events.on("after gameWin", function(event) {
+        if ( !allowed(event) ) {
+            return;
+        }
+        if ( game.match[0] === game.match[1] ) {
+            self.say("Games tied at " + game.match[0]);
+            return;
+        }
+        var leader, leaderGames, followerGames;
+        if ( game.match[0] > game.match[1] ) {
+            leader = game.players[0];
+            leaderGames = game.match[0];
+            followerGames = game.match[1];
+        } else if ( game.match[1] > game.match[0] ) {
+            leader = games.players[1];
+            leaderGames = game.match[1];
+            followerGames = game.match[0];
+        } else {
+            throw new Error("Illegal state");
+        }
+        var gameText = ( leaderGames === 1 ) ? "game" : "games";
+        self.say(leader + " leads, " + leaderGames + " " + gameText +
+            " to " + followerGames);
+    });
 
     return self;
-};
 
+};
