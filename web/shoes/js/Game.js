@@ -22,28 +22,48 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.announcers = score.announcers || {};
+score.shoes = score.shoes || {};
 
-score.announcers.GameWinner = score.announcers.GameWinner || function(self) {
+score.shoes.Game = score.shoes.Game || function() {
 
-    var game = self.game;
+    var self = {};
+    self.events = blackchip.Events();
 
-    var allowed = function(event) {
-        if ( game.options.matchLength === 1 ) {
-            return true;
-        }
-        if ( game.matchOver ) {
-            return false;
-        }
-        return true;
+    self.options = blackchip.Properties({
+        maxPlayers: 2,
+        gameLength: 11,
+        matchLength: 1
+    }, self.events, "options");
+
+    score.Game(self);
+
+    score.features.Scores(self);
+    score.features.Round(self);
+    score.features.Match(self);
+
+    score.rules.WinGameByTwo(self, { when: "after round" });
+    score.rules.WinMatchBestOf(self);
+
+    self.ringer = function(player) {
+        self.scores[player] += 3;
     };
 
-    self.events.on("after gameWin", function(event) {
-        if ( allowed(event) ) {
-            self.say(game.players[event.player] + " has won the game");
-        }
-    });
+    self.leaner = function(player) {
+        self.scores[player] += 2;
+    };
+
+    self.close = function(player) {
+        self.scores[player] += 1;
+    };
+
+    self.status = function() {
+        console.log("Game ", self.currentGame, ":",
+                    self.players[0], self.scores[0], "-",
+                    self.players[1], self.scores[1],
+                    "; Match:",
+                    self.players[0], self.match[0], "-",
+                    self.players[1], self.match[1]);
+    };
 
     return self;
 

@@ -22,29 +22,20 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.announcers = score.announcers || {};
+score.shoes = score.shoes || {};
 
-score.announcers.GameWinner = score.announcers.GameWinner || function(self) {
+score.shoes.Announcer = score.shoes.Announcer || function(game, talker) {
 
-    var game = self.game;
+    self = {};
+    self.game = game;
+    self.talker = talker;
 
-    var allowed = function(event) {
-        if ( game.options.matchLength === 1 ) {
-            return true;
-        }
-        if ( game.matchOver ) {
-            return false;
-        }
-        return true;
-    };
+    score.Announcer(self);
 
-    self.events.on("after gameWin", function(event) {
-        if ( allowed(event) ) {
-            self.say(game.players[event.player] + " has won the game");
-        }
-    });
+    score.announcers.RoundPoints(self);
+    score.announcers.Score(self, {when: "after round"});
+    score.announcers.GameWinner(self);
+    score.announcers.MatchWinner(self);
 
     return self;
-
 };

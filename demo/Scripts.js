@@ -25,7 +25,8 @@
 (function() {
 
     blackchip.ScriptLoader.load([
-        "../demo/DemoPong.js"
+        "../demo/DemoPong.js",
+        "../demo/DemoShoes.js"
     ]);
 
 })();

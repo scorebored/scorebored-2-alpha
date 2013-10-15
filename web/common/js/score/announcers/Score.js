@@ -25,24 +25,27 @@
 var score = score || {};
 score.announcers = score.announcers || {};
 
-score.announcers.GameWinner = score.announcers.GameWinner || function(self) {
+score.announcers.Score = score.announcers.Score || function(self, options) {
 
+    options = options || {};
     var game = self.game;
+    var when = options.when || "after point";
 
     var allowed = function(event) {
-        if ( game.options.matchLength === 1 ) {
-            return true;
-        }
-        if ( game.matchOver ) {
+        if ( game.gameOver ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("after gameWin", function(event) {
-        if ( allowed(event) ) {
-            self.say(game.players[event.player] + " has won the game");
+    self.events.on(when, function(event) {
+        if ( !allowed(event) ) {
+            return;
         }
+        var text = [];
+        text.push(game.players[0] + " " + game.scores[0]);
+        text.push(game.players[1] + " " + game.scores[1]);
+        self.say("Scores are " + text.join(", "));
     });
 
     return self;

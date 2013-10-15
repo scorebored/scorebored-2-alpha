@@ -46,10 +46,13 @@
         "common/js/score/announcers/MatchStandings.js",
         "common/js/score/announcers/MatchWinner.js",
         "common/js/score/announcers/PlayerPoint.js",
+        "common/js/score/announcers/RoundPoints.js",
+        "common/js/score/announcers/Score.js",
         "common/js/score/announcers/ScoreByServer.js",
         "common/js/score/announcers/SwitchSides.js",
 
         "common/js/score/features/Match.js",
+        "common/js/score/features/Round.js",
         "common/js/score/features/Scores.js",
         "common/js/score/features/Server.js",
         "common/js/score/features/Sides.js",

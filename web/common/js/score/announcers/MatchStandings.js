@@ -30,7 +30,7 @@ score.announcers.MatchStandings = score.announcers.MatchStandings || function(se
     var game = self.game;
 
     var allowed = function(event) {
-        if ( game.matchOver ) {
+        if ( game.gameOver || game.matchOver ) {
             return false;
         }
         return true;

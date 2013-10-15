@@ -25,23 +25,29 @@
 var score = score || {};
 score.announcers = score.announcers || {};
 
-score.announcers.GameWinner = score.announcers.GameWinner || function(self) {
+score.announcers.RoundPoints = score.announcers.RoundPoints || function(self) {
 
     var game = self.game;
 
     var allowed = function(event) {
-        if ( game.options.matchLength === 1 ) {
-            return true;
-        }
-        if ( game.matchOver ) {
+        if ( game.gameOver ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("after gameWin", function(event) {
-        if ( allowed(event) ) {
-            self.say(game.players[event.player] + " has won the game");
+    self.events.on("after round", function(event) {
+        if ( !allowed(event) ) {
+            return;
+        }
+        var text = [];
+        _.each(event.properties, function(score, player) {
+            if ( score > 0 ) {
+                text.push(score + " for " + game.players[player]);
+            }
+        });
+        if ( text.length > 0 ) {
+            self.say(text.join(", "));
         }
     });
 

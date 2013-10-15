@@ -23,28 +23,43 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.features = score.features || {};
 
-score.announcers.GameWinner = score.announcers.GameWinner || function(self) {
+score.features.Round = score.features.Round || function(self) {
 
-    var game = self.game;
+    var scores = {};
 
-    var allowed = function(event) {
-        if ( game.options.matchLength === 1 ) {
-            return true;
+    var zero = function() {
+        for ( var i = 0; i < self.options.maxPlayers; i++ ) {
+            scores[i] = 0;
         }
-        if ( game.matchOver ) {
-            return false;
-        }
-        return true;
+    };
+    zero();
+
+    self.endRound = function() {
+        var event = { properties: scores };
+        self.events.trigger("round", event);
+        self.events.trigger("after round", event);
+        self.record("round");
+        zero();
     };
 
-    self.events.on("after gameWin", function(event) {
-        if ( allowed(event) ) {
-            self.say(game.players[event.player] + " has won the game");
+    self.events.on("score", function(event) {
+        scores[event.name] += event.value - event.previous;
+    });
+
+    self.events.on("undo round", function() {
+        var done = false;
+        while ( !done ) {
+            if ( self.history.length === 0 ) {
+                done = true;
+            } else if ( _.last(self.history).name === "round" ) {
+                done = true;
+            } else {
+                self.undo();
+            }
         }
     });
 
     return self;
-
 };
