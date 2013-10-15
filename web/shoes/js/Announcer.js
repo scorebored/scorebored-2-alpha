@@ -37,5 +37,14 @@ score.shoes.Announcer = score.shoes.Announcer || function(game, talker) {
     score.announcers.GameWinner(self);
     score.announcers.MatchWinner(self);
 
+    self.events.on("score", function(event) {
+        var amount = event.value - event.previous;
+        if ( amount === 3 ) {
+            self.talker.say("Ringer!");
+        } else if ( amount === 2 ) {
+            self.talker.say("Leaner!");
+        }
+    });
+
     return self;
 };
