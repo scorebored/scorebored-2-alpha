@@ -4,7 +4,7 @@ score.rules = score.rules || {};
 score.rules.WinGameByTwo = score.rules.WinGameByTwo || function(self, options) {
 
     options = options || {};
-    var when = options.when || "score";
+    var when = options.when || "after score";
 
     self.gameOver = false;
 
@@ -39,8 +39,13 @@ score.rules.WinGameByTwo = score.rules.WinGameByTwo || function(self, options) {
             console.error(name, event);
             throw new Error("Game is over");
         }
-        var winner = isWinner(self.scores[0], self.scores[1]) ? 0 : null ||
-                     isWinner(self.scores[1], self.scores[0]) ? 1 : null;
+        var winner = null;
+        if ( isWinner(self.scores[0], self.scores[1]) ) {
+            winner = 0;
+        }
+        if ( isWinner(self.scores[1], self.scores[0]) ) {
+            winner = 1;
+        }
         if ( !_.isNull(winner) ) {
             self.gameOver = true;
             var winEvent = { player: winner };

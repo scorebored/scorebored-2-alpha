@@ -5,7 +5,6 @@ score.pong.Announcer(pong, score.talkers.Console());
     var listener = function(event, name) { console.log(name, event); };
 
     //pong.events.all(function(event, name) { console.log("ALL", name, event); });
-
     /*
     pong.events
         .on("player", listener)
