@@ -30,10 +30,11 @@ var blackchip = blackchip || {};
 blackchip.Properties = blackchip.Properties || 
         function(initial, events, context) {
 
-    var events = events || blackchip.Events();
     var properties = {}; 
+    
     var self = {};
-     
+    self.events = events || blackchip.Events();
+
     var init = function() {
         _.each(initial, function(value, name) {
             properties[name] = value;
@@ -51,28 +52,15 @@ blackchip.Properties = blackchip.Properties ||
             return;
         }    
         var previous = properties[name];
+        var event = ( context ) ? context : name;
+        
+        self.events.trigger("before " + event, value, name, previous);
         properties[name] = value;
-        event = {
-            name: name,
-            value: value,
-            previous: previous,
-            properties: properties
-        };
-        if ( context ) {
-            events.trigger(context, event);
-            events.trigger(context + "." + name, event); 
-            events.trigger("after " + context, event);   
-            events.trigger("after " + context + "." + name, event);
-        } else {
-            events.trigger(name, event);
-            events.trigger("after " + name, event);
-        }
+        self.events.trigger(event, value, name, previous);
+        self.events.trigger("after " + event, value, name, previous);
     };
     
-    init();
-    
-    self.events = events;
-    
+    init();    
     return self;    
 };
 

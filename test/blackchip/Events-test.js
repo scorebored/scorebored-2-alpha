@@ -46,41 +46,29 @@ buster.testCase("blackchip.Events", {
     
     "Remove listener": function() {
         var events = blackchip.Events();
-        var count = 0;
-        var listener = function() {
-            count++;
-        };
+        var listener = this.stub();
         events
             .on("test", listener)
             .trigger("test")
             .off("test", listener)
             .trigger("test");
-        assert.equals(count, 1);
+        assert.calledOnce(listener);
     },
     
     "Listen to all events": function() {
         var events = blackchip.Events();
-        var calledA = null;
-        var calledB = null;
+        var listener = this.stub();
         events
-            .all(function(event, name) { 
-                if ( name === "a" ) { calledA = true; }
-                if ( name === "b" ) { calledB = true; }
-            })
+            .all(listener)
             .trigger("a")
             .trigger("b");
-        assert(calledA);
-        assert(calledB);
+        assert(listener.calledWith("a"));
+        assert(listener.calledWith("b"));
     },
     
     "Remove all events listener": function() {
         var events = blackchip.Events();
-        var calledA = 0;
-        var calledB = 0;
-        var listener = function(event, name) {
-            if ( name === "a" ) { calledA++; }
-            if ( name === "b" ) { calledB++; }
-        };
+        var listener = this.stub();
         events
             .all(listener)
             .trigger("a")
@@ -89,8 +77,9 @@ buster.testCase("blackchip.Events", {
             .trigger("a")
             .trigger("b");
             
-        assert.equals(calledA, 1);
-        assert.equals(calledB, 1);        
+        assert(listener.calledWith("a"));
+        assert(listener.calledWith("b"));
+        assert.calledTwice(listener);
     }    
     
 });

@@ -76,9 +76,9 @@ blackchip.Events = blackchip.Events || function() {
      * 
      * @param {string} event Name of the event to listen for.
      * 
-     * @param {function} listener Invoked when the event is triggered. First
-     * argument will be the value passed to the trigger method, the second
-     * argument will be the name of this event.
+     * @param {function} listener Invoked when the event is triggered. The
+     * same arguments when calling trigger will be available to the listener
+     * except that the event name will be the last argument.
      * 
      * @return {Events} this object for chaining. 
      */
@@ -93,9 +93,9 @@ blackchip.Events = blackchip.Events || function() {
      * 
      * @method all
      * 
-     * @param {function} listener Invoked when an event is triggered. First
-     * argument will be the value passed to the trigger method, the second
-     * argument will be the name of this event.
+     * @param {function} listener Invoked when an event is triggered. The
+     * same arguments when calling trigger will be available to the listener
+     * with the name of the event as the first argument.
      * 
      * @return {Events} this object for chaining. 
      */
@@ -151,22 +151,25 @@ blackchip.Events = blackchip.Events || function() {
      * 
      * @param {string} event Name of the event to trigger.
      * 
-     * @param {object} [arg] Single argument to pass to each listener. Use
-     * arrays or objects if more than one value needs to be passed. 
+     * @param {object} [arguments*] Arguments to pass to each listener. 
      * 
      * @return {Events} this object for chaining. 
      */
-    self.trigger = function(event, arg) {
+    self.trigger = function(event) {
         if ( self.quiet ) {
             return;
         }
-        if ( listeners[event] ) {
+        var argsAll = arguments;
+        var argsEventAtEnd = _.tail(arguments);
+        argsEventAtEnd.push(event);
+        if ( listeners[event] ) {   
             _.each(listeners[event], function(listener) {
-                listener(arg, event);    
+                listener.apply(null, argsEventAtEnd);    
             });
         }
+        // All listeners get the arguments in order (event name first)
         _.each(allListeners, function(listener) {
-            listener(arg, event);    
+            listener.apply(null, argsAll);   
         });
         return self;     
     };
