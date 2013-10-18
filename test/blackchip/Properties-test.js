@@ -24,55 +24,40 @@
 
 buster.testCase("blackchip.Properties", {
 
+    events: null,
+    
+    setUp: function() {
+        events = blackchip.Events();
+    },
+    
     "Initialized with properties": function() {
-        var props = blackchip.Properties({a: 1, b: 2});
+        var props = blackchip.Properties({a: 1, b: 2}, events);
         assert.equals(props.a, 1);
         assert.equals(props.b, 2);
     },
     
     "Events fired on assignment": function() {
-        var props = blackchip.Properties({a: 1});
-        var listener = this.stub();
-        props.events.on("a", listener);
-        props.a = 2;
-        assert(listener.calledWith(2, "a", 1));
-    },
-    
-    /*
-    "Event not fired when assigned the same value": function() {
-        var props = blackchip.Properties({a: 1});
-        var listener = this.stub();
-        props.events.on("a", listener);
-        props.a = 1;
-        refute.called(listener);  
-    },
-    
-    "Uses provided events object": function() {
-        var events = blackchip.Events();
         var props = blackchip.Properties({a: 1}, events);
         var listener = this.stub();
         events.on("a", listener);
         props.a = 2;
-        assert(listener.calledWith({
-            name: "a",
-            value: 2,
-            previous: 1,
-            properties: {a: 2}
-        }));        
+        assert(listener.calledWith(2, "a", 1, "a"));
     },
     
-    "Prefixes property names in events": function() {
-        var events = blackchip.Events();
-        var props = blackchip.Properties({a: 1}, events, "prefix");
+    "Event not fired when assigned the same value": function() {
+        var props = blackchip.Properties({a: 1}, events);
         var listener = this.stub();
         events.on("a", listener);
+        props.a = 1;
+        refute.called(listener);  
+    },
+        
+    "Triggers and event with the provided event name": function() {
+        var props = blackchip.Properties({a: 1}, events, "as");
+        var listener = this.stub();
+        events.on("as", listener);
         props.a = 2;
-        assert(listener.calledWith({
-            name: "prefix.a",
-            value: 2,
-            previous: 1,
-            properties: {a: 2}
-        }));         
+        assert(listener.calledWith(2, "a", 1, "as"));  
     }
-    */
+    
 });

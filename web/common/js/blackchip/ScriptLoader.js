@@ -22,6 +22,8 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/* jshint -W060 */ // allow document.write
+
 /**
  * @module blackchip
  */
@@ -87,7 +89,7 @@ blackchip.ScriptLoader = blackchip.ScriptLoader || function() {
         for ( var i = 0; i < bundle.length; i++ ) {
             path = bundle[i];
             tags.push("<script src='" + baseDir + "/" + path + "'></script>");    
-        };
+        }
         document.write(tags.join(""));    
     };
     

@@ -29,11 +29,11 @@ buster.testCase("blackchip.Logging", {
         this.stub(console, "warn");
         this.stub(console, "info");
         this.stub(console, "log");
-        blackchip.Console.reload();
+        blackchip.console.reload();
     },
     
     tearDown: function() {
-        blackchip.Console.reload();
+        blackchip.console.reload();
     },
     
     "Same names are same instance": function() {

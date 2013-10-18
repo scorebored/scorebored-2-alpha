@@ -22,57 +22,57 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-buster.testCase("blackchip.Console", {
+buster.testCase("blackchip.console", {
             
     "Correct method called for error": function() {
         this.stub(console, "error");
-        blackchip.Console.reload();
-        blackchip.Console.error("test");
+        blackchip.console.reload();
+        blackchip.console.error("test");
         assert.called(console.error);
     },
     
     "Correct method called for warn": function() {
         this.stub(console, "warn");
-        blackchip.Console.reload();
-        blackchip.Console.warn("test");
+        blackchip.console.reload();
+        blackchip.console.warn("test");
         assert.called(console.warn);
     },    
     
     "Correct method called for info": function() {
         this.stub(console, "info");
-        blackchip.Console.reload();
-        blackchip.Console.info("test");
+        blackchip.console.reload();
+        blackchip.console.info("test");
         assert.called(console.info);
     },    
     
     "Correct method called for log": function() {
         this.stub(console, "log");
-        blackchip.Console.reload();
-        blackchip.Console.log("test");
+        blackchip.console.reload();
+        blackchip.console.log("test");
         assert.called(console.log);
     },
     
     "Error does nothing if there is no function": function() {
         this.stub(window, "console");
-        blackchip.Console.reload();
-        blackchip.Console.error("error");
+        blackchip.console.reload();
+        blackchip.console.error("error");
     },
 
     "Warn does nothing if there is no function": function() {
         this.stub(window, "console");
-        blackchip.Console.reload();
-        blackchip.Console.warn("warn");
+        blackchip.console.reload();
+        blackchip.console.warn("warn");
     },   
     
     "Info does nothing if there is no function": function() {
         this.stub(window, "console");
-        blackchip.Console.reload();
-        blackchip.Console.info("info");
+        blackchip.console.reload();
+        blackchip.console.info("info");
     },
     
     "Log does nothing if there is no function": function() {
         this.stub(window, "console");
-        blackchip.Console.reload();
-        blackchip.Console.log("log");
+        blackchip.console.reload();
+        blackchip.console.log("log");
     }
 });

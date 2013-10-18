@@ -23,25 +23,41 @@
  *****************************************************************************/
 
 module.exports = function(grunt) {
+
+    grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
     
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    yuidoc: {
-        compile: {
-            name: "Scorebored",
-            description: "Description here",
-            version: "2.0",
-            url: "http://example.com",
-            options: {
-                paths: "web/common/js",
-                outdir: "build/doc"
+        jshint: {
+            main: [
+                "web/common/js/blackchip/**/*.js", 
+            ]
+        },
+        
+        buster: {
+            all: {}
+        },
+
+        yuidoc: {
+            compile: {
+                name: "Scorebored",
+                description: "Description here",
+                version: "2.0",
+                url: "http://example.com",
+                options: {
+                    paths: "web/common/js",
+                    outdir: "build/doc"
+                }
             }
         }
-    }
-  });    
-  
-  grunt.loadNpmTasks('grunt-contrib-yuidoc');
-  
-  grunt.registerTask("default", ["yuidoc"]);
+    });    
+            
+    grunt.loadNpmTasks("grunt-buster");      
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-yuidoc');
+      
+    grunt.registerTask("default", ["jshint", "yuidoc"]);
+    grunt.registerTask("doc", ["yuidoc"]);
+    grunt.registerTask("lint", ["jshint"]);
+    //grunt.registerTask("test", ["buster"]);
   
 };

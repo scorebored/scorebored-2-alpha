@@ -22,28 +22,28 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.features = score.features || {};
+buster.testCase("score.Game", {
 
-score.features.Scores = score.features.Scores || function(self) {
+    "Default creates two players": function() {
+        var game = score.Game();
+        assert.equals(game.players.count, 2);
+    },
     
-    (function() {
-        var scores = {};
-        
-        for ( var i = 0; i < self.options.maxPlayers; i++ ) {
-            scores[i] = self.options.startingScore || 0;
-        }
-        self.scores = blackchip.Properties(scores, self.events, "score");
-    })();    
-        
-    self.events.on("score", function(event, name) {
-        self.record(name, event);
-    });
+    "Creates the given number of players": function() {
+        var game = score.Game({maxPlayers: 3});
+        assert.equals(game.players.count, 3);
+        assert(game.players[0]);
+        assert(game.players[1]);
+        assert(game.players[2]);
+        refute(game.players[3]);
+    },
     
-    self.events.on("undo score", function(event) {
-        self.scores[event.name] = event.previous;
-    });    
-             
-    return self;
+    "Creates default player names": function() {
+        var game = score.Game();
+        assert.equals(game.players[0], "Player 1");
+        assert.equals(game.players[1], "Player 2");
+    },
     
-};
+    
+    
+});

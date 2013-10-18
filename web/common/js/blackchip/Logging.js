@@ -143,20 +143,20 @@ blackchip.Logging = blackchip.Logging || function() {
     };
     
     var enable = function(logger) {
-        logger.error = blackchip.Console.error;
-        logger.warn  = blackchip.Console.warn;
-        logger.info  = blackchip.Console.info;
-        logger.log   = blackchip.Console.log;    
+        logger.error = blackchip.console.error;
+        logger.warn  = blackchip.console.warn;
+        logger.info  = blackchip.console.info;
+        logger.log   = blackchip.console.log;    
     };
     
     var debug = function(logger) {
         enable(logger);
-        logger.debug = blackchip.Console.log;
+        logger.debug = blackchip.console.log;
     };
     
     var trace = function(logger) {
         debug(logger);
-        logger.trace = blackchip.Console.log;
+        logger.trace = blackchip.console.log;
     };
      
     return self;

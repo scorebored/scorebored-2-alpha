@@ -24,24 +24,40 @@
 
 var score = score || {};
 
-score.Game = score.Game || function(self) {
+score.Game = score.Game || function(options) {
         
-    (function() {
-        var players = {};
+    var self = {};
+
+    self.events = blackchip.Events();    
+    self.options = null;
+    self.players = null;
+    self.undoing = 0;
+    self.redoing = 0;
+    self.history = [];
+    self.undoHistory = [];
+    
+    var init = function() {
+        options = options || { maxPlayers: 2 };
+        options.maxPlayers = options.maxPlayers || 2;
+        self.options = blackchip.Properties(options);
+        
+        var players = {
+            count: self.options.maxPlayers
+        };
         
         for ( var i = 0; i < self.options.maxPlayers; i++ ) {
             var playerNumber = i + 1;
             players[i] = "Player " + playerNumber;
         }
-        self.players = blackchip.Properties(players, self.events, "player");
-    })();    
-            
-    self.rollback = 0;
-    self.history = [];
-    
-    self.record = function(name, event) {
-        if ( !self.rollback ) {
-            self.history.push({name: name, event: event});
+        self.players = blackchip.Properties(players, "player", self.events);
+    }; 
+           
+    self.record = function() {
+        if ( !self.undoing && !self.redoing) {
+            undoHistory = [];
+            var args = Array.prototype.slice.call(arguments, 0);
+            args.unshift(args.pop());
+            self.history.push(args);
         }
     };
     
@@ -49,13 +65,24 @@ score.Game = score.Game || function(self) {
         if ( self.history.length === 0 ) {
             return;
         }
-        self.rollback++;
-        var item = self.history.pop();
-        self.events.trigger("undo " + item.name, item.event); 
-        self.rollback--;   
+        self.undoing++;
+        var args = self.history.pop();
+        self.undoHistory.push(args.slice(0));
+        args[0] = "undo " + args[0];
+        self.events.trigger.apply(null, args);
+        self.undoing--;   
     };
     
+    self.redo = function() {
+        self.redoing = true;
+        while ( self.undoHistory.length ) {
+            var args = self.undoHistory.pop();
+            args[0] = "redo " + args[0];
+            self.events.trigger.apply(null, args);            
+        }
+        self.redoing = false;
+    };
     
+    init();
     return self;
-    
 };
