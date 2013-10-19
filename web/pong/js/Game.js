@@ -28,7 +28,7 @@
 score.pong = score.pong || {};
 
 /**
- * Table tennis (a.k.a Ping Pong).
+ * Not documented
  * 
  * @class Game
  * @uses score.features.scores
@@ -37,48 +37,34 @@ score.pong = score.pong || {};
  * @uses score.features.sides
  */
 score.pong.Game = score.pong.Game || function() {
-
-    var self = {};
-    self.events = blackchip.Events(); 
         
-    self.options = blackchip.Properties({
+    var options = {
         maxPlayers: 2,
         gameLength: 11,
-        matchLength: 3
-    }, self.events, "options");
-    
-    score.Game(self);
-    
-    score.features.Scores(self);
-    score.features.Server(self);
-    score.features.Match(self); 
-    score.features.Sides(self);
-               
-    score.rules.WinGameByTwo(self);
-    score.rules.WinMatchBestOf(self); 
-    
-    var changeServer = function() {
-        if ( self.gameOver ) {
-            return;
-        }
-        var at = ( self.options.gameLength === 11 ) ? 2 : 5;
-        if ( (self.scores[0] + self.scores[1]) % at === 0 ) {
-            self.changeServer();
-        }    
-    };  
-    self.events.on("after score", changeServer);
-      
-    self.status = function() {
-        console.log("Game ", self.currentGame, ":",
-                    self.players[0], self.scores[0], "-", 
-                    self.players[1], self.scores[1], 
-                    "; Match:", 
-                    self.players[0], self.match[0], "-",
-                    self.players[1], self.match[1],
-                    "; Server:", 
-                    self.players[self.server.is]);
+        matchLength: 1
     };
     
-    return self;
+    var game = score.Game(options);
+    
+    score.features.scores(game);
+    score.features.server(game);
+    score.features.match(game); 
+    score.features.sides(game);
+               
+    score.rules.winGameByTwo(game);
+    score.rules.winMatchBestOf(game); 
+    
+    var changeServer = function() {
+        if ( game.gameOver ) {
+            return;
+        }
+        var at = ( game.options.gameLength === 11 ) ? 2 : 5;
+        if ( (game.scores[0] + game.scores[1]) % at === 0 ) {
+            game.server.next();
+        }    
+    };  
+    game.events.on("after score", changeServer);
+    
+    return game;
     
 };

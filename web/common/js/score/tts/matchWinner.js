@@ -23,27 +23,27 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.ChangeServers = score.announcers.ChangeServers || function(self, options) {
+score.tts.matchWinner = score.tts.matchWinner || function(self) {
 
     var game = self.game;
-    options = options || {};
 
-    var allowed = function(event) {
-        if ( options.noOverTime && game.isOverTime() ) {
+    var allowed = function() {
+        if ( game.options.matchLength === 1 ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("server", function(event) {
-        if ( !allowed(event) ) {
+    self.events.on("matchWin", function(winner) {
+        if ( !allowed() ) {
             return;
-        }
-        if ( event.previous !== null ) {
-            self.say("Change servers");
-        }
+        };
+        console.warn("WINNER", winner);
+        var loser = ( winner === "0" ) ? 1: 0;
+        self.say(game.players[winner] + " has won the match.",
+                 game.match[winner] + " games to " + game.match[loser]);
     });
 
     return self;

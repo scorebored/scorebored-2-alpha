@@ -23,29 +23,42 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.MatchPoint = score.announcers.MatchPoint || function(self) {
+score.tts.matchStandings = score.tts.matchStandings || function(self) {
 
     var game = self.game;
 
     var allowed = function(event) {
-        if ( game.gameOver ) {
-            return false;
-        }
-        if ( !game.isMatchPoint() ) {
-            return false;
-        }
-        if ( game.isOverTime() || game.isOverTimeNext() ) {
+        if ( game.matchOver ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("after score", function(event) {
-        if ( allowed(event) ) {
-            self.say("Match point");
+    self.events.on("after gameWin", function(event) {
+        if ( !allowed(event) ) {
+            return;
         }
+        if ( game.match[0] === game.match[1] ) {
+            self.say("Games tied at " + game.match[0]);
+            return;
+        }
+        var leader, leaderGames, followerGames;
+        if ( game.match[0] > game.match[1] ) {
+            leader = game.players[0];
+            leaderGames = game.match[0];
+            followerGames = game.match[1];
+        } else if ( game.match[1] > game.match[0] ) {
+            leader = games.players[1];
+            leaderGames = game.match[1];
+            followerGames = game.match[0];
+        } else {
+            throw new Error("Illegal state");
+        }
+        var gameText = ( leaderGames === 1 ) ? "game" : "games";
+        self.say(leader + " leads, " + leaderGames + " " + gameText +
+            " to " + followerGames);
     });
 
     return self;

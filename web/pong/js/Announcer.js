@@ -32,16 +32,16 @@ score.pong.Announcer = score.pong.Announcer || function(game, talker) {
 
     score.Announcer(self);
 
-    score.announcers.PlayerPoint(self,   { noOverTime: true });
-    score.announcers.ChangeServers(self, { noOverTime: true });
-    score.announcers.ScoreByServer(self, { noOverTime: true });
-    score.announcers.GamePoint(self);
-    score.announcers.GameWinner(self);
-    score.announcers.MatchStandings(self);
-    score.announcers.SwitchSides(self);
-    score.announcers.MatchPoint(self);
-    score.announcers.MatchWinner(self);
-    score.announcers.Deuce(self);
+    score.tts.playerPoint(self,   { noOverTime: true });
+    score.tts.changeServers(self, { noOverTime: true });
+    score.tts.scoreByServer(self, { noOverTime: true });
+    score.tts.gamePoint(self);
+    score.tts.gameWinner(self);
+    score.tts.matchStandings(self);
+    score.tts.switchSides(self);
+    score.tts.matchPoint(self);
+    score.tts.matchWinner(self);
+    score.tts.deuce(self);
 
     return self;
 };

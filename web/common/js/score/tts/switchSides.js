@@ -23,16 +23,14 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.GamePoint = score.announcers.GamePoint || function(self) {
+score.tts.switchSides = score.tts.switchSides || function(self) {
     
     var game = self.game;
     
-    self.events.on("after score", function(event) {
-        if ( !game.gameOver && game.isGamePoint() && game.isMatchPoint && !game.isMatchPoint() ) {
-            self.say("Game point");
-        }
+    self.events.on("switchSides", function(event) {
+        self.say("Switch sides");    
     });
     
     return self;

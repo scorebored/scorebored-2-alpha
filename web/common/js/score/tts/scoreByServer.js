@@ -23,42 +23,31 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.MatchStandings = score.announcers.MatchStandings || function(self) {
+score.tts.scoreByServer = score.tts.scoreByServer || function(self, options) {
 
+    options = options || {};
     var game = self.game;
 
     var allowed = function(event) {
-        if ( game.matchOver ) {
+        if ( game.gameOver ) {
+            return false;
+        }
+        if ( options.noOverTime && game.isOverTime() ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("after gameWin", function(event) {
+    self.events.on("after score", function(event) {
         if ( !allowed(event) ) {
             return;
         }
-        if ( game.match[0] === game.match[1] ) {
-            self.say("Games tied at " + game.match[0]);
-            return;
-        }
-        var leader, leaderGames, followerGames;
-        if ( game.match[0] > game.match[1] ) {
-            leader = game.players[0];
-            leaderGames = game.match[0];
-            followerGames = game.match[1];
-        } else if ( game.match[1] > game.match[0] ) {
-            leader = games.players[1];
-            leaderGames = game.match[1];
-            followerGames = game.match[0];
-        } else {
-            throw new Error("Illegal state");
-        }
-        var gameText = ( leaderGames === 1 ) ? "game" : "games";
-        self.say(leader + " leads, " + leaderGames + " " + gameText +
-            " to " + followerGames);
+        var server = game.server.is;
+        var score1 = server === 0 ? game.scores[0] : game.scores[1];
+        var score2 = server === 0 ? game.scores[1] : game.scores[0];
+        self.say(score1 + " - " + score2);
     });
 
     return self;

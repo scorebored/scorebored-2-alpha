@@ -53,7 +53,7 @@ score.rules.winMatchBestOf = score.rules.winMatchBestOf || function(self) {
         if ( self.matchOver ) {
             throw new Error("Match is over");
         }
-        if ( isWinner(player) ) {
+        if ( isWinner(self.match[player]) ) {
             self.events.trigger("before matchWin", player);
             self.matchOver = true;
             self.events.trigger("matchWin", player);

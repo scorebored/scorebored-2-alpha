@@ -23,29 +23,32 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.Score = score.announcers.Score || function(self, options) {
+score.tts.roundPoints = score.tts.roundPoints || function(self) {
 
-    options = options || {};
     var game = self.game;
-    var when = options.when || "after point";
 
-    var allowed = function(event) {
+    var allowed = function() {
         if ( game.gameOver ) {
             return false;
         }
         return true;
     };
 
-    self.events.on(when, function(event) {
-        if ( !allowed(event) ) {
+    self.events.on("after round", function(scores) {
+        if ( !allowed() ) {
             return;
         }
         var text = [];
-        text.push(game.players[0] + " " + game.scores[0]);
-        text.push(game.players[1] + " " + game.scores[1]);
-        self.say("Scores are " + text.join(", "));
+        for ( var player = 0; player < game.players.count; player++ ) {
+            if ( scores[player] > 0 ) {
+                text.push(scores[player] + " for " + game.players[player]);
+            }
+        };
+        if ( text.length > 0 ) {
+            self.say(text.join(", "));
+        }
     });
 
     return self;

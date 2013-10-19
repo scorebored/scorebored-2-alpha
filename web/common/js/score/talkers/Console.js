@@ -27,7 +27,7 @@ score.talkers = score.talkers || {};
 score.talkers.Console = score.talkers.Console || function() {
     
     var self = {};
-    var console = blackchip.Console;
+    var console = blackchip.console;
     
     self.say = function() {
         console.log.apply(console, arguments); 

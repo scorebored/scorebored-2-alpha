@@ -23,31 +23,29 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.ScoreByServer = score.announcers.ScoreByServer || function(self, options) {
+score.tts.score = score.tts.score || function(self, options) {
 
     options = options || {};
     var game = self.game;
+    var when = options.when || "after point";
 
     var allowed = function(event) {
         if ( game.gameOver ) {
             return false;
         }
-        if ( options.noOverTime && game.isOverTime() ) {
-            return false;
-        }
         return true;
     };
 
-    self.events.on("after score", function(event) {
+    self.events.on(when, function(event) {
         if ( !allowed(event) ) {
             return;
         }
-        var server = game.server.is;
-        var score1 = server === 0 ? game.scores[0] : game.scores[1];
-        var score2 = server === 0 ? game.scores[1] : game.scores[0];
-        self.say(score1 + " - " + score2);
+        var text = [];
+        text.push(game.players[0] + " " + game.scores[0]);
+        text.push(game.players[1] + " " + game.scores[1]);
+        self.say("Scores are " + text.join(", "));
     });
 
     return self;

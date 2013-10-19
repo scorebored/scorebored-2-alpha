@@ -39,7 +39,7 @@ score.Game = score.Game || function(options) {
     var init = function() {
         options = options || { maxPlayers: 2 };
         options.maxPlayers = options.maxPlayers || 2;
-        self.options = blackchip.Properties(options);
+        self.options = blackchip.Properties(options, self.events, "options");
         
         var players = {
             count: self.options.maxPlayers

@@ -28,7 +28,7 @@ score.Announcer = score.Announcer || function(self) {
         
     self.events = self.game.events;
     self.say = function() {
-        if ( !self.game.rollback ) {
+        if ( !self.game.correcting ) {
             self.talker.say.apply(self.talker, arguments);
         }
     };

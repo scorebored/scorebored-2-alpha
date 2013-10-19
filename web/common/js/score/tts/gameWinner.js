@@ -23,27 +23,26 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.MatchWinner = score.announcers.MatchWinner || function(self) {
+score.tts.gameWinner = score.tts.gameWinner || function(self) {
 
     var game = self.game;
 
-    var allowed = function(event) {
+    var allowed = function() {
         if ( game.options.matchLength === 1 ) {
+            return true;
+        }
+        if ( game.matchOver ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("matchWin", function(event) {
-        if ( !allowed(event) ) {
-            return;
-        };
-        var winner = event.player;
-        var loser = ( winner === "0" ) ? 1: 0;
-        self.say(game.players[winner] + " has won the match.",
-                 game.match[winner] + " games to " + game.match[loser]);
+    self.events.on("after gameWin", function(player) {
+        if ( allowed() ) {
+            self.say(game.players[player] + " has won the game");
+        }
     });
 
     return self;

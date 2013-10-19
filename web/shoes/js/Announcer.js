@@ -32,13 +32,13 @@ score.shoes.Announcer = score.shoes.Announcer || function(game, talker) {
 
     score.Announcer(self);
 
-    score.announcers.RoundPoints(self);
-    score.announcers.Score(self, {when: "after round"});
-    score.announcers.GameWinner(self);
-    score.announcers.MatchWinner(self);
+    score.tts.roundPoints(self);
+    score.tts.score(self, {when: "after round"});
+    score.tts.gameWinner(self);
+    score.tts.matchWinner(self);
 
-    self.events.on("score", function(event) {
-        var amount = event.value - event.previous;
+    self.events.on("score", function(score, player, previous) {
+        var amount = score - previous;
         if ( amount === 3 ) {
             self.talker.say("Ringer!");
         } else if ( amount === 2 ) {

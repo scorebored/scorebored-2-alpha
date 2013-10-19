@@ -28,7 +28,8 @@ score.pong.Announcer(pong, score.talkers.Console());
 
 pong.demo = function() {
     var game = pong;
-
+    game.options.matchLength = 3;
+    
     var ken = 0;
     game.players[ken] = "Ken";
     var mcg = 1;

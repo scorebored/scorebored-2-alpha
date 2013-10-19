@@ -22,49 +22,45 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/**
+ * @module score.scores
+ */
 score.shoes = score.shoes || {};
 
+/**
+ * Not documented.
+ * 
+ * @class Game
+ */
 score.shoes.Game = score.shoes.Game || function() {
 
-    var self = {};
-    self.events = blackchip.Events();
-
-    self.options = blackchip.Properties({
+    var options = {
         maxPlayers: 2,
         gameLength: 11,
         matchLength: 1
-    }, self.events, "options");
-
-    score.Game(self);
-
-    score.features.Scores(self);
-    score.features.Round(self);
-    score.features.Match(self);
-
-    score.rules.WinGameByTwo(self, { when: "after round" });
-    score.rules.WinMatchBestOf(self);
-
-    self.ringer = function(player) {
-        self.scores[player] += 3;
     };
 
-    self.leaner = function(player) {
-        self.scores[player] += 2;
+    var game = score.Game(options);
+
+    score.features.scores(game);
+    score.features.round(game);
+    score.features.match(game);
+
+    score.rules.winGameByTwo(game, { when: "after round" });
+    score.rules.winMatchBestOf(game);
+
+    game.ringer = function(player) {
+        game.scores[player] += 3;
     };
 
-    self.close = function(player) {
-        self.scores[player] += 1;
+    game.leaner = function(player) {
+        game.scores[player] += 2;
     };
 
-    self.status = function() {
-        console.log("Game ", self.currentGame, ":",
-                    self.players[0], self.scores[0], "-",
-                    self.players[1], self.scores[1],
-                    "; Match:",
-                    self.players[0], self.match[0], "-",
-                    self.players[1], self.match[1]);
+    game.close = function(player) {
+        game.scores[player] += 1;
     };
 
-    return self;
+    return game;
 
 };

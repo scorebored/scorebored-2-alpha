@@ -23,28 +23,27 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.PlayerPoint = score.announcers.PlayerPoint || function(self, options) {
+score.tts.changeServers = score.tts.changeServers || function(self, options) {
 
-    options = options || {};
     var game = self.game;
+    options = options || {};
 
-    var allowed = function(event) {
-        if ( game.gameOver ) {
-            return false;
-        }
+    var allowed = function() {
         if ( options.noOverTime && game.isOverTime() ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("score", function(event) {
-        if ( !allowed(event) ) {
+    self.events.on("server", function(player, prop, previous) {
+        if ( !allowed() ) {
             return;
         }
-        self.say("Point " + game.players[event.name]);
+        if ( previous !== null ) {
+            self.say("Change servers");
+        }
     });
 
     return self;

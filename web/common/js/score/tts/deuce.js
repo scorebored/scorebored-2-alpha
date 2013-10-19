@@ -23,9 +23,9 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.Deuce = score.announcers.Deuce || function(self) {
+score.tts.deuce = score.tts.deuce || function(self) {
 
     var game = self.game;
 

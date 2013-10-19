@@ -23,25 +23,28 @@
  *****************************************************************************/
 
 var score = score || {};
-score.announcers = score.announcers || {};
+score.tts = score.tts || {};
 
-score.announcers.GameWinner = score.announcers.GameWinner || function(self) {
+score.tts.matchPoint = score.tts.matchPoint || function(self) {
 
     var game = self.game;
 
     var allowed = function(event) {
-        if ( game.options.matchLength === 1 ) {
-            return true;
+        if ( game.gameOver ) {
+            return false;
         }
-        if ( game.matchOver ) {
+        if ( !game.isMatchPoint() ) {
+            return false;
+        }
+        if ( game.isOverTime() || game.isOverTimeNext() ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("after gameWin", function(event) {
+    self.events.on("after score", function(event) {
         if ( allowed(event) ) {
-            self.say(game.players[event.player] + " has won the game");
+            self.say("Match point");
         }
     });
 
