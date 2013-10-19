@@ -25,8 +25,9 @@
 (function() {
     
     blackchip.ScriptLoader.load([
-        "pong/js/Announcer.js",
-        "pong/js/Game.js"
+        "pong/Announcer.js",
+        "pong/Game.js",
+        "pong/Controller.js"
     ]);
     
 })();

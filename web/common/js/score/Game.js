@@ -62,6 +62,7 @@ score.Game = score.Game || function(options) {
             var args = Array.prototype.slice.call(arguments, 0);
             args.unshift(args.pop());
             self.history.push(args);
+            self.events.trigger("history", self.history);
         }
     };
     
@@ -77,6 +78,7 @@ score.Game = score.Game || function(options) {
         self.events.trigger.apply(null, args);
         self.undoing--;   
         self.correction = false;
+        self.events.trigger("history", self.history);
     };
     
     self.redo = function() {

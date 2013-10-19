@@ -43,17 +43,17 @@ score.rules.winMatchBestOf = score.rules.winMatchBestOf || function(self) {
 
     self.isMatchPoint = function() {
         return self.isGamePoint() &&
-            ( isWinner(self.match[0] + 1) || isWinner(self.match[1] + 1) );
+            ( isWinner(self.games[0] + 1) || isWinner(self.games[1] + 1) );
     };
 
-    self.events.on("match", function(player) {
+    self.events.on("game", function(games, player) {
         if ( self.undoing ) {
             return;
         }
         if ( self.matchOver ) {
             throw new Error("Match is over");
         }
-        if ( isWinner(self.match[player]) ) {
+        if ( isWinner(self.games[player]) ) {
             self.events.trigger("before matchWin", player);
             self.matchOver = true;
             self.events.trigger("matchWin", player);

@@ -36,7 +36,7 @@ buster.testCase("score.rules.match", {
     "Game win advances match": function() {
         game.scores[0] = 11;
         assert(game.currentGame, 2);
-        assert(game.match[0], 1);
+        assert(game.games[0], 1);
     }
     
 });

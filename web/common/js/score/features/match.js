@@ -38,23 +38,23 @@ score.features.match = score.features.match || function(self) {
     self.currentGame = 1;
 
     var init = function() {
-        var match = {};
+        var games = {};
         
         for ( var i = 0; i < self.options.maxPlayers; i++ ) {
-            match[i] = 0;
+            games[i] = 0;
         }
-        self.match = blackchip.Properties(match, self.events, "match");
+        self.games = blackchip.Properties(games, self.events, "game");
 
         self.events.on("after gameWin", function(player) {
-            self.match[player]++;
+            self.games[player]++;
         });
         
-        self.events.on("match", function() {
+        self.events.on("game", function() {
             self.record.apply(null, arguments);
         });
         
-        self.events.on("undo match", function(event) {
-            self.match[event.name] = event.previous;  
+        self.events.on("undo game", function(player, x, previous) {
+            self.games[player] = previous;  
             self.undo();  
         });
         
@@ -65,15 +65,13 @@ score.features.match = score.features.match || function(self) {
         });
     };    
        
-    self.next = function() {
+    self.nextGame = function() {
         self.events.trigger("before nextGame");
         self.currentGame++;
-        // FIXME: This is a hack
-        self.events.quiet = true;
         self.scores[0] = self.options.startingScore || 0;
         self.scores[1] = self.options.startingScore || 0;
-        self.events.quiet = false;
         self.events.trigger("nextGame");
+        self.events.trigger("after nextGame");
         self.record("nextGame");
     };
           

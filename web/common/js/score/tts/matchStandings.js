@@ -40,19 +40,19 @@ score.tts.matchStandings = score.tts.matchStandings || function(self) {
         if ( !allowed(event) ) {
             return;
         }
-        if ( game.match[0] === game.match[1] ) {
-            self.say("Games tied at " + game.match[0]);
+        if ( game.games[0] === game.games[1] ) {
+            self.say("Games tied at " + game.games[0]);
             return;
         }
         var leader, leaderGames, followerGames;
-        if ( game.match[0] > game.match[1] ) {
+        if ( game.games[0] > game.games[1] ) {
             leader = game.players[0];
-            leaderGames = game.match[0];
-            followerGames = game.match[1];
-        } else if ( game.match[1] > game.match[0] ) {
-            leader = games.players[1];
-            leaderGames = game.match[1];
-            followerGames = game.match[0];
+            leaderGames = game.games[0];
+            followerGames = game.games[1];
+        } else if ( game.games[1] > game.games[0] ) {
+            leader = game.players[1];
+            leaderGames = game.games[1];
+            followerGames = game.games[0];
         } else {
             throw new Error("Illegal state");
         }

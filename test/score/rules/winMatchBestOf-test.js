@@ -33,7 +33,7 @@ buster.testCase("score.rules.winMatchBestOf", {
     },
     
     "Match win on best of": function() {
-        game.match[0] = 2;
+        game.games[0] = 2;
         assert(game.matchOver);
     }
 

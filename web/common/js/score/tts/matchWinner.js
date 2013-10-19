@@ -40,10 +40,9 @@ score.tts.matchWinner = score.tts.matchWinner || function(self) {
         if ( !allowed() ) {
             return;
         };
-        console.warn("WINNER", winner);
         var loser = ( winner === "0" ) ? 1: 0;
         self.say(game.players[winner] + " has won the match.",
-                 game.match[winner] + " games to " + game.match[loser]);
+                 game.games[winner] + " games to " + game.games[loser]);
     });
 
     return self;

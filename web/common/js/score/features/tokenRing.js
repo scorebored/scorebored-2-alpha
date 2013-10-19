@@ -67,10 +67,12 @@ score.features.tokenRing = score.features.tokenRing ||
      * @property *.order 
      * @type {playerId} Array
      */
-    self[property].order = null;
+    self[property].order = [];
     
     var init = function() {
-        self[property].order = _.range(self.players.count);
+        for ( var i = 0; i < self.players.count; i++ ) {
+            self[property].order[i] = "" + i;
+        }
     };
     
     /**

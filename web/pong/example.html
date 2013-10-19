@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+	<head>
+	<title>Scorebored - Pong</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<link href="common/lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+    	<link href="application.css" rel="stylesheet" media="screen">
+	</head>
+
+	<body>
+		<h2>Scorebored - Pong</h2>
+
+    	<div class="container scores">
+    		<div id="matches" class="row">
+				<div class="col-xs-2 0">0</div>
+				<div class="col-xs-2 1">0</div>
+			</div>
+    		<div class="row">
+				<div class="col-xs-2 name">Player 1</div>
+				<div class="col-xs-2 name">Player 2</div>
+			</div>
+			<div id="scores" class="row">
+				<div class="col-xs-2 0">0</div>
+				<div class="col-xs-2 1">0</div>
+			</div>
+			<div id="server" class="row">
+				<div class="col-xs-2 0">&nbsp;</div>
+				<div class="col-xs-2 1">&nbsp;</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-2">
+					<button class="add" data-player="0">+</button>
+				</div>
+				<div class="col-xs-2">
+					<button class="add" data-player="1">+</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4">
+					<button id="undo" disabled="true">Undo</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4">
+					<button id="nextGame" style="display: none">Next Game</button>
+				</div>
+			</div>
+		</div>
+			
+		<!-- link.dev --> <script src="../common/js/blackchip/ScriptLoader.js"></script>
+		<!-- link.dev --> <script>blackchip.SCRIPT_BASE_DIR = "..";</script>
+		<!-- link.dev --> <script src="../common/Scripts.js"></script>
+		<!-- link.dev --> <script src="Scripts.js"></script>
+		
+	</body>
+
+</html>

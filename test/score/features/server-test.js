@@ -32,11 +32,11 @@ buster.testCase("score.features.server", {
     },
     
     "Changes servers": function() {
-        game.server.is = 0;
+        game.server.is = "0";
         game.server.next();
-        assert.equals(game.server.is, 1);
+        assert.equals(game.server.is, "1");
         game.server.next();
-        assert.equals(game.server.is, 0);
+        assert.equals(game.server.is, "0");
     }
     
 });        

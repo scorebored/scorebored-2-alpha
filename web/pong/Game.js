@@ -36,14 +36,14 @@ score.pong = score.pong || {};
  * @uses score.features.match
  * @uses score.features.sides
  */
-score.pong.Game = score.pong.Game || function() {
+score.pong.Game = score.pong.Game || function(options) {
         
-    var options = {
-        maxPlayers: 2,
-        gameLength: 11,
-        matchLength: 1
-    };
+    options = options || {};
     
+    options.maxPlayers = 2;
+    options.gameLength = options.gameLength || 11;
+    options.matchLength = options.matchLength || 1;
+
     var game = score.Game(options);
     
     score.features.scores(game);

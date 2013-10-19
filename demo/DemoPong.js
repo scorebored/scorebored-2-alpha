@@ -46,7 +46,7 @@ pong.demo = function() {
         point(ken);
     }
 
-    game.next();
+    game.nextGame();
     for ( var i = 0; i < 10; i++ ) {
         point(ken);
         point(mcg);
@@ -56,7 +56,7 @@ pong.demo = function() {
     point(mcg);
     point(mcg);
 
-    game.next();
+    game.nextGame();
     for ( var i = 0; i < 11; i++ ) {
         point(ken);
     }

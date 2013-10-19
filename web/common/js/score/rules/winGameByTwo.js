@@ -37,7 +37,7 @@ score.rules.winGameByTwo = score.rules.winGameByTwo || function(self, options) {
 
     options = options || {};
     var when = options.when || "after score";
-
+    
     self.gameOver = false;
 
     self.isOverTime = function() {
@@ -86,9 +86,14 @@ score.rules.winGameByTwo = score.rules.winGameByTwo || function(self, options) {
         }
     });
 
+    self.events.on("before nextGame", function(event) {
+        self.undoing = true;
+    });
+
     self.events.on("nextGame", function(event) {
         self.gameOver = false;
         self.overTime = false;
+        self.undoing = false;
     });
 
     self.events.on("undo gameWin", function(event) {
