@@ -22,42 +22,47 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-module.exports = function(grunt) {
+buster.testCase("score.features.token", {
 
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+    game: null,
     
-        jshint: {
-            main: [
-                "web/common/js/blackchip/**/*.js", 
-            ]
-        },
-        
-        buster: {
-            all: {}
-        },
+    setUp: function() {
+        game = score.Game();
+        score.features.scores(game);
+        score.features.token(game, "server");
+    },
+    
+    "Is initially unassigned": function() {
+        refute(game.server.is);
+    },
+    
+    "Fires event on assignment": function() {
+        var listener = this.stub();
+        game.events.on("server", listener);
+        game.server.is = 2;
+        assert.calledWith(listener, 2);
+    },
+    
+    "Undo applied": function() {
+        game.server.is = 2;
+        game.scores[0] += 1;
+        game.server.is = 3;
+        game.undo();
+        assert.equals(game.server.is, 2);
+        assert.equals(game.scores[0], 0);
+    },
+    
+    "Redo applied": function() {
+        game.server.is = 2;
+        game.scores[0] += 1;
+        game.server.is = 3;
+        game.undo();
+        game.redo();
+        assert.equals(game.server.is, 3);
+        assert.equals(game.scores[0], 1);        
+    }
 
-        yuidoc: {
-            compile: {
-                name: "Scorebored",
-                description: "Description here",
-                version: "2.0",
-                url: "http://example.com",
-                options: {
-                    paths: ["web/common/js", "web/pong/js"],
-                    outdir: "build/doc"
-                }
-            }
-        }
-    });    
-            
-    grunt.loadNpmTasks("grunt-buster");      
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
-      
-    grunt.registerTask("default", ["jshint", "yuidoc"]);
-    grunt.registerTask("doc", ["yuidoc"]);
-    grunt.registerTask("lint", ["jshint"]);
-    //grunt.registerTask("test", ["buster"]);
-  
-};
+});
+
+    
+    

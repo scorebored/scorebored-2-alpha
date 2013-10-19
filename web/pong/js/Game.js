@@ -22,8 +22,20 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/**
+ * @module score.pong
+ */
 score.pong = score.pong || {};
 
+/**
+ * Table tennis (a.k.a Ping Pong).
+ * 
+ * @class Game
+ * @uses score.features.scores
+ * @uses score.features.server
+ * @uses score.features.match
+ * @uses score.features.sides
+ */
 score.pong.Game = score.pong.Game || function() {
 
     var self = {};

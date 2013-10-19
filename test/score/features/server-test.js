@@ -22,42 +22,22 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-module.exports = function(grunt) {
-
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+buster.testCase("score.features.server", {
     
-        jshint: {
-            main: [
-                "web/common/js/blackchip/**/*.js", 
-            ]
-        },
-        
-        buster: {
-            all: {}
-        },
-
-        yuidoc: {
-            compile: {
-                name: "Scorebored",
-                description: "Description here",
-                version: "2.0",
-                url: "http://example.com",
-                options: {
-                    paths: ["web/common/js", "web/pong/js"],
-                    outdir: "build/doc"
-                }
-            }
-        }
-    });    
-            
-    grunt.loadNpmTasks("grunt-buster");      
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
-      
-    grunt.registerTask("default", ["jshint", "yuidoc"]);
-    grunt.registerTask("doc", ["yuidoc"]);
-    grunt.registerTask("lint", ["jshint"]);
-    //grunt.registerTask("test", ["buster"]);
-  
-};
+    game: null, 
+    
+    setUp: function() {
+        game = score.Game();
+        score.features.server(game);
+    },
+    
+    "Changes servers": function() {
+        game.server.is = 0;
+        game.server.next();
+        assert.equals(game.server.is, 1);
+        game.server.next();
+        assert.equals(game.server.is, 0);
+    }
+    
+});        
+    

@@ -25,14 +25,14 @@
 var score = score || {};
 
 score.Game = score.Game || function(options) {
-        
+     
     var self = {};
 
     self.events = blackchip.Events();    
     self.options = null;
     self.players = null;
     self.undoing = 0;
-    self.redoing = 0;
+    self.correction = false;
     self.history = [];
     self.undoHistory = [];
     
@@ -47,13 +47,17 @@ score.Game = score.Game || function(options) {
         
         for ( var i = 0; i < self.options.maxPlayers; i++ ) {
             var playerNumber = i + 1;
-            players[i] = "Player " + playerNumber;
+            var player = {
+                id: i,
+                name: "Player " + playerNumber
+            };
+            players[i] = blackchip.Properties(player, self.events, "player");
         }
-        self.players = blackchip.Properties(players, "player", self.events);
+        self.players = players;
     }; 
            
     self.record = function() {
-        if ( !self.undoing && !self.redoing) {
+        if ( !self.correction ) {
             undoHistory = [];
             var args = Array.prototype.slice.call(arguments, 0);
             args.unshift(args.pop());
@@ -66,21 +70,23 @@ score.Game = score.Game || function(options) {
             return;
         }
         self.undoing++;
+        self.correction = true;
         var args = self.history.pop();
         self.undoHistory.push(args.slice(0));
         args[0] = "undo " + args[0];
         self.events.trigger.apply(null, args);
         self.undoing--;   
+        self.correction = false;
     };
     
     self.redo = function() {
-        self.redoing = true;
+        self.correction = true;
         while ( self.undoHistory.length ) {
             var args = self.undoHistory.pop();
             args[0] = "redo " + args[0];
             self.events.trigger.apply(null, args);            
         }
-        self.redoing = false;
+        self.correction = false;
     };
     
     init();

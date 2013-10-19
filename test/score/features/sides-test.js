@@ -22,42 +22,39 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-module.exports = function(grunt) {
-
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+buster.testCase("score.features.sides", {
     
-        jshint: {
-            main: [
-                "web/common/js/blackchip/**/*.js", 
-            ]
-        },
+    game: null,
+    
+    setUp: function() {
+        game = score.Game();
+        score.features.sides(game);    
+    },
+    
+    "Assigned to default sides": function() {
+        assert.equals(game.sides[0], 0);
+        assert.equals(game.sides[1], 1);
+    },
+    
+    "Change sides": function() {
+        game.sides.change();
+        assert.equals(game.sides[0], 1);
+        assert.equals(game.sides[1], 0);
+    },
+    
+    "Events triggered on side change": function() {
+        var before = this.stub();
+        var as = this.stub();
+        var after = this.stub();
         
-        buster: {
-            all: {}
-        },
-
-        yuidoc: {
-            compile: {
-                name: "Scorebored",
-                description: "Description here",
-                version: "2.0",
-                url: "http://example.com",
-                options: {
-                    paths: ["web/common/js", "web/pong/js"],
-                    outdir: "build/doc"
-                }
-            }
-        }
-    });    
-            
-    grunt.loadNpmTasks("grunt-buster");      
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
-      
-    grunt.registerTask("default", ["jshint", "yuidoc"]);
-    grunt.registerTask("doc", ["yuidoc"]);
-    grunt.registerTask("lint", ["jshint"]);
-    //grunt.registerTask("test", ["buster"]);
-  
-};
+        game.events.on("before sides", before);
+        game.events.on("sides", as);
+        game.events.on("after sides", after);
+        
+        game.sides.change();
+        assert.calledWith(before, 1, 0);
+        assert.calledWith(as, 1, 0);
+        assert.calledWith(after, 1, 0);
+    }
+    
+});

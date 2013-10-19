@@ -40,8 +40,8 @@ buster.testCase("score.Game", {
     
     "Creates default player names": function() {
         var game = score.Game();
-        assert.equals(game.players[0], "Player 1");
-        assert.equals(game.players[1], "Player 2");
+        assert.equals(game.players[0].name, "Player 1");
+        assert.equals(game.players[1].name, "Player 2");
     },
     
     

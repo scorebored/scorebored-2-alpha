@@ -31,6 +31,7 @@ var blackchip = blackchip || {};
  * Creates an object with properties that fire events when values are set.
  * 
  * For example:
+ * 
  *      var events = blackchip.Events();
  *      var props = blackchip.Properties({a: 1, b: 2}, events);
  *      console.log(props.a); // Prints out: 1

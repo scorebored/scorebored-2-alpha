@@ -22,42 +22,19 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-module.exports = function(grunt) {
+buster.testCase("score.rules.winMatchBestOf", {
 
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+    game: null,
     
-        jshint: {
-            main: [
-                "web/common/js/blackchip/**/*.js", 
-            ]
-        },
-        
-        buster: {
-            all: {}
-        },
+    setUp: function() {
+        game = score.Game({matchLength: 3});
+        score.features.match(game);
+        score.rules.winMatchBestOf(game);
+    },
+    
+    "Match win on best of": function() {
+        game.match[0] = 2;
+        assert(game.matchOver);
+    }
 
-        yuidoc: {
-            compile: {
-                name: "Scorebored",
-                description: "Description here",
-                version: "2.0",
-                url: "http://example.com",
-                options: {
-                    paths: ["web/common/js", "web/pong/js"],
-                    outdir: "build/doc"
-                }
-            }
-        }
-    });    
-            
-    grunt.loadNpmTasks("grunt-buster");      
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
-      
-    grunt.registerTask("default", ["jshint", "yuidoc"]);
-    grunt.registerTask("doc", ["yuidoc"]);
-    grunt.registerTask("lint", ["jshint"]);
-    //grunt.registerTask("test", ["buster"]);
-  
-};
+});

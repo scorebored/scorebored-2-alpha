@@ -22,42 +22,41 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-module.exports = function(grunt) {
-
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+buster.testCase("score.features.seats", {
     
-        jshint: {
-            main: [
-                "web/common/js/blackchip/**/*.js", 
-            ]
-        },
-        
-        buster: {
-            all: {}
-        },
-
-        yuidoc: {
-            compile: {
-                name: "Scorebored",
-                description: "Description here",
-                version: "2.0",
-                url: "http://example.com",
-                options: {
-                    paths: ["web/common/js", "web/pong/js"],
-                    outdir: "build/doc"
-                }
-            }
-        }
-    });    
-            
-    grunt.loadNpmTasks("grunt-buster");      
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
-      
-    grunt.registerTask("default", ["jshint", "yuidoc"]);
-    grunt.registerTask("doc", ["yuidoc"]);
-    grunt.registerTask("lint", ["jshint"]);
-    //grunt.registerTask("test", ["buster"]);
-  
-};
+    game: null,
+    
+    setUp: function() {
+        game = score.Game({maxPlayers: 3}); 
+        score.features.seats(game);
+    },
+    
+    "Seats in player order by default": function() {
+        assert.equals(game.seats[0], 0);
+        assert.equals(game.seats[1], 1);
+        assert.equals(game.seats[2], 2);
+    },
+    
+    "Used a different property name when specified": function() {
+        game = score.Game({maxPlayers: 2}); 
+        score.features.seats(game, "sides");   
+        assert.equals(game.sides[0], 0);
+        assert.equals(game.sides[1], 1);    
+    },
+    
+    "Swap seats": function() {
+        game.seats.swap(0, 1);
+        assert.equals(game.seats[0], 1);
+        assert.equals(game.seats[1], 0);
+        assert.equals(game.seats[2], 2);        
+    },
+    
+    "Event fired when a seat changes": function() {
+        var listener = this.stub();
+        game.events.on("seat", listener);
+        game.seats[0] = 1;
+        assert.calledWith(listener, 1);
+    }
+    
+});
+    

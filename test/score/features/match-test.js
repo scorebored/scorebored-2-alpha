@@ -22,42 +22,21 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-module.exports = function(grunt) {
+buster.testCase("score.rules.match", {
 
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+    game: null,
     
-        jshint: {
-            main: [
-                "web/common/js/blackchip/**/*.js", 
-            ]
-        },
-        
-        buster: {
-            all: {}
-        },
-
-        yuidoc: {
-            compile: {
-                name: "Scorebored",
-                description: "Description here",
-                version: "2.0",
-                url: "http://example.com",
-                options: {
-                    paths: ["web/common/js", "web/pong/js"],
-                    outdir: "build/doc"
-                }
-            }
-        }
-    });    
-            
-    grunt.loadNpmTasks("grunt-buster");      
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
-      
-    grunt.registerTask("default", ["jshint", "yuidoc"]);
-    grunt.registerTask("doc", ["yuidoc"]);
-    grunt.registerTask("lint", ["jshint"]);
-    //grunt.registerTask("test", ["buster"]);
-  
-};
+    setUp: function() {
+        game = score.Game({gameLength: 11, matchLength: 3});
+        score.features.scores(game);
+        score.features.match(game);
+        score.rules.winGameByTwo(game);
+    },
+    
+    "Game win advances match": function() {
+        game.scores[0] = 11;
+        assert(game.currentGame, 2);
+        assert(game.match[0], 1);
+    }
+    
+});

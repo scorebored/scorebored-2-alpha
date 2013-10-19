@@ -22,33 +22,53 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/**
+ * @module score.features
+ */
 var score = score || {};
 score.features = score.features || {};
 
-score.features.Match = score.features.Match || function(self) {
+/**
+ * Not documented
+ * 
+ * @class match
+ */
+score.features.match = score.features.match || function(self) {
     
-    (function() {
+    self.currentGame = 1;
+
+    var init = function() {
         var match = {};
         
         for ( var i = 0; i < self.options.maxPlayers; i++ ) {
             match[i] = 0;
         }
         self.match = blackchip.Properties(match, self.events, "match");
-    })();    
+
+        self.events.on("after gameWin", function(player) {
+            self.match[player]++;
+        });
+        
+        self.events.on("match", function() {
+            self.record.apply(null, arguments);
+        });
+        
+        self.events.on("undo match", function(event) {
+            self.match[event.name] = event.previous;  
+            self.undo();  
+        });
+        
+        self.events.on("undo nextGame", function() {
+            self.currentGame--;
+            self.undo();
+            self.undo();
+        });
+    };    
        
-    self.currentGame = 1;
-    
-    self.events.on("after gameWin", function(event) {
-        self.match[event.player]++;
-    });
-    
-    self.events.on("match", function(event, name) {
-        self.record(name, event);
-    });
-    
     self.next = function() {
         self.events.trigger("before nextGame");
         self.currentGame++;
+        // FIXME: This is a hack
         self.events.quiet = true;
         self.scores[0] = self.options.startingScore || 0;
         self.scores[1] = self.options.startingScore || 0;
@@ -57,17 +77,7 @@ score.features.Match = score.features.Match || function(self) {
         self.record("nextGame");
     };
           
-    self.events.on("undo match", function(event) {
-        self.match[event.name] = event.previous;  
-        self.undo();  
-    });
-    
-    self.events.on("undo nextGame", function() {
-        self.currentGame--;
-        self.undo();
-        self.undo();
-    });
-        
+    init();
     return self;
     
 };
