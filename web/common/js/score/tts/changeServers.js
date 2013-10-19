@@ -42,6 +42,8 @@ score.tts.changeServers = score.tts.changeServers || function(self, options) {
         }
         if ( previous !== null ) {
             self.say("Change servers");
+        } else {
+            self.say(self.players[player] + " serves first");
         }
     });
 

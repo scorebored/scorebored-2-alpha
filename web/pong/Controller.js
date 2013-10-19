@@ -29,7 +29,7 @@
         mute: score.talkers.Mute(game.events),
         google: score.talkers.Google(game.events)
     };
-    game.talker = talkers.google;
+    game.talker = talkers.mute;
     
     window.pong = game;
     var log = blackchip.Logging.get("score.pong");
