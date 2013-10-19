@@ -58,11 +58,11 @@ score.rules.winMatchBestOf = score.rules.winMatchBestOf || function(self) {
             self.matchOver = true;
             self.events.trigger("matchWin", player);
             self.events.trigger("after matchWin", player);
-            self.record("matchWin", player);
+            self.record(player, "matchWin");
         }
     });
 
-    self.events.on("undo matchWin", function(event) {
+    self.events.on("undo matchWin", function() {
         self.matchOver = false;
         self.undo();
     });

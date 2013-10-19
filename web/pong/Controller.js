@@ -23,7 +23,6 @@
  *****************************************************************************/
 
 (function() {
-
     var game = score.pong.Game({matchLength: 3});
     var talkers = {
         mute: score.talkers.Mute(game.events),
@@ -56,6 +55,11 @@
         $("button.add").attr("disabled", true);   
     };
     
+    var onUndoGameWin = function() {
+        $("#nextGame").css("display", "none"); 
+        $("button.add").attr("disabled", false);             
+    };
+    
     var onGame = function(games, player) {
         $("#matches ." + player).html(games);        
     };
@@ -76,6 +80,7 @@
         .on("score", onScore)
         .on("server", onServer)
         .on("after gameWin", onGameWin)
+        .on("undo gameWin", onUndoGameWin)
         .on("game", onGame)
         .on("history", onHistory)
         .on("say", onSay)

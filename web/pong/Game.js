@@ -55,7 +55,7 @@ score.pong.Game = score.pong.Game || function(options) {
     score.rules.winMatchBestOf(game); 
     
     var changeServer = function() {
-        if ( game.gameOver ) {
+        if ( game.gameOver || game.correction ) {
             return;
         }
         var at = ( game.options.gameLength === 11 ) ? 2 : 5;
@@ -63,8 +63,10 @@ score.pong.Game = score.pong.Game || function(options) {
             game.server.next();
         }    
     };  
-    game.events.on("after score", changeServer);
     
+    game.events
+        .on("after score", changeServer);
+        
     game.events.on("score", game.silence);
     score.tts.playerPoint(game,   { noOverTime: true });
     score.tts.changeServers(game, { noOverTime: true });

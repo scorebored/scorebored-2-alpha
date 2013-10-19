@@ -53,7 +53,7 @@ score.features.match = score.features.match || function(self) {
             self.record.apply(null, arguments);
         });
         
-        self.events.on("undo game", function(player, x, previous) {
+        self.events.on("undo game", function(games, player, previous) {
             self.games[player] = previous;  
             self.undo();  
         });

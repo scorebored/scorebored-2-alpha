@@ -72,31 +72,31 @@ score.rules.winGameByTwo = score.rules.winGameByTwo || function(self, options) {
         }
         var winner = null;
         if ( isWinner(self.scores[0], self.scores[1]) ) {
-            winner = 0;
+            winner = "0";
         }
         if ( isWinner(self.scores[1], self.scores[0]) ) {
-            winner = 1;
+            winner = "1";
         }
         if ( !_.isNull(winner) ) {
             self.events.trigger("before gameWin", winner);
             self.gameOver = true;
             self.events.trigger("gameWin", winner);
             self.events.trigger("after gameWin", winner);
-            self.record("gameWin", winner);
+            self.record(winner, "gameWin");
         }
     });
 
-    self.events.on("before nextGame", function(event) {
+    self.events.on("before nextGame", function() {
         self.undoing = true;
     });
 
-    self.events.on("nextGame", function(event) {
+    self.events.on("nextGame", function() {
         self.gameOver = false;
         self.overTime = false;
         self.undoing = false;
     });
 
-    self.events.on("undo gameWin", function(event) {
+    self.events.on("undo gameWin", function() {
         self.gameOver = false;
         self.undo();
     });

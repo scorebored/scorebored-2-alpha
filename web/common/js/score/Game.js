@@ -89,7 +89,7 @@ score.Game = score.Game || function(options) {
     };
     
     self.say = function(text) {
-        if ( talker ) {
+        if ( talker && !self.correction ) {
             self.talker.say(text);
         }
     };
