@@ -22,17 +22,50 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-
-score.Announcer = score.Announcer || function(self) {
-        
-    self.events = self.game.events;
-    self.say = function() {
-        if ( !self.game.correcting ) {
-            self.talker.say.apply(self.talker, arguments);
-        }
-    };
+buster.testCase("score.talkers.Mute", {
     
-    return self;
+    talker: null,
+    listener: null,
     
-};
+    setUp: function() {
+        talker = score.talkers.Mute(100);
+        listener = this.stub();
+    },
+    
+    "Event fired before talking": function() {
+        talker.events.on("say", listener);
+        talker.say("Foo");
+        assert.calledWith(listener, "Foo");    
+    },
+    
+    "Event fired after talking": function(done) {
+        talker.events.on("after say", function() {
+            done();
+        });
+        talker.say("Foo");
+    },
+    
+    "Talk events queued": function(done) {
+        talker.events.on("after say", function(text) {
+            if ( text === "done" ) {
+                done();
+            }   
+        });
+        talker.say("start");
+        talker.say("done");
+    },
+    
+    "Silence": function(done) {
+        talker.events.on("after say", function(text) {
+            if ( text === "pass" ) {
+                done();
+            }
+            assert(false);
+        });
+        talker.say("start");
+        talker.say("done");
+        talker.silence();
+        talker.say("pass");
+    }
+    
+});

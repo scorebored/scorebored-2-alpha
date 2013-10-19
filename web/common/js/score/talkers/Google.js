@@ -22,17 +22,58 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.tts = score.tts || {};
+score.talkers = score.talkers || {};
 
-score.tts.gamePoint = score.tts.gamePoint || function(self) {
-        
-    self.events.on("after score", function(event) {
-        if ( !self.gameOver && self.isGamePoint() && self.isMatchPoint && !self.isMatchPoint() ) {
-            self.say("Game point");
-        }
-    });
+score.talkers.Google = score.talkers.Google || function(events, $audio) {
     
+    var ENDPOINT = "http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=";
+    
+    var self = {};
+    var queue = [];
+    var queueing = null;
+    var $tag = null;
+    
+    self.events = events || blackchip.Events();
+    
+    var init = function() {
+        if ( $audio ) {
+            $tag = $audio;
+        } else {
+            $tag = $("<embed id='audio' controller='false'></embed>");
+            $("body").append($tag);
+        }
+    };
+    
+    self.say = function(text) {
+        if ( !queueing ) {
+            queueing = setTimeout(speak, 10);
+        }
+        queue.push(text);
+    };
+    
+    self.silence = function() {
+        if ( queueing ) {
+            clearTimeout(queueing);
+        }
+        queue = [];
+        self.events.trigger("silence");
+    };
+    
+    var speak = function() {
+        queueing = false;
+        text = queue.join(". ");
+        queue = [];
+        $tag.attr("src", ENDPOINT + encodeURIComponent(text)); 
+    };
+    
+    var processQueue = function() {
+        if ( queue.length === 0 ) {
+            return;
+        }
+        speak(queue.shift());
+    };
+    
+    init();
     return self;
-        
+    
 };

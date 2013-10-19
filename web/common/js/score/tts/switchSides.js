@@ -26,9 +26,7 @@ var score = score || {};
 score.tts = score.tts || {};
 
 score.tts.switchSides = score.tts.switchSides || function(self) {
-    
-    var game = self.game;
-    
+        
     self.events.on("switchSides", function(event) {
         self.say("Switch sides");    
     });

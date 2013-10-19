@@ -22,17 +22,50 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.tts = score.tts || {};
+score.talkers = score.talkers || {};
 
-score.tts.gamePoint = score.tts.gamePoint || function(self) {
-        
-    self.events.on("after score", function(event) {
-        if ( !self.gameOver && self.isGamePoint() && self.isMatchPoint && !self.isMatchPoint() ) {
-            self.say("Game point");
+score.talkers.Mute = score.talkers.Mute || function(events, delay) {
+    
+    var self = {};
+    var queue = [];
+    var talking = null;
+    var delay = delay || 1000;
+    
+    self.events = events || blackchip.Events();
+    
+    self.say = function(text) {
+        if ( talking ) {
+            queue.push(text);
+        } else {
+            speak(text);
         }
-    });
+    };
+    
+    self.silence = function() {
+        if ( talking ) {
+            clearTimeout(talking);
+            talking = null;
+        }
+        queue = [];
+        self.events.trigger("silence");
+    };
+    
+    var speak = function(text) {
+        self.events.trigger("say", text);
+        talking = setTimeout(function() {
+            self.events.trigger("after say", text);
+            talking = null;
+            processQueue();
+        }, delay);          
+    };
+    
+    var processQueue = function() {
+        if ( queue.length === 0 ) {
+            return;
+        }
+        speak(queue.shift());
+    };
     
     return self;
-        
+    
 };

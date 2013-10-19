@@ -27,16 +27,14 @@ score.tts = score.tts || {};
 
 score.tts.matchPoint = score.tts.matchPoint || function(self) {
 
-    var game = self.game;
-
     var allowed = function(event) {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
-        if ( !game.isMatchPoint() ) {
+        if ( !self.isMatchPoint() ) {
             return false;
         }
-        if ( game.isOverTime() || game.isOverTimeNext() ) {
+        if ( self.isOverTime() || self.isOverTimeNext() ) {
             return false;
         }
         return true;

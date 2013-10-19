@@ -28,13 +28,12 @@ score.tts = score.tts || {};
 score.tts.playerPoint = score.tts.playerPoint || function(self, options) {
 
     options = options || {};
-    var game = self.game;
 
     var allowed = function() {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
-        if ( options.noOverTime && game.isOverTime() ) {
+        if ( options.noOverTime && self.isOverTime() ) {
             return false;
         }
         return true;
@@ -44,7 +43,7 @@ score.tts.playerPoint = score.tts.playerPoint || function(self, options) {
         if ( !allowed() ) {
             return;
         }
-        self.say("Point " + game.players[player]);
+        self.say("Point " + self.players[player]);
     });
 
     return self;

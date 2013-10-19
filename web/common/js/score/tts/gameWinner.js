@@ -27,13 +27,11 @@ score.tts = score.tts || {};
 
 score.tts.gameWinner = score.tts.gameWinner || function(self) {
 
-    var game = self.game;
-
     var allowed = function() {
-        if ( game.options.matchLength === 1 ) {
+        if ( self.options.matchLength === 1 ) {
             return true;
         }
-        if ( game.matchOver ) {
+        if ( self.matchOver ) {
             return false;
         }
         return true;
@@ -41,7 +39,7 @@ score.tts.gameWinner = score.tts.gameWinner || function(self) {
 
     self.events.on("after gameWin", function(player) {
         if ( allowed() ) {
-            self.say(game.players[player] + " has won the game");
+            self.say(self.players[player] + " has won the game");
         }
     });
 

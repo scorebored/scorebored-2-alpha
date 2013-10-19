@@ -28,11 +28,10 @@ score.tts = score.tts || {};
 score.tts.score = score.tts.score || function(self, options) {
 
     options = options || {};
-    var game = self.game;
     var when = options.when || "after point";
 
     var allowed = function(event) {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
         return true;
@@ -43,8 +42,8 @@ score.tts.score = score.tts.score || function(self, options) {
             return;
         }
         var text = [];
-        text.push(game.players[0] + " " + game.scores[0]);
-        text.push(game.players[1] + " " + game.scores[1]);
+        text.push(self.players[0] + " " + self.scores[0]);
+        text.push(self.players[1] + " " + self.scores[1]);
         self.say("Scores are " + text.join(", "));
     });
 

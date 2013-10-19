@@ -63,7 +63,9 @@
         "common/js/score/rules/winGameByTwo.js",
         "common/js/score/rules/winMatchBestOf.js",
 
-        "common/js/score/talkers/Console.js"
+        "common/js/score/talkers/Console.js",
+        "common/js/score/talkers/Google.js",
+        "common/js/score/talkers/Mute.js"
     ]);
 
 })();

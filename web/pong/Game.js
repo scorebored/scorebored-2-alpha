@@ -65,6 +65,18 @@ score.pong.Game = score.pong.Game || function(options) {
     };  
     game.events.on("after score", changeServer);
     
+    game.events.on("score", game.silence);
+    score.tts.playerPoint(game,   { noOverTime: true });
+    score.tts.changeServers(game, { noOverTime: true });
+    score.tts.scoreByServer(game, { noOverTime: true });
+    score.tts.gamePoint(game);
+    score.tts.gameWinner(game);
+    score.tts.matchStandings(game);
+    score.tts.switchSides(game);
+    score.tts.matchPoint(game);
+    score.tts.matchWinner(game);
+    score.tts.deuce(game);
+        
     return game;
     
 };

@@ -25,6 +25,12 @@
 (function() {
 
     var game = score.pong.Game({matchLength: 3});
+    var talkers = {
+        mute: score.talkers.Mute(game.events),
+        google: score.talkers.Google(game.events)
+    };
+    game.talker = talkers.google;
+    
     window.pong = game;
     var log = blackchip.Logging.get("score.pong");
     
@@ -58,12 +64,24 @@
         $("#undo").attr("disabled", history.length === 0);    
     };
     
+    var onSay = function(text) {
+        $("#announcement").html(text);    
+    };
+
+    var onSilence = function(text) {
+        $("#announcement").html("&nbsp");    
+    };
+        
     game.events
         .on("score", onScore)
         .on("server", onServer)
         .on("after gameWin", onGameWin)
         .on("game", onGame)
-        .on("history", onHistory);
+        .on("history", onHistory)
+        .on("say", onSay)
+        .on("after say", onSilence)
+        .on("silence", onSilence);
+        
     
     $("button.add").click(function() {
         var player = $(this).attr("data-player");
@@ -82,6 +100,10 @@
         game.nextGame();   
         $("button.add").attr("disabled", false);  
         $("#nextGame").css("display", "none");  
+    });
+    
+    $("#talker").change(function() {
+        game.talker = talkers[$(this).val()];
     });
             
 })();

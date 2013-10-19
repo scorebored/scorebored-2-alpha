@@ -27,13 +27,11 @@ score.tts = score.tts || {};
 
 score.tts.deuce = score.tts.deuce || function(self) {
 
-    var game = self.game;
-
     var allowed = function(event) {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
-        if ( !game.isOverTime() ) {
+        if ( !self.isOverTime() ) {
             return false;
         }
         return true;
@@ -43,12 +41,12 @@ score.tts.deuce = score.tts.deuce || function(self) {
         if ( !allowed(event) ) {
             return;
         }
-        if ( game.scores[0] === game.scores[1] ) {
+        if ( self.scores[0] === self.scores[1] ) {
             self.say("Deuce");
-        } else if ( game.scores[0] > game.scores[1] ) {
-            self.say("Advantage " + game.players[0]);
-        } else if ( game.scores[1] > game.scores[0] ) {
-            self.say("Advantage " + game.players[1]);
+        } else if ( self.scores[0] > self.scores[1] ) {
+            self.say("Advantage " + self.players[0]);
+        } else if ( self.scores[1] > self.scores[0] ) {
+            self.say("Advantage " + self.players[1]);
         }
     });
 

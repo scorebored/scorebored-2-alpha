@@ -27,7 +27,7 @@ var score = score || {};
 score.Game = score.Game || function(options) {
      
     var self = {};
-
+    
     self.events = blackchip.Events();    
     self.options = null;
     self.players = null;
@@ -35,7 +35,8 @@ score.Game = score.Game || function(options) {
     self.correction = false;
     self.history = [];
     self.undoHistory = [];
-    
+    self.talker = null;
+        
     var init = function() {
         options = options || { maxPlayers: 2 };
         options.maxPlayers = options.maxPlayers || 2;
@@ -47,13 +48,9 @@ score.Game = score.Game || function(options) {
         
         for ( var i = 0; i < self.options.maxPlayers; i++ ) {
             var playerNumber = i + 1;
-            var player = {
-                id: i,
-                name: "Player " + playerNumber
-            };
-            players[i] = blackchip.Properties(player, self.events, "player");
+            players[i] = "Player " + playerNumber;
         }
-        self.players = players;
+        self.players = blackchip.Properties(players, self.events, "player");
     }; 
            
     self.record = function() {
@@ -89,6 +86,18 @@ score.Game = score.Game || function(options) {
             self.events.trigger.apply(null, args);            
         }
         self.correction = false;
+    };
+    
+    self.say = function(text) {
+        if ( talker ) {
+            self.talker.say(text);
+        }
+    };
+    
+    self.silence = function() {
+        if ( talker ) {
+            self.talker.silence();
+        }
     };
     
     init();

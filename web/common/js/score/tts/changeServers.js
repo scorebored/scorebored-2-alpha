@@ -27,11 +27,10 @@ score.tts = score.tts || {};
 
 score.tts.changeServers = score.tts.changeServers || function(self, options) {
 
-    var game = self.game;
     options = options || {};
 
     var allowed = function() {
-        if ( options.noOverTime && game.isOverTime() ) {
+        if ( options.noOverTime && self.isOverTime() ) {
             return false;
         }
         return true;
