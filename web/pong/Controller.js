@@ -34,8 +34,6 @@
     
     var onScore = function(value, player) {
         $("#scores ." + player).html(value);
-        var hasUndo = game.history.length > 0;
-        $("#undo").attr("disabled", !hasUndo); 
     };
     
     var onServer = function(player) {
