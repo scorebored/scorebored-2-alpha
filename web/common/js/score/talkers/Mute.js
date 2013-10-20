@@ -25,11 +25,12 @@
 score.talkers = score.talkers || {};
 
 score.talkers.Mute = score.talkers.Mute || function(events, delay) {
-    
-    var self = {};
+
+    delay = delay || 1000;
     var queue = [];
     var talking = null;
-    var delay = delay || 1000;
+    
+    var self = {};
     
     self.events = events || blackchip.Events();
     

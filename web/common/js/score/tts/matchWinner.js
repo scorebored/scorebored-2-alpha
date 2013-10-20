@@ -37,7 +37,7 @@ score.tts.matchWinner = score.tts.matchWinner || function(self) {
     self.events.on("matchWin", function(winner) {
         if ( !allowed() ) {
             return;
-        };
+        }
         var loser = ( winner === "0" ) ? 1: 0;
         self.say(self.players[winner] + " has won the match.",
                  self.games[winner] + " games to " + self.games[loser]);

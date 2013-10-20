@@ -43,7 +43,7 @@ score.tts.roundPoints = score.tts.roundPoints || function(self) {
             if ( scores[player] > 0 ) {
                 text.push(scores[player] + " for " + self.players[player]);
             }
-        };
+        }
         if ( text.length > 0 ) {
             self.say(text.join(", "));
         }

@@ -29,7 +29,8 @@ module.exports = function(grunt) {
     
         jshint: {
             main: [
-                "web/common/js/blackchip/**/*.js", 
+                "web/common/js/**/*.js", 
+                "web/pong/*.js"
             ]
         },
         

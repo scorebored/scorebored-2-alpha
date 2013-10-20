@@ -38,7 +38,7 @@ score.rules.winMatchBestOf = score.rules.winMatchBestOf || function(self) {
     self.matchOver = false;
 
     var isWinner = function(score) {
-        return ( score / self.options.matchLength >= .5 ) ;
+        return ( score / self.options.matchLength >= 0.5 ) ;
     };
 
     self.isMatchPoint = function() {

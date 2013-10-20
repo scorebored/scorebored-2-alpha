@@ -85,7 +85,7 @@ score.features.tokenRing = score.features.tokenRing ||
         var index = _.indexOf(self[property].order, self[property].is) + 1;
         if ( index >= self.players.count ) {
             index = 0;
-        };
+        }
         self[property].is = self[property].order[index];
     };
     

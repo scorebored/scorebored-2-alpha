@@ -68,7 +68,7 @@ score.features.seats = score.features.seats || function(self, property) {
         var seats = {};
         for ( var id = 0; id < self.players.count; id++ ) {
             seats[id] = id;
-        };
+        }
         self[property] = blackchip.Properties(seats, self.events, "seat");   
     };
     init();
