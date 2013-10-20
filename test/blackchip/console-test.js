@@ -22,6 +22,7 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/*
 buster.testCase("blackchip.console", {
             
     "Correct method called for error": function() {
@@ -76,3 +77,4 @@ buster.testCase("blackchip.console", {
         blackchip.console.log("log");
     }
 });
+*/

@@ -58,6 +58,6 @@ module.exports = function(grunt) {
     grunt.registerTask("default", ["jshint", "yuidoc"]);
     grunt.registerTask("doc", ["yuidoc"]);
     grunt.registerTask("lint", ["jshint"]);
-    //grunt.registerTask("test", ["buster"]);
+    grunt.registerTask("test", ["buster"]);
   
 };

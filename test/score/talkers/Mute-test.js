@@ -25,29 +25,32 @@
 buster.testCase("score.talkers.Mute", {
     
     talker: null,
+    events: null,
     listener: null,
     
     setUp: function() {
-        talker = score.talkers.Mute(100);
+        events = blackchip.Events();
+        talker = score.talkers.Mute(events, 10);
         listener = this.stub();
     },
     
     "Event fired before talking": function() {
-        talker.events.on("say", listener);
+        events.on("say", listener);
         talker.say("Foo");
         assert.calledWith(listener, "Foo");    
     },
     
     "Event fired after talking": function(done) {
-        talker.events.on("after say", function() {
-            done();
-        });
+        events.on("after say", done(function(text) {
+            assert.equals(text, "Foo");
+        }));
         talker.say("Foo");
     },
     
     "Talk events queued": function(done) {
-        talker.events.on("after say", function(text) {
+        events.on("after say", function(text) {
             if ( text === "done" ) {
+                assert(true);
                 done();
             }   
         });
@@ -56,9 +59,11 @@ buster.testCase("score.talkers.Mute", {
     },
     
     "Silence": function(done) {
-        talker.events.on("after say", function(text) {
+        events.on("after say", function(text) {
             if ( text === "pass" ) {
+                assert(true);
                 done();
+                return;
             }
             assert(false);
         });

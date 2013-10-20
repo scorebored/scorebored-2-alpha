@@ -26,16 +26,5 @@ Grunt Tasks
 
 * lint: Runs the JavaScript linter (jslint)
 * doc: Generates documentation (YUI Doc). Output is placed in build/doc
-
-Test Suite
-----------
-PhantomJS for headless testing doesn't seem to work with the current code
-base. Static web browser testing can be done with:
-
-```
-buster static
-```
-
-Navigate to the URL that Buster reports to run the tests. The server needs
-to be restarted anytime a JavaScript file is added or removed.
+* test: Runs test suite (Buster.JS)
 

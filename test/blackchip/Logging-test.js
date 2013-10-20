@@ -22,6 +22,7 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/*
 buster.testCase("blackchip.Logging", {
         
     setUp: function() {
@@ -123,3 +124,4 @@ buster.testCase("blackchip.Logging", {
         assert.calledThrice(console.log); 
     }
 });
+*/

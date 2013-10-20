@@ -48,7 +48,7 @@ blackchip.console = blackchip.console || (function() {
          * 
          * @param {object} [arguments*] Arguments to pass to console.log
          */
-        self.log = ( console && console.log ) ? 
+        self.log = ( console && console.log && console.log.bind ) ? 
                 console.log.bind(console) : _.identity;
     
         /**
@@ -60,7 +60,7 @@ blackchip.console = blackchip.console || (function() {
          * 
          * @param {object} [arguments*] Arguments to pass to console.error
          */
-        self.error = ( console && console.error ) ? 
+        self.error = ( console && console.error && console.log.bind ) ? 
                 console.error.bind(console) : self.log;
         
         /**
@@ -72,7 +72,7 @@ blackchip.console = blackchip.console || (function() {
          * 
          * @param {object} [arguments*] Arguments to pass to console.warn
          */  
-        self.warn = ( console && console.warn ) ? 
+        self.warn = ( console && console.warn && console.log.bind ) ? 
                 console.warn.bind(console) : self.log;      
                 
         /**
@@ -84,7 +84,7 @@ blackchip.console = blackchip.console || (function() {
          * 
          * @param {object} [arguments*] Arguments to pass to console.warn
          */          
-        self.info = ( console && console.info ) ? 
+        self.info = ( console && console.info && console.log.bind ) ? 
                 console.info.bind(console) : self.log;
   
     };

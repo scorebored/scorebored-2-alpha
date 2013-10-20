@@ -89,9 +89,9 @@ buster.testCase("score.rules.winGameByTwo", {
         
         game.scores[1] = 11;
         
-        assert.calledWith(before, 1);
-        assert.calledWith(as, 1);
-        assert.calledWith(after, 1);       
+        assert.calledWith(before, "1", "before gameWin");
+        assert.calledWith(as, "1", "gameWin");
+        assert.calledWith(after, "1", "after gameWin");       
     },
         
 });
