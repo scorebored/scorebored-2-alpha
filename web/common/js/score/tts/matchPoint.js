@@ -25,16 +25,13 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.matchPoint = score.tts.matchPoint || function(self) {
+score.tts.matchPoint = score.tts.matchPoint || function(self, options) {
     
     var allowed = function(event) {
         if ( self.gameOver ) {
             return false;
         }
         if ( !self.isMatchPoint() ) {
-            return false;
-        }
-        if ( self.isOverTime() || self.isOverTimeNext() ) {
             return false;
         }
         return true;

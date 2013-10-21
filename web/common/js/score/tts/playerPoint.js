@@ -30,9 +30,6 @@ score.tts.playerPoint = score.tts.playerPoint || function(self, options) {
     options = options || {};
 
     var allowed = function() {
-        if ( self.gameOver ) {
-            return false;
-        }
         if ( options.noOverTime && self.isOverTime() ) {
             return false;
         }

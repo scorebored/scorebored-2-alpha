@@ -22,33 +22,51 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.tts = score.tts || {};
+buster.testCase("score.tts.matchPoint", {
 
-score.tts.gamePoint = score.tts.gamePoint || function(self, options) {
-            
-    var allowed = function() {
-        if ( !self.isGamePoint ) {
-            return false;
-        }
-        if ( self.gameOver ) { 
-            return false; 
-        }
-        if ( options.noOverTime && self.isOverTime() ) {
-            return false;
-        }
-        if ( self.isMatchPoint && self.isMatchPoint() ) {
-            return false;
-        }
-        return self.isGamePoint();
-    };
+    app: null,
+    options: null,
     
-    self.events.on("after score", function() {
-        if ( allowed() ) {
-            self.say("Game point");
-        }
-    });
+    setUp: function() {
+        gameOptions = {gameLength: 11, matchLength: 3};
+        options = {};
+        app = score.Game(gameOptions);
+        score.features.scores(app);
+        score.features.match(app);
+        score.rules.winGameByTwo(app);
+        score.rules.winMatchBestOf(app);
+        score.tts.matchPoint(app, options);
+    },
     
-    return self;
-        
-};
+    "Match point": function() {
+        app.games[0] = 1;
+        this.stub(app.talker, "say");
+        app.scores[0] = 10;
+        assert.calledWith(app.talker.say, "Match point"); 
+    },
+    
+    "Silent when not match point": function() {
+        app.games[0] = 1;
+        this.stub(app.talker, "say");
+        app.scores[0] = 9;
+        assert(app.talker.say.notCalled);       
+    },
+    
+    "Slient when game over": function() {
+        app.games[0] = 1;
+        this.stub(app.talker, "say");
+        app.scores[0] = 11;  
+        assert(app.talker.say.notCalled);             
+    },
+    
+    "No match point in overtime": function() {
+        options.noOverTime = true; 
+        app.games[0] = 1;
+        app.scores[0] = 10;
+        this.stub(app.talker, "say");
+        app.scores[1] = 10;  
+        assert(app.talker.say.notCalled);                  
+    }
+
+});
+

@@ -43,8 +43,7 @@ score.Game = score.Game || function(options) {
     self.correction = false;
     self.history = [];
     self.undoHistory = [];
-    self.talker = null;
-    self.announcer = null;
+    self.talker = score.talkers.Mute();
     
     var init = function() {
         options = options || { maxPlayers: 2 };
@@ -97,14 +96,14 @@ score.Game = score.Game || function(options) {
         self.correction = false;
     };
     
-    self.say = function(text) {
-        if ( talker && !self.correction ) {
-            self.talker.say(text);
+    self.say = function() {
+        if ( self.talker && !self.correction ) {
+            self.talker.say.apply(null, arguments);
         }
     };
     
     self.silence = function() {
-        if ( talker ) {
+        if ( self.talker ) {
             self.talker.silence();
         }
     };

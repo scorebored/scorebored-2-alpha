@@ -22,33 +22,43 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.tts = score.tts || {};
+buster.testCase("score.tts.matchWinner", {
 
-score.tts.gamePoint = score.tts.gamePoint || function(self, options) {
-            
-    var allowed = function() {
-        if ( !self.isGamePoint ) {
-            return false;
-        }
-        if ( self.gameOver ) { 
-            return false; 
-        }
-        if ( options.noOverTime && self.isOverTime() ) {
-            return false;
-        }
-        if ( self.isMatchPoint && self.isMatchPoint() ) {
-            return false;
-        }
-        return self.isGamePoint();
-    };
+    app: null,
     
-    self.events.on("after score", function() {
-        if ( allowed() ) {
-            self.say("Game point");
-        }
-    });
+    setUp: function() {
+        gameOptions = {gameLength: 11, matchLength: 3};
+        app = score.Game(gameOptions);
+        score.features.scores(app);
+        score.features.match(app);
+        score.rules.winGameByTwo(app);
+        score.rules.winMatchBestOf(app);
+        score.tts.matchWinner(app);
+    },
     
-    return self;
-        
-};
+    "Player 1 wins match": function() {
+        app.games[0] = 1;
+        app.games[1] = 1;
+        this.stub(app.talker, "say");
+        app.scores[0] = 11;
+        assert.calledWith(app.talker.say, 
+            "Player 1 has won the match", "2 games to 1");
+    },
+    
+    "Player 2 wins match": function() {
+        app.games[0] = 1;
+        app.games[1] = 1;
+        this.stub(app.talker, "say");
+        app.scores[1] = 11;
+        assert.calledWith(app.talker.say, 
+            "Player 2 has won the match", "2 games to 1");
+    },    
+    
+    "Silent on single game match": function() {
+        app.options.matchLength = 1;
+        this.stub(app.talker, "say");
+        app.scores[1] = 11;
+        assert(app.talker.say.notCalled);
+    },  
+    
+});

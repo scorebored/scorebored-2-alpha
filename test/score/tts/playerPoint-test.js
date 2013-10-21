@@ -22,33 +22,47 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-var score = score || {};
-score.tts = score.tts || {};
+buster.testCase("score.tts.playerPoint", {
 
-score.tts.gamePoint = score.tts.gamePoint || function(self, options) {
-            
-    var allowed = function() {
-        if ( !self.isGamePoint ) {
-            return false;
-        }
-        if ( self.gameOver ) { 
-            return false; 
-        }
-        if ( options.noOverTime && self.isOverTime() ) {
-            return false;
-        }
-        if ( self.isMatchPoint && self.isMatchPoint() ) {
-            return false;
-        }
-        return self.isGamePoint();
-    };
+    app: null,
+    opitions: null,
     
-    self.events.on("after score", function() {
-        if ( allowed() ) {
-            self.say("Game point");
-        }
-    });
+    setUp: function() {
+        gameOptions = {gameLength: 11};
+        options = {};
+        app = score.Game(gameOptions);
+        score.features.scores(app);
+        score.rules.winGameByTwo(app);
+        score.tts.playerPoint(app, options);
+    },
+ 
+    "Player 1 point": function() {
+        this.stub(app.talker, "say");
+        app.scores[0] = 1;
+        assert.calledWith(app.talker.say, "Point Player 1");      
+    },
     
-    return self;
-        
-};
+    "Player 2 point": function() {
+        this.stub(app.talker, "say");
+        app.scores[1] = 1;
+        assert.calledWith(app.talker.say, "Point Player 2");      
+    },
+    
+    "Point in overtime": function() {
+        app.scores[0] = 10;
+        app.scores[1] = 10;
+        this.stub(app.talker, "say");
+        app.scores[0] = 11;
+        assert.calledWith(app.talker.say, "Point Player 1");        
+    },
+    
+    "Silent in overtime": function() {
+        options.noOverTime = true;
+        app.scores[0] = 10;
+        app.scores[1] = 10;
+        this.stub(app.talker, "say");
+        app.scores[0] = 11;
+        assert(app.talker.say.notCalled);           
+    }
+
+});
