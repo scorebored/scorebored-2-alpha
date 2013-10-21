@@ -28,13 +28,25 @@
 score.pong = score.pong || {};
 
 /**
- * Not documented
+ * Table tennis (a.k.a Ping-Pong).
  * 
- * @class Game
- * @uses score.features.scores
- * @uses score.features.server
- * @uses score.features.match
- * @uses score.features.sides
+ * Options for this game:
+ * 
+ * * gameLength: Number of points required to win a game. Defaults
+ *   to 11.
+ * * matchLength: Number of games required to win a match. Defaults
+ *   to 1.
+ * 
+ * @class score.pong.Game
+ * @uses scores
+ * @uses server
+ * @uses match
+ * @uses sides
+ * @uses winGameByTwo
+ * @uses winMatchBestOf
+ * @constructor
+ * 
+ * @param options
  */
 score.pong.Game = score.pong.Game || function(options) {
         
@@ -44,41 +56,34 @@ score.pong.Game = score.pong.Game || function(options) {
     options.gameLength = options.gameLength || 11;
     options.matchLength = options.matchLength || 1;
 
-    var game = score.Game(options);
+    var self = score.Game(options);
     
-    score.features.scores(game);
-    score.features.server(game);
-    score.features.match(game); 
-    score.features.sides(game);
+    score.features.scores(self);
+    score.features.server(self);
+    score.features.match(self); 
+    score.features.sides(self);
                
-    score.rules.winGameByTwo(game);
-    score.rules.winMatchBestOf(game); 
+    score.rules.winGameByTwo(self);
+    score.rules.winMatchBestOf(self); 
     
     var changeServer = function() {
-        if ( game.gameOver || game.correction ) {
+        if ( self.selfOver || self.correction ) {
             return;
         }
-        var at = ( game.options.gameLength === 11 ) ? 2 : 5;
-        if ( (game.scores[0] + game.scores[1]) % at === 0 ) {
-            game.server.next();
-        }    
+        if ( self.isOverTime() ) {
+            self.server.next();    
+        } else {
+            var at = ( self.options.gameLength === 11 ) ? 2 : 5;
+            if ( (self.scores[0] + self.scores[1]) % at === 0 ) {
+                self.server.next();    
+            }    
+        }
     };  
     
-    game.events
-        .on("after score", changeServer);
-        
-    game.events.on("score", game.silence);
-    score.tts.playerPoint(game,   { noOverTime: true });
-    score.tts.changeServers(game, { noOverTime: true });
-    score.tts.scoreByServer(game, { noOverTime: true });
-    score.tts.gamePoint(game);
-    score.tts.gameWinner(game);
-    score.tts.matchStandings(game);
-    score.tts.switchSides(game);
-    score.tts.matchPoint(game);
-    score.tts.matchWinner(game);
-    score.tts.deuce(game);
-        
-    return game;
+    self.events.on("after score", changeServer);
+    
+    self.events.on("score", self.silence);
+
+    return self;
     
 };

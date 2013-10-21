@@ -45,14 +45,17 @@ module.exports = function(grunt) {
                 version: "2.0",
                 url: "http://example.com",
                 options: {
-                    paths: ["web/common/js", "web/pong/js"],
+                    paths: ["web/common/js", "web/pong"],
                     outdir: "build/doc"
                 }
             }
-        }
+        },
+        
+        clean: ["build"]
     });    
             
-    grunt.loadNpmTasks("grunt-buster");      
+    grunt.loadNpmTasks("grunt-buster");  
+    grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
       
@@ -60,5 +63,4 @@ module.exports = function(grunt) {
     grunt.registerTask("doc", ["yuidoc"]);
     grunt.registerTask("lint", ["jshint"]);
     grunt.registerTask("test", ["buster"]);
-  
 };

@@ -23,29 +23,21 @@
  *****************************************************************************/
 
 var score = score || {};
-score.tts = score.tts || {};
+score.pong = score.pong || {};
+score.pong.foundry = score.pong.foundry || {};
 
-score.tts.playerPoint = score.tts.playerPoint || function(game, options) {
-
+score.pong.foundry.jacobNotImpressed = 
+        score.pong.foundry.jacobNotImpressed || function(game) {
+            
     var self = {};
-    options = options || {};
 
-    var allowed = function() {
-        if ( game.gameOver ) {
-            return false;
+    // gameWin
+    self.onEvent = function(winner) {
+        var loser = ( winner === "0" ) ? "1" : "0";
+        if ( game.scores[loser] <= 12 ) {
+            game.say("Sorry " + game.players[loser] + ", Jacob is not " +
+                    "impressed");
         }
-        if ( options.noOverTime && game.isOverTime() ) {
-            return false;
-        }
-        return true;
-    };
-
-    // score
-    self.onEvent = function(score, player) {
-        if ( !allowed() ) {
-            return;
-        }
-        game.say("Point " + game.players[player]);
     };
 
     return self;

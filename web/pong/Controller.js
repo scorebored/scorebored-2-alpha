@@ -23,14 +23,21 @@
  *****************************************************************************/
 
 (function() {
-    var game = score.pong.Game({matchLength: 3});
+    var pong = score.pong.Game({matchLength: 3});
     var talkers = {
-        mute: score.talkers.Mute(game.events),
-        google: score.talkers.Google(game.events)
+        mute: score.talkers.Mute(pong.events),
+        google: score.talkers.Google(pong.events)
     };
-    game.talker = talkers.mute;
+    var announcers = {
+        standard: score.pong.Announcer(pong),
+        foundry: score.pong.foundry.Announcer(pong)
+    };
     
-    window.pong = game;
+    pong.talker = talkers.mute;
+    pong.announcer = announcers.standard;
+    
+    window.pong = pong; // Just for console debugging
+    
     var log = blackchip.Logging.get("score.pong");
     
     pong.events.all(function() { 
@@ -43,13 +50,13 @@
     
     var onServer = function(player) {
         $("#server div").html("&nbsp;");
-        if ( !_.isNull(game.server.is) ) {
+        if ( !_.isNull(pong.server.is) ) {
             $("#server ." + player).html("Server");    
         }   
     };
     
     var onGameWin = function() {
-        if ( !game.matchOver ) {
+        if ( !pong.matchOver ) {
             $("#nextGame").css("display", "inline"); 
         }
         $("button.add").attr("disabled", true);   
@@ -76,7 +83,7 @@
         $("#announcement").html("&nbsp");    
     };
         
-    game.events
+    pong.events
         .on("score", onScore)
         .on("server", onServer)
         .on("after gameWin", onGameWin)
@@ -90,25 +97,28 @@
     
     $("button.add").click(function() {
         var player = $(this).attr("data-player");
-        if ( _.isNull(game.server.is) ) {
-            game.server.is = player;    
+        if ( _.isNull(pong.server.is) ) {
+            pong.server.is = player;    
         } else {
-            game.scores[player] += 1;
+            pong.scores[player] += 1;
         } 
     });
 
     $("#undo").click(function() {
-        game.undo();
+        pong.undo();
     });
 
     $("#nextGame").click(function() {
-        game.nextGame();   
+        pong.games.next();   
         $("button.add").attr("disabled", false);  
         $("#nextGame").css("display", "none");  
     });
     
     $("#talker").change(function() {
-        game.talker = talkers[$(this).val()];
+        pong.talker = talkers[$(this).val()];
     });
-            
+
+    $("#announcer").change(function() {
+        pong.announcer = announcers[$(this).val()];
+    });            
 })();

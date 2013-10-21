@@ -59,7 +59,7 @@ buster.testCase("score.rules.winGameByTwo", {
     },
     
     "Game point": function() {
-        game.scores[0] = 10;
+        game.scores[1] = 10;
         assert(game.isGamePoint());            
     },
     

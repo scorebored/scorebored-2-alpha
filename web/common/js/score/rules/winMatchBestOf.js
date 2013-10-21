@@ -29,43 +29,81 @@ var score = score || {};
 score.rules = score.rules || {};
 
 /**
- * Not documented
+ * Match is one when one players wins the best X of of Y games. This
+ * condition is true if the number of games one by a player is greater than
+ * half of the match length.
  * 
  * @class winMatchBestOf
  */
 score.rules.winMatchBestOf = score.rules.winMatchBestOf || function(self) {
 
+    /**
+     * True when the winning condition for the match has been achieved.
+     * 
+     * @property matchOver
+     */
     self.matchOver = false;
 
-    var isWinner = function(score) {
-        return ( score / self.options.matchLength >= 0.5 ) ;
+    var init = function() {
+        self.events.on("game", function(games, player) {
+            if ( self.undoing ) {
+                return;
+            }
+            if ( self.matchOver ) {
+                throw new Error("Match is over");
+            }
+            if ( isWinner(self.games[player]) ) {
+                self.events.trigger("before matchWin", player);
+                self.matchOver = true;
+                self.events.trigger("matchWin", player);
+                self.events.trigger("after matchWin", player);
+                self.record(player, "matchWin");
+            }
+        });
+    
+        self.events.on("undo matchWin", function() {
+            self.matchOver = false;
+            self.undo();
+        });        
     };
-
+    init();
+    
+    /**
+     * Checks to see if a player could win the match on the next point.
+     * 
+     * @method isMatchPoint
+     * @return true if this is a game point for that player and winning 
+     * the game would also win the match.
+     */
     self.isMatchPoint = function() {
         return self.isGamePoint() &&
             ( isWinner(self.games[0] + 1) || isWinner(self.games[1] + 1) );
     };
-
-    self.events.on("game", function(games, player) {
-        if ( self.undoing ) {
-            return;
-        }
-        if ( self.matchOver ) {
-            throw new Error("Match is over");
-        }
-        if ( isWinner(self.games[player]) ) {
-            self.events.trigger("before matchWin", player);
-            self.matchOver = true;
-            self.events.trigger("matchWin", player);
-            self.events.trigger("after matchWin", player);
-            self.record(player, "matchWin");
-        }
-    });
-
-    self.events.on("undo matchWin", function() {
-        self.matchOver = false;
-        self.undo();
-    });
-
+    
+    var isWinner = function(games) {
+        return ( games / self.options.matchLength >= 0.5 ) ;
+    };
+    
     return self;
 };
+
+/**
+ * Triggered before a match win has been awarded.
+ * 
+ * @event before matchWin
+ * @param {string} player id of the winner.
+ */
+
+/**
+ * Triggered when a match win has been awarded.
+ * 
+ * @event matchWin
+ * @param {string} player id of the winner.
+ */
+
+/**
+ * Triggered after all other listeners have been notified of a match win.
+ * 
+ * @event after matchWin
+ * @param {string} player id of the winner.
+ */

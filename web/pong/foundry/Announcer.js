@@ -22,14 +22,27 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-(function() {
+/**
+ * @module score.pong
+ */
+score.pong = score.pong || {};
+score.pong.foundry = score.pong.foundry || {};
+
+/**
+ * Something
+ * 
+ * @class score.pong.foundry.Announcer
+ */
+score.pong.foundry.Announcer = score.pong.foundry.Announcer || function(game) {
     
-    blackchip.ScriptLoader.load([
-        "pong/foundry/Announcer.js",
-        "pong/foundry/jacobNotImpressed.js",
-        "pong/Announcer.js",
-        "pong/Game.js",
-        "pong/Controller.js",
-    ]);
+    var self = score.pong.Announcer(game);
     
-})();
+    var jacobNotImpressed = score.pong.foundry.jacobNotImpressed(game);
+    
+    self["after gameWin"].push({ 
+        name: "jacobNotImpressed", call: jacobNotImpressed
+    });
+       
+    return self;
+    
+}; 

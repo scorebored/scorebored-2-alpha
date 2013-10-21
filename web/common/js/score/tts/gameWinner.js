@@ -25,23 +25,26 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.gameWinner = score.tts.gameWinner || function(self) {
+score.tts.gameWinner = score.tts.gameWinner || function(game) {
 
+    var self = {};
+    
     var allowed = function() {
-        if ( self.options.matchLength === 1 ) {
+        if ( game.options.matchLength === 1 ) {
             return true;
         }
-        if ( self.matchOver ) {
+        if ( game.matchOver ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("after gameWin", function(player) {
+    // after gameWin
+    self.onEvent = function(player) {
         if ( allowed() ) {
-            self.say(self.players[player] + " has won the game");
+            game.say(game.players[player] + " has won the game");
         }
-    });
+    };
 
     return self;
 

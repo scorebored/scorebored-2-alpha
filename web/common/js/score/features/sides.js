@@ -29,17 +29,30 @@ var score = score || {};
 score.features = score.features || {};
 
 /**
- * Not documented
+ * Keeps track of which side a player is on.
+ * 
+ * This can only be used in two player games. To keep track of positions
+ * for more players, use "seats"
  * 
  * @class sides
  */
 score.features.sides = score.features.sides || function(self) {
     
+    /**
+     * Side each player is on. One side is "0" and the other side is "1".
+     *  
+     * @property sides
+     */
     var init = function() {
         score.features.seats(self, "sides");
     };
     init();
     
+    /**
+     * Changes the sides that the players are on.
+     * 
+     * @method sides.change
+     */
     self.sides.change = function() {
         var newSide0 = self.sides[1];
         var newSide1 = self.sides[0];

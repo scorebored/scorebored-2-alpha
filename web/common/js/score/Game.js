@@ -22,8 +22,16 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/**
+ * @module score
+ */
 var score = score || {};
 
+/**
+ * Not documented.
+ * 
+ * @class Game
+ */
 score.Game = score.Game || function(options) {
      
     var self = {};
@@ -36,7 +44,8 @@ score.Game = score.Game || function(options) {
     self.history = [];
     self.undoHistory = [];
     self.talker = null;
-        
+    self.announcer = null;
+    
     var init = function() {
         options = options || { maxPlayers: 2 };
         options.maxPlayers = options.maxPlayers || 2;
@@ -51,6 +60,15 @@ score.Game = score.Game || function(options) {
             players[i] = "Player " + playerNumber;
         }
         self.players = blackchip.Properties(players, self.events, "player");
+        
+        self.events.all(function(name) {
+            var eventArgs = _.tail(arguments);
+            if ( self.announcer && self.announcer[name] ) {
+                _.each(self.announcer[name], function(handler) {
+                    handler.call.onEvent.apply(null, eventArgs);
+                });
+            }    
+        });
     }; 
            
     self.record = function() {

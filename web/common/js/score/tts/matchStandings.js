@@ -25,39 +25,42 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.matchStandings = score.tts.matchStandings || function(self) {
+score.tts.matchStandings = score.tts.matchStandings || function(game) {
 
+    var self = {};
+    
     var allowed = function(event) {
-        if ( self.matchOver ) {
+        if ( game.matchOver ) {
             return false;
         }
         return true;
     };
 
-    self.events.on("after gameWin", function(event) {
+    // after gameWin
+    self.onEvent = function(event) {
         if ( !allowed(event) ) {
             return;
         }
-        if ( self.games[0] === self.games[1] ) {
-            self.say("Games tied at " + self.games[0]);
+        if ( game.games[0] === game.games[1] ) {
+            game.say("Games tied at " + game.games[0]);
             return;
         }
         var leader, leaderGames, followerGames;
-        if ( self.games[0] > self.games[1] ) {
-            leader = self.players[0];
-            leaderGames = self.games[0];
-            followerGames = self.games[1];
-        } else if ( self.games[1] > self.games[0] ) {
-            leader = self.players[1];
-            leaderGames = self.games[1];
-            followerGames = self.games[0];
+        if ( game.games[0] > game.games[1] ) {
+            leader = game.players[0];
+            leaderGames = game.games[0];
+            followerGames = game.games[1];
+        } else if ( game.games[1] > game.games[0] ) {
+            leader = game.players[1];
+            leaderGames = game.games[1];
+            followerGames = game.games[0];
         } else {
             throw new Error("Illegal state");
         }
         var gameText = ( leaderGames === 1 ) ? "game" : "games";
-        self.say(leader + " leads, " + leaderGames + " " + gameText +
+        game.say(leader + " leads, " + leaderGames + " " + gameText +
             " to " + followerGames);
-    });
+    };
 
     return self;
 

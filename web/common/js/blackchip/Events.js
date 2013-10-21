@@ -67,7 +67,6 @@ blackchip.Events = blackchip.Events || function() {
     var listeners = {};
     var allListeners = [];
     var self = {};
-    self.quiet = false;
     
     /**
      * Registers a listener for an event.
@@ -156,9 +155,6 @@ blackchip.Events = blackchip.Events || function() {
      * @return {Events} this object for chaining. 
      */
     self.trigger = function(event) {
-        if ( self.quiet ) {
-            return;
-        }
         var argsAll = arguments;
         var argsEventAtEnd = _.tail(arguments);
         argsEventAtEnd.push(event);

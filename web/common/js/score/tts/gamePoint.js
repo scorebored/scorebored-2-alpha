@@ -25,13 +25,29 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.gamePoint = score.tts.gamePoint || function(self) {
+score.tts.gamePoint = score.tts.gamePoint || function(game, options) {
         
-    self.events.on("after score", function(event) {
-        if ( !self.gameOver && self.isGamePoint() && self.isMatchPoint && !self.isMatchPoint() ) {
-            self.say("Game point");
+    var self = {};
+    
+    var allowed = function() {
+        if ( game.gameOver ) { 
+            return false; 
         }
-    });
+        if ( options.noOverTime && game.isOverTime() ) {
+            return false;
+        }
+        if ( game.isGamePoint() && game.isMatchPoint && !game.isMatchPoint() ) {
+            return true;
+        }
+        return false;
+    };
+    
+    // after score
+    self.onEvent = function(event) {
+        if ( allowed() ) {
+            game.say("Game point");
+        }
+    };
     
     return self;
         

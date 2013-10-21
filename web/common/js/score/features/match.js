@@ -29,14 +29,29 @@ var score = score || {};
 score.features = score.features || {};
 
 /**
- * Not documented
+ * Records number of games won in a match.
+ * 
+ * This requires a rule to have been mixed in that triggers an "after gameWin"
+ * event. Upon receiving that event, the number of games won for that
+ * player will be incremented by one.
  * 
  * @class match
  */
 score.features.match = score.features.match || function(self) {
     
-    self.currentGame = 1;
-
+    /**
+     * Number of games won by player id.
+     * 
+     * @property games
+     */
+    self.games = null;
+    
+    /**
+     * Number of the current game being played. Starts at one.
+     * 
+     * @property games.current
+     */
+    
     var init = function() {
         var games = {};
         
@@ -44,7 +59,8 @@ score.features.match = score.features.match || function(self) {
             games[i] = 0;
         }
         self.games = blackchip.Properties(games, self.events, "game");
-
+        self.games.current = 1;
+        
         self.events.on("after gameWin", function(player) {
             self.games[player]++;
         });
@@ -59,23 +75,29 @@ score.features.match = score.features.match || function(self) {
         });
         
         self.events.on("undo nextGame", function() {
-            self.currentGame--;
-            self.undo();
+            self.games.current--;
             self.undo();
         });
     };    
-       
-    self.nextGame = function() {
+    init();
+    
+    /**
+     * Advances to the next game.
+     * 
+     * @method games.next
+     */
+    self.games.next = function() {
         self.events.trigger("before nextGame");
-        self.currentGame++;
+        self.games.current++;
+        self.correction = true;
         self.scores[0] = self.options.startingScore || 0;
         self.scores[1] = self.options.startingScore || 0;
+        self.correction = false;
         self.events.trigger("nextGame");
         self.events.trigger("after nextGame");
         self.record("nextGame");
     };
           
-    init();
     return self;
     
 };

@@ -25,11 +25,14 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.switchSides = score.tts.switchSides || function(self) {
+score.tts.switchSides = score.tts.switchSides || function(game) {
         
-    self.events.on("switchSides", function(event) {
+    var self = {};
+    
+    // switchSides
+    self.onEvent = function(event) {
         self.say("Switch sides");    
-    });
+    };
     
     return self;
         

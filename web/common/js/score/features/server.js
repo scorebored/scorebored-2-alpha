@@ -65,7 +65,7 @@ score.features.server = score.features.server || function(self) {
  * Current player that is serving. Set to null to indicate a server has not
  * yet been decided.
  * 
- * @property {playerId} is
+ * @property {playerId} server.is
  */
 
 /**
@@ -105,5 +105,5 @@ score.features.server = score.features.server || function(self) {
 /**
  * Switches the server.
  * 
- * @method next
+ * @method server.next
  */
