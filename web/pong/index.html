@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scorebored - Pong</title>
+
+    <link type="text/css" rel="stylesheet" href="common/lib/bootstrap/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="common/css/scorebored.css" />
+
+    <script type="text/javascript" src="common/lib/jquery.js"></script>
+    <script type="text/javascript" src="common/lib/bootstrap/js/bootstrap.js"></script>
+
+    <script type="text/javascript" src="js/score.pong.ui.js"></script>
+
+</head>
+<body>
+    <header id="score_header" class="navbar navbar-inverse">
+        <div class="score-logo">
+            <h3>ScoreBored</h3>
+        </div>
+    </header>
+    <div id="score_content">
+        <h2 class="score-pong text-center">Loading game...</h2>
+
+
+        <!-- Main board -->
+        <div class="score-pong score-pong-board" style="display:none;">
+            <button class="score-pong-open-settings pull-right">
+                <i class="glyphicon glyphicon-cog"></i>
+            </button>
+            <h1 class="text-center">FIGHT!</h1>
+        </div>
+
+
+        <!-- Settings -->
+        <div class="score-pong score-pong-settings form-horizontal col-lg-2 col-lg-offset-5" style="display:none;" role="form">
+            <!-- + Game Length -->
+            <div class="form-group">
+                <label for="pong_settings_length" class="control-label">Game Length</label>
+                <div class="">
+                    <select id="pong_settings_game_length" name="game_length" class="form-control">
+                        <option value="11">11</option>
+                        <option value="21" selected="selected">21</option>
+                    </select>
+                </div>
+            </div>
+            <!-- + Game Type -->
+            <div class="form-group">
+                <label for="pong_settings_type" class="control-label">Game Type</label>
+                <div class="">
+                    <select id="pong_settings_game_type" name="game_type" class="form-control">
+                        <option value="single" selected="selected">Singles</option>
+                        <option value="double">Doubles</option>
+                    </select>
+                </div>
+            </div>
+            <!-- + Player 1 -->
+            <div class="form-group">
+                <label for="pong_settings_player_1" class="control-label">Left Team</label>
+                <div class="">
+                    <input id="pong_settings_player_1_name" name="player_1_name" class="form-control" value="Home Team" />
+                </div>
+            </div>
+            <!-- + Player 2 -->
+            <div class="form-group">
+                <label for="pong_settings_player_2" class="control-label">Away Team</label>
+                <div class="">
+                    <input id="pong_settings_player_2_name" name="player_2_name" class="form-control" value="Away Team" />
+                </div>
+            </div>
+            <!-- + Begin Game -->
+            <div class="form-group">
+                <div class="col-lg-offset2">
+                    <button id="score_settings_play_game" class="btn btn-large">Start Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer id="score_footer">
+        <div class="score-copyright">
+            2013 Blackchip.org
+        </div>
+    </footer>
+</body>
+</html>

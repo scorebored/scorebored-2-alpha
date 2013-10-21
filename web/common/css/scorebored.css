@@ -1,0 +1,48 @@
+/**
+ * Main ScoreBored stylesheet
+ * Covers basic page elements for application
+ */
+
+body {
+    background-color: #76A5AF;
+    color: #EEEEEE;
+}
+
+#score_header {
+    color: #CCCCCC;
+    padding-left: 40px;
+    border-radius: 0px;
+    margin-bottom: 80px;
+}
+
+#score_content {
+    min-height: 300px;
+    color: #333333;
+}
+
+#score_footer {
+    padding-top: 40px;
+    padding-bottom: 30px;
+    margin-top: 100px;
+    text-align: center;
+    border-top: 1px solid #e5e5e5;
+}
+
+.score-copyright {
+    text-align: center;
+}
+
+.score-select-game-link {
+    height: 360px;
+    color: #333333;
+    text-decoration: none;
+}
+.score-select-game-link:hover {
+    color: #555555;
+    text-decoration: none;
+}
+
+.score-select-game-icon {
+    height: 100%;
+    width: 100%;
+}
