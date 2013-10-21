@@ -25,32 +25,31 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.roundPoints = score.tts.roundPoints || function(game) {
+score.tts.roundPoints = score.tts.roundPoints || function(self) {
 
     var self = {};
     
     var allowed = function() {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
         return true;
     };
-
-    // after round
-    self.onEvent = function(scores) {
+    
+    self.events.on("after round", function(scores) {
         if ( !allowed() ) {
             return;
         }
         var text = [];
-        for ( var player = 0; player < game.players.count; player++ ) {
+        for ( var player = 0; player < self.players.count; player++ ) {
             if ( scores[player] > 0 ) {
-                text.push(scores[player] + " for " + game.players[player]);
+                text.push(scores[player] + " for " + self.players[player]);
             }
         }
         if ( text.length > 0 ) {
-            game.say(text.join(", "));
+            self.say(text.join(", "));
         }
-    };
+    });
 
     return self;
 

@@ -25,9 +25,6 @@
 (function() {
     
     blackchip.ScriptLoader.load([
-        "pong/foundry/Announcer.js",
-        "pong/foundry/jacobNotImpressed.js",
-        "pong/Announcer.js",
         "pong/Game.js",
         "pong/Controller.js",
     ]);

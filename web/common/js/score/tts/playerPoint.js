@@ -25,28 +25,26 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.playerPoint = score.tts.playerPoint || function(game, options) {
+score.tts.playerPoint = score.tts.playerPoint || function(self, options) {
 
-    var self = {};
     options = options || {};
 
     var allowed = function() {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
-        if ( options.noOverTime && game.isOverTime() ) {
+        if ( options.noOverTime && self.isOverTime() ) {
             return false;
         }
         return true;
     };
 
-    // score
-    self.onEvent = function(score, player) {
+    self.events.on("score", function(score, player) {
         if ( !allowed() ) {
             return;
         }
-        game.say("Point " + game.players[player]);
-    };
+        self.say("Point " + self.players[player]);
+    });
 
     return self;
 

@@ -60,15 +60,6 @@ score.Game = score.Game || function(options) {
             players[i] = "Player " + playerNumber;
         }
         self.players = blackchip.Properties(players, self.events, "player");
-        
-        self.events.all(function(name) {
-            var eventArgs = _.tail(arguments);
-            if ( self.announcer && self.announcer[name] ) {
-                _.each(self.announcer[name], function(handler) {
-                    handler.call.onEvent.apply(null, eventArgs);
-                });
-            }    
-        });
     }; 
            
     self.record = function() {

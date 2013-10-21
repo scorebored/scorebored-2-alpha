@@ -28,13 +28,8 @@
         mute: score.talkers.Mute(pong.events),
         google: score.talkers.Google(pong.events)
     };
-    var announcers = {
-        standard: score.pong.Announcer(pong),
-        foundry: score.pong.foundry.Announcer(pong)
-    };
     
     pong.talker = talkers.mute;
-    pong.announcer = announcers.standard;
     
     window.pong = pong; // Just for console debugging
     
@@ -117,8 +112,5 @@
     $("#talker").change(function() {
         pong.talker = talkers[$(this).val()];
     });
-
-    $("#announcer").change(function() {
-        pong.announcer = announcers[$(this).val()];
-    });            
+           
 })();

@@ -25,33 +25,30 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.deuce = score.tts.deuce || function(game) {
-
-    var self = {};
+score.tts.deuce = score.tts.deuce || function(self) {
     
     var allowed = function() {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
-        if ( !game.isOverTime() && !game.isOverTimeNext() ) {
+        if ( !self.isOverTime() && !self.isOverTimeNext() ) {
             return false;
         }
         return true;
     };
 
-    // after score
-    self.onEvent = function() {
+    self.events.on("after score", function() {
         if ( !allowed() ) {
             return;
         }
-        if ( game.scores[0] === game.scores[1] ) {
-            game.say("Deuce");
-        } else if ( game.scores[0] > game.scores[1] ) {
-            game.say("Advantage " + game.players[0]);
-        } else if ( game.scores[1] > game.scores[0] ) {
-            game.say("Advantage " + game.players[1]);
+        if ( self.scores[0] === self.scores[1] ) {
+            self.say("Deuce");
+        } else if ( self.scores[0] > self.scores[1] ) {
+            self.say("Advantage " + self.players[0]);
+        } else if ( self.scores[1] > self.scores[0] ) {
+            self.say("Advantage " + self.players[1]);
         }
-    };
+    });
 
     return self;
 

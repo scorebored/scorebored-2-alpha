@@ -81,9 +81,19 @@ score.pong.Game = score.pong.Game || function(options) {
     };  
     
     self.events.on("after score", changeServer);
-    
     self.events.on("score", self.silence);
 
+    score.tts.playerPoint(self, { noOverTime: true });
+    score.tts.scoreByServer(self, { noOverTime: true, noOverTimeNext: true });
+    score.tts.deuce(self);
+    score.tts.gamePoint(self, { noOverTime: true });
+    score.tts.matchPoint(self, { noOverTime: true });
+    score.tts.changeServers(self, { noOverTime: true});
+    score.tts.gameWinner(self);
+    score.tts.matchStandings(self); 
+    score.tts.switchSides(self);
+    score.tts.matchWinner(self);
+    
     return self;
     
 };

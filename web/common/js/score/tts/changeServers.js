@@ -25,32 +25,30 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.changeServers = score.tts.changeServers || function(game, options) {
+score.tts.changeServers = score.tts.changeServers || function(self, options) {
 
-    var self = {};
     options = options || {};
 
     var allowed = function() {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
-        if ( options.noOverTime && game.isOverTime() ) {
+        if ( options.noOverTime && self.isOverTime() ) {
             return false;
         }
         return true;
     };
 
-    // server
-    self.onEvent = function(player, prop, previous) {
+    self.events.on("server", function(player, prop, previous) {
         if ( !allowed() ) {
             return;
         }
         if ( previous !== null ) {
-            game.say("Change servers");
+            self.say("Change servers");
         } else {
-            game.say(game.players[player] + " serves first");
+            self.say(self.players[player] + " serves first");
         }
-    };
+    });
 
     return self;
 

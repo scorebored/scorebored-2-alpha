@@ -25,29 +25,26 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.gamePoint = score.tts.gamePoint || function(game, options) {
-        
-    var self = {};
-    
+score.tts.gamePoint = score.tts.gamePoint || function(self, options) {
+            
     var allowed = function() {
-        if ( game.gameOver ) { 
+        if ( self.gameOver ) { 
             return false; 
         }
-        if ( options.noOverTime && game.isOverTime() ) {
+        if ( options.noOverTime && self.isOverTime() ) {
             return false;
         }
-        if ( game.isGamePoint() && game.isMatchPoint && !game.isMatchPoint() ) {
+        if ( self.isGamePoint() && self.isMatchPoint && !self.isMatchPoint() ) {
             return true;
         }
         return false;
     };
     
-    // after score
-    self.onEvent = function(event) {
+    self.events.on("after score", function() {
         if ( allowed() ) {
-            game.say("Game point");
+            self.say("Game point");
         }
-    };
+    });
     
     return self;
         

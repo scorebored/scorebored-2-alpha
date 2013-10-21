@@ -25,27 +25,26 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.score = score.tts.score || function(game, options) {
-
-    var self = {};
+score.tts.score = score.tts.score || function(self, options) {
+    
+    var when = options.when || "score";
     
     var allowed = function(event) {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
         return true;
     };
 
-    // score or endRound
-    self.onEvent = function(event) {
+    self.events.on(when, function(event) {
         if ( !allowed(event) ) {
             return;
         }
         var text = [];
-        text.push(game.players[0] + " " + game.scores[0]);
-        text.push(game.players[1] + " " + game.scores[1]);
-        game.say("Scores are " + text.join(", "));
-    };
+        text.push(self.players[0] + " " + self.scores[0]);
+        text.push(self.players[1] + " " + self.scores[1]);
+        self.say("Scores are " + text.join(", "));
+    });
 
     return self;
 

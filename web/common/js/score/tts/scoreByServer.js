@@ -25,35 +25,32 @@
 var score = score || {};
 score.tts = score.tts || {};
 
-score.tts.scoreByServer = score.tts.scoreByServer || function(game, options) {
-
-    var self = {};
+score.tts.scoreByServer = score.tts.scoreByServer || function(self, options) {
     
     options = options || {};
 
     var allowed = function(event) {
-        if ( game.gameOver ) {
+        if ( self.gameOver ) {
             return false;
         }
-        if ( options.noOverTime && game.isOverTime() ) {
+        if ( options.noOverTime && self.isOverTime() ) {
             return false;
         }
-        if ( options.noOverTimeNext && game.isOverTimeNext() ) {
+        if ( options.noOverTimeNext && self.isOverTimeNext() ) {
             return false;
         }
         return true;
     };
 
-    // after score
-    self.onEvent = function() {
+    self.events.on("after score", function() {
         if ( !allowed() ) {
             return;
         }
-        var server = game.server.is;
-        var score1 = server === "0" ? game.scores[0] : game.scores[1];
-        var score2 = server === "0" ? game.scores[1] : game.scores[0];
-        game.say(score1 + " - " + score2);
-    };
+        var server = self.server.is;
+        var score1 = server === "0" ? self.scores[0] : self.scores[1];
+        var score2 = server === "0" ? self.scores[1] : self.scores[0];
+        self.say(score1 + " - " + score2);
+    });
 
     return self;
 
