@@ -81,13 +81,8 @@ score.pong.ui = score.pong.ui || {
             mute: score.talkers.Mute(this.game.events),
             google: score.talkers.Google(this.game.events)
         };
-        var announcers = {
-            standard: score.pong.Announcer(this.game),
-            foundry: score.pong.foundry.Announcer(this.game)
-        };
 
-        this.game.talker = talkers.mute;
-        this.game.announcer = announcers.standard;
+        this.game.talker = talkers.google;
 
         // Event bindings
         this.game.events
@@ -99,7 +94,7 @@ score.pong.ui = score.pong.ui || {
             .on("history", this.onHistory)
             .on("say", this.onSay)
             .on("after say", this.onSilence)
-            .on("silence", this.onSilence)
+            .on("silence", this.onSilence);
 
         // DEBUG?
         this.game.events.all(function() {
