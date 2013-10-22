@@ -41,8 +41,8 @@ buster.testCase("score.tts.matchWinner", {
         app.games[1] = 1;
         this.stub(app.talker, "say");
         app.scores[0] = 11;
-        assert.calledWith(app.talker.say, 
-            "Player 1 has won the match", "2 games to 1");
+        assert.calledWith(app.talker.say, "Player 1 has won the match");
+        assert.calledWith(app.talker.say, "2 games to 1");
     },
     
     "Player 2 wins match": function() {
@@ -50,8 +50,8 @@ buster.testCase("score.tts.matchWinner", {
         app.games[1] = 1;
         this.stub(app.talker, "say");
         app.scores[1] = 11;
-        assert.calledWith(app.talker.say, 
-            "Player 2 has won the match", "2 games to 1");
+        assert.calledWith(app.talker.say, "Player 2 has won the match");
+        assert.calledWith(app.talker.say, "2 games to 1");
     },    
     
     "Silent on single game match": function() {
