@@ -12,12 +12,15 @@ body {
     color: #CCCCCC;
     padding-left: 40px;
     border-radius: 0px;
-    margin-bottom: 80px;
 }
 
 #score_content {
     min-height: 300px;
     color: #333333;
+}
+
+.score-game-select {
+    margin-top: 40px;
 }
 
 #score_footer {
@@ -45,4 +48,10 @@ body {
 .score-select-game-icon {
     height: 100%;
     width: 100%;
+}
+
+.round {
+    -webkit-border-radius: 10%;
+    -moz-border-radius: 10%;
+    border-radius: 10%;
 }

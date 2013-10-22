@@ -3,13 +3,14 @@
 <head>
     <title>Scorebored - Pong</title>
 
-    <link type="text/css" rel="stylesheet" href="common/lib/bootstrap/css/bootstrap.css" />
-    <link type="text/css" rel="stylesheet" href="common/css/scorebored.css" />
+    <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height, initial-scale=1.0" />
 
-    <script type="text/javascript" src="common/lib/jquery.js"></script>
-    <script type="text/javascript" src="common/lib/bootstrap/js/bootstrap.js"></script>
+    <link type="text/css" rel="stylesheet" href="../common/lib/bootstrap/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="../common/css/scorebored.css" />
+    <link type="text/css" rel="stylesheet" href="css/pong.css" />
 
-    <script type="text/javascript" src="js/score.pong.ui.js"></script>
+    <script type="text/javascript" src="../common/lib/jquery.js"></script>
+    <script type="text/javascript" src="../common/lib/bootstrap/js/bootstrap.js"></script>
 
 </head>
 <body>
@@ -19,34 +20,85 @@
         </div>
     </header>
     <div id="score_content">
-        <h2 class="score-pong text-center">Loading game...</h2>
+
+<!--        <h2 class="score-pong text-center">Loading game...</h2> -->
 
 
         <!-- Main board -->
         <div class="score-pong score-pong-board" style="display:none;">
-            <button class="score-pong-open-settings pull-right">
-                <i class="glyphicon glyphicon-cog"></i>
-            </button>
-            <h1 class="text-center">FIGHT!</h1>
+            <div class="score-pong-toolbar clearfix">
+                <button class="score-pong-open-settings btn btn-default btn-sm pull-left" style="margin-right:24px">
+                    <i class="glyphicon glyphicon-cog"></i>
+                </button>
+
+                <div class="score-match-clock-wrapper pull-right">
+                    <strong>Match Time:</strong>
+                    <span class="score-match-clock">00:00:00</span>
+                </div>
+            </div>
+
+            <div class="container-fluid scoreboard-back">
+
+                <div class="row-fluid">
+                    <h1 class="team-1-name team-score data-us text-align-center"></h1>
+                    <h1 class="team-2-name team-score data-them text-align-center"></h1>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="team-score">
+                        <div class="displayed-score team-1-score text-align-center">0</div>
+                        <div class="score-actions">
+                          <button data-player="1" class="action-increment-score btn btn-lg btn-danger">+ Point!</button>
+                        </div>
+                    </div>
+                    <div class="team-score">
+                        <div class="displayed-score team-2-score text-align-center">0</div>
+                        <div class="score-actions">
+                          <button data-player="2" class="action-increment-score btn btn-lg btn-danger">+ Point!</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
 
         <!-- Settings -->
-        <div class="score-pong score-pong-settings form-horizontal col-lg-2 col-lg-offset-5" style="display:none;" role="form">
+        <div class="score-pong score-pong-settings form-horizontal col-lg-5 col-lg-offset-4" style="display:none;" role="form">
+            <!-- + Game Name -->
+            <div class="form-group">
+                <label for="pong_settings_game_name" class="col-lg-3 control-label">Game Name:</label>
+                <div class="col-lg-7">
+                    <input type="text" id="pong_settings_game_name" name="game_name" class="form-control" value="" />
+                </div>
+            </div>
             <!-- + Game Length -->
             <div class="form-group">
-                <label for="pong_settings_length" class="control-label">Game Length</label>
-                <div class="">
+                <label for="pong_settings_game_length" class="col-lg-3 control-label">Game Length:</label>
+                <div class="col-lg-7">
                     <select id="pong_settings_game_length" name="game_length" class="form-control">
                         <option value="11">11</option>
                         <option value="21" selected="selected">21</option>
                     </select>
                 </div>
             </div>
+            <!-- + Match Length -->
+            <div class="form-group">
+                <label for="pong_settings_match_length" class="col-lg-3 control-label">Best of:</label>
+                <div class="col-lg-7">
+                    <select id="pong_settings_match_length" name="match_length" class="form-control">
+                        <option value="1">1</option>
+                        <option value="3" selected="selected">3</option>
+                        <option value="5">5</option>
+                        <option value="7">7</option>
+                    </select>
+                </div>
+            </div>
             <!-- + Game Type -->
             <div class="form-group">
-                <label for="pong_settings_type" class="control-label">Game Type</label>
-                <div class="">
+                <label for="pong_settings_type" class="col-lg-3 control-label">Game Type:</label>
+                <div class="col-lg-7">
                     <select id="pong_settings_game_type" name="game_type" class="form-control">
                         <option value="single" selected="selected">Singles</option>
                         <option value="double">Doubles</option>
@@ -55,30 +107,48 @@
             </div>
             <!-- + Player 1 -->
             <div class="form-group">
-                <label for="pong_settings_player_1" class="control-label">Left Team</label>
-                <div class="">
-                    <input id="pong_settings_player_1_name" name="player_1_name" class="form-control" value="Home Team" />
+                <label for="pong_settings_player_1" class="col-lg-3 control-label">Player 1:</label>
+                <div class="col-lg-7">
+                    <input id="pong_settings_player_1_name" name="player_1_name" class="form-control" placeholder="Home Team" value="" />
                 </div>
             </div>
             <!-- + Player 2 -->
             <div class="form-group">
-                <label for="pong_settings_player_2" class="control-label">Away Team</label>
-                <div class="">
-                    <input id="pong_settings_player_2_name" name="player_2_name" class="form-control" value="Away Team" />
+                <label for="pong_settings_player_2" class="col-lg-3 control-label">Player 2:</label>
+                <div class="col-lg-7">
+                    <input id="pong_settings_player_2_name" name="player_2_name" class="form-control" placeholder="Away Team" value="" />
                 </div>
             </div>
-            <!-- + Begin Game -->
+            <!-- + Save Settings -->
             <div class="form-group">
-                <div class="col-lg-offset2">
-                    <button id="score_settings_play_game" class="btn btn-large">Start Game</button>
+                <label class="col-lg-3 control-label"></label>
+                <div class="col-lg-7">
+                    <button id="score_settings_play_game" class="btn btn-primary">Start Game</button>
+                    <button class="cancel-settings btn btn-default col-lg-offset-1" style="display:none">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
+    <div class="clearfix"></div>
     <footer id="score_footer">
         <div class="score-copyright">
             2013 Blackchip.org
         </div>
     </footer>
+
+
+    <script type="text/javascript" src="../common/js/blackchip/ScriptLoader.js"></script>
+    <script type="text/javascript">
+        score = {};
+        blackchip.SCRIPT_BASE_DIR = "..";
+    </script>
+    <script type="text/javascript" src="../common/Scripts.js"></script>
+    <script type="text/javascript" src="Scripts.js"></script>
+    <script type="text/javascript" src="Announcer.js"></script>
+    <script type="text/javascript" src="Game.js"></script>
+
+    <script type="text/javascript" src="js/jquery.fittext.js"></script>
+    <script type="text/javascript" src="js/score.pong.ui.js"></script>
+
 </body>
 </html>

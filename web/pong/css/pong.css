@@ -1,0 +1,69 @@
+/**
+ * CSS for Ping-Pong scoreboard
+ */
+
+.score-pong-toolbar {
+    min-height: 24px;
+}
+.score-pong-open-settings { margin-left: 24px; }
+.score-match-clock-wrapper { margin-right: 24px; color: #FFFFFF; }
+.score-match-clock-wrapper strong { color: #DDDDDD; }
+
+.score-pong-settings {
+    margin-top: 40px;
+}
+
+.score-pong-settings .cancel-settings {
+    color: #999999;
+}
+.score-pong-settings .cancel-settings:hover {
+    color: #333333;
+}
+
+.team-1-name, .team-2-name {
+    width: 60%;
+    margin: 10px auto;
+    /*cursor: pointer;*/
+}
+
+.team-score {
+    width: 50%;
+    float: left;
+}
+
+.scoreboard-back {
+    background: #333333;
+    /* RGBa fallback */
+    background: rgb(0, 0, 0);
+    /* RGBa with 0.6 opacity */
+    background: rgba(0, 0, 0, 0.9);
+    filters:alpha(opacity=90);  /* IE8 and earlier */
+    margin: 0 5%;
+    color: #FFFFFF;
+}
+
+.displayed-score {
+    width: 80%;
+    margin: 0 auto;
+    background: #000000;
+    font-weight: 800;
+    -webkit-transform-origin: 0% 100%;
+    -moz-transform-origin: 0% 100%;
+    -o-transform-origin: 0% 100%;
+    -transform-origin: 0% 100%;
+    white-space: nowrap;
+}
+
+.score-actions { text-align: center; }
+.score-actions button {
+    padding: 0.5em;
+    margin: 1.5em 0;
+    border: 0;
+    color: #FFFFFF;
+
+    font-weight: bold;
+}
+
+.text-align-left { text-align: left; }
+.text-align-center { text-align: center; }
+.text-align-right { text-align: right; }
