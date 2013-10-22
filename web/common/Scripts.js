@@ -60,6 +60,7 @@
         "common/js/score/features/token.js",
         "common/js/score/features/tokenRing.js",        
 
+        "common/js/score/rules/gameWinSwitchSides.js",
         "common/js/score/rules/winGameByTwo.js",
         "common/js/score/rules/winMatchBestOf.js",
 

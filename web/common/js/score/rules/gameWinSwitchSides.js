@@ -22,49 +22,28 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-buster.testCase("score.features.seats", {
+/**
+ * @module score.rules
+ */
+var score = score || {};
+score.rules = score.rules || {};
+
+/**
+ * Switches the sides for each player after a game has been won.
+ * 
+ * @class score.rules.gameWinSwitchSides
+ * @static
+ * @constructor
+ * 
+ * @param {object} the target object to receive these new properites.
+ */
+score.rules.gameWinSwitchSides = score.rules.gameWinSwitchSides ||
+        function(self) {
     
-    game: null,
+    self.events.on("nextGame", function() {
+        self.sides.change();
+    });
     
-    setUp: function() {
-        game = score.Game({maxPlayers: 3}); 
-        score.features.seats(game);
-    },
-    
-    "Seats in player order by default": function() {
-        assert.equals(game.seats[0], 0);
-        assert.equals(game.seats[1], 1);
-        assert.equals(game.seats[2], 2);
-    },
-    
-    "Used a different property name when specified": function() {
-        game = score.Game({maxPlayers: 2}); 
-        score.features.seats(game, "sides");   
-        assert.equals(game.sides[0], 0);
-        assert.equals(game.sides[1], 1);    
-    },
-    
-    "Swap seats": function() {
-        game.seats.swap(0, 1);
-        assert.equals(game.seats[0], 1);
-        assert.equals(game.seats[1], 0);
-        assert.equals(game.seats[2], 2);        
-    },
-    
-    "Event fired when a seat changes": function() {
-        var listener = this.stub();
-        game.events.on("seat", listener);
-        game.seats[0] = 1;
-        assert.calledWith(listener, 1);
-    },
-    
-    "Undo seat assignment": function() {
-        game.seats.swap(0, 1);
-        game.undo();
-        assert.equals(game.seats[0], 0);
-        assert.equals(game.seats[1], 1);
-        assert.equals(game.seats[2], 2);                        
-    }
-    
-});
-    
+    return self;
+        
+};

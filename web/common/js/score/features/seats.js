@@ -69,7 +69,16 @@ score.features.seats = score.features.seats || function(self, property) {
         for ( var id = 0; id < self.players.count; id++ ) {
             seats[id] = id;
         }
-        self[property] = blackchip.Properties(seats, self.events, "seat");   
+        self[property] = blackchip.Properties(seats, self.events, "seat"); 
+        
+        self.events
+            .on("seat", function() {
+                self.record.apply(null, arguments);    
+            })
+            .on("undo seat", function(seat, player, previous) {
+                self[property][previous] = player; 
+                self.undo();  
+            });
     };
     init();
         
@@ -78,13 +87,13 @@ score.features.seats = score.features.seats || function(self, property) {
      * 
      * @method seats.swap
      * 
-     * @param player1 {int}
-     * @param player2 {int}
+     * @param seat1 {int}
+     * @param seat2 {int}
      */
-    self[property].swap = function(playerId1, playerId2) {
-        var tmp = self[property][playerId1];
-        self[property][playerId1] = playerId2;
-        self[property][playerId2] = tmp;    
+    self[property].swap = function(seat1, seat2) {
+        var tmp = self[property][seat1];
+        self[property][seat1] = self[property][seat2];
+        self[property][seat2] = tmp;    
     };
     
     return self;

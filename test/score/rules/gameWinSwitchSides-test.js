@@ -22,49 +22,25 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-buster.testCase("score.features.seats", {
-    
-    game: null,
+buster.testCase("score.tts.gameWinSwitchSides", {
+
+    app: null,
     
     setUp: function() {
-        game = score.Game({maxPlayers: 3}); 
-        score.features.seats(game);
+        gameOptions = {gameLength: 11, matchLength: 3};
+        app = score.Game(gameOptions);
+        score.features.scores(app);
+        score.features.match(app);
+        score.features.sides(app);
+        score.rules.winGameByTwo(app);
+        score.rules.gameWinSwitchSides(app);
     },
     
-    "Seats in player order by default": function() {
-        assert.equals(game.seats[0], 0);
-        assert.equals(game.seats[1], 1);
-        assert.equals(game.seats[2], 2);
-    },
-    
-    "Used a different property name when specified": function() {
-        game = score.Game({maxPlayers: 2}); 
-        score.features.seats(game, "sides");   
-        assert.equals(game.sides[0], 0);
-        assert.equals(game.sides[1], 1);    
-    },
-    
-    "Swap seats": function() {
-        game.seats.swap(0, 1);
-        assert.equals(game.seats[0], 1);
-        assert.equals(game.seats[1], 0);
-        assert.equals(game.seats[2], 2);        
-    },
-    
-    "Event fired when a seat changes": function() {
-        var listener = this.stub();
-        game.events.on("seat", listener);
-        game.seats[0] = 1;
-        assert.calledWith(listener, 1);
-    },
-    
-    "Undo seat assignment": function() {
-        game.seats.swap(0, 1);
-        game.undo();
-        assert.equals(game.seats[0], 0);
-        assert.equals(game.seats[1], 1);
-        assert.equals(game.seats[2], 2);                        
+    "Switch sides": function() {
+        app.scores[0] = 11;
+        app.games.next();
+        assert.equals(app.sides[0], 1);
+        assert.equals(app.sides[1], 0);    
     }
-    
+        
 });
-    

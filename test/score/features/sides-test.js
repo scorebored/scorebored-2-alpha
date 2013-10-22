@@ -42,6 +42,13 @@ buster.testCase("score.features.sides", {
         assert.equals(game.sides[1], 0);
     },
     
+    "Double change sides": function() {
+        game.sides.change();
+        game.sides.change();
+        assert.equals(game.sides[0], 0);
+        assert.equals(game.sides[1], 1);        
+    },
+    
     "Events triggered on side change": function() {
         var before = this.stub();
         var as = this.stub();

@@ -23,35 +23,41 @@
  *****************************************************************************/
 
 (function() {
-    var pong = score.pong.Game({matchLength: 3});
+    var app = score.pong.Game({matchLength: 3});
     var talkers = {
-        mute: score.talkers.Mute(pong.events),
-        google: score.talkers.Google(pong.events)
+        mute: score.talkers.Mute(app.events),
+        google: score.talkers.Google(app.events)
     };
     
-    pong.talker = talkers.mute;
+    app.talker = talkers.mute;
     
-    window.pong = pong; // Just for console debugging
+    window.pong = app; // Just for console debugging
     
     var log = blackchip.Logging.get("score.pong");
     
-    pong.events.all(function() { 
+    app.events.all(function() { 
         log.trace.apply(log.trace, arguments);
     });
     
-    var onScore = function(value, player) {
-        $("#scores ." + player).html(value);
+    var onNameChange = function() {
+        $("#names [data-player='0']").html(app.players[0]);
+        $("#names [data-player='1']").html(app.players[1]);
     };
     
-    var onServer = function(player) {
+    var onScore = function() {
+        $("#scores [data-player='0']").html(app.scores[0]);
+        $("#scores [data-player='1']").html(app.scores[1]);
+    };
+    
+    var onServer = function() {
         $("#server div").html("&nbsp;");
-        if ( !_.isNull(pong.server.is) ) {
-            $("#server ." + player).html("Server");    
+        if ( !_.isNull(app.server.is) ) {
+            $("#server [data-player='" + app.server.is + "']").html("Server");    
         }   
     };
     
     var onGameWin = function() {
-        if ( !pong.matchOver ) {
+        if ( !app.matchOver ) {
             $("#nextGame").css("display", "inline"); 
         }
         $("button.add").attr("disabled", true);   
@@ -62,8 +68,18 @@
         $("button.add").attr("disabled", false);             
     };
     
-    var onGame = function(games, player) {
-        $("#matches ." + player).html(games);        
+    var onGame = function() {
+        $("#games [data-player='0']").html(app.games[0]);
+        $("#games [data-player='1']").html(app.games[1]);       
+    };
+    
+    var onSides = function() {
+        $("[data-side='0']").attr("data-player", app.sides[0]);
+        $("[data-side='1']").attr("data-player", app.sides[1]);
+        onNameChange();
+        onScore();
+        onServer();
+        onGame();        
     };
     
     var onHistory = function(history) {
@@ -78,7 +94,7 @@
         $("#announcement").html("&nbsp");    
     };
         
-    pong.events
+    app.events
         .on("score", onScore)
         .on("server", onServer)
         .on("after gameWin", onGameWin)
@@ -87,30 +103,31 @@
         .on("history", onHistory)
         .on("say", onSay)
         .on("after say", onSilence)
-        .on("silence", onSilence);
+        .on("silence", onSilence)
+        .on("seat", onSides);
         
     
     $("button.add").click(function() {
         var player = $(this).attr("data-player");
-        if ( _.isNull(pong.server.is) ) {
-            pong.server.is = player;    
+        if ( _.isNull(app.server.is) ) {
+            app.server.is = player;    
         } else {
-            pong.scores[player] += 1;
+            app.scores[player] += 1;
         } 
     });
 
     $("#undo").click(function() {
-        pong.undo();
+        app.undo();
     });
 
     $("#nextGame").click(function() {
-        pong.games.next();   
+        app.games.next();   
         $("button.add").attr("disabled", false);  
         $("#nextGame").css("display", "none");  
     });
     
     $("#talker").change(function() {
-        pong.talker = talkers[$(this).val()];
+        app.talker = talkers[$(this).val()];
     });
            
 })();

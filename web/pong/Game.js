@@ -42,6 +42,7 @@ score.pong = score.pong || {};
  * @uses server
  * @uses match
  * @uses sides
+ * @uses gameWinSwitchSides
  * @uses winGameByTwo
  * @uses winMatchBestOf
  * @constructor
@@ -62,7 +63,8 @@ score.pong.Game = score.pong.Game || function(options) {
     score.features.server(self);
     score.features.match(self); 
     score.features.sides(self);
-               
+    
+    score.rules.gameWinSwitchSides(self);           
     score.rules.winGameByTwo(self);
     score.rules.winMatchBestOf(self); 
     
