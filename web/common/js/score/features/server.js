@@ -55,6 +55,10 @@ score.features.server = score.features.server || function(self) {
     var init = function() {
         score.features.token(self, "server");
         score.features.tokenRing(self, "server");  
+        
+        self.events.on("gameWin", function() {
+            self.server.is = null;
+        });
     };
     
     init();

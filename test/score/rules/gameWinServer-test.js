@@ -22,53 +22,51 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-buster.testCase("score.features.token", {
-
-    game: null,
+buster.testCase("score.tts.gameWinServer", {
+    
+    app: null,
+    gameOptions: null,
     
     setUp: function() {
-        game = score.Game();
-        score.features.scores(game);
-        score.features.token(game, "server");
+        gameOptions = {
+            gameLength: 11, 
+            matchLength: 3,
+            gameWinServer: "alternate"
+        };
+        app = score.Game(gameOptions);
+        score.features.scores(app);
+        score.features.server(app);
+        score.features.match(app);
+        score.rules.winGameByTwo(app);
+        score.rules.gameWinServer(app);
     },
     
-    "Is initially unassigned": function() {
-        refute(game.server.is);
+    "Player 1 alternates to Player 2": function() {
+        app.server.is = 0;
+        app.scores[0] = 11;
+        app.games.next();
+        assert(app.server.is, 1); 
     },
     
-    "Fires event on assignment": function() {
-        var listener = this.stub();
-        game.events.on("server", listener);
-        game.server.is = 2;
-        assert.calledWith(listener, 2);
+    "Player 2 alternates to Player 1": function() {
+        app.server.is = 1;
+        app.scores[1] = 11;
+        app.games.next();
+        assert(app.server.is, 0); 
     },
     
-    "Undo applied": function() {
-        game.server.is = 2;
-        game.scores[0] += 1;
-        game.server.is = 3;
-        game.undo();
-        assert.equals(game.server.is, 2);
-        assert.equals(game.scores[0], 0);
+    "Winner serves first": function() {
+        app.options.gameWinServer = "winner";
+        app.scores[1] = 11;
+        app.games.next();
+        assert(app.server.is, 1);         
     },
     
-    "Redo applied": function() {
-        game.server.is = 2;
-        game.scores[0] += 1;
-        game.server.is = 3;
-        game.undo();
-        game.redo();
-        assert.equals(game.server.is, 3);
-        assert.equals(game.scores[0], 1);        
-    },
-    
-    "Initial value retained": function() {
-        game.server.is = 2;
-        game.server.is = 4;
-        assert.equals(game.server.initial, 2);
+    "Loser serves first": function() {
+        app.options.gameWinServer = "loser";
+        app.scores[1] = 11;
+        app.games.next();
+        assert(app.server.is, 0);         
     }
-    
-});
 
-    
-    
+});

@@ -139,5 +139,9 @@
         }
         app.players[player] = name;
     });
+    
+    $("#setGameWinServer select").change(function() {
+        app.options.gameWinServer = $(this).val();    
+    });
            
 })();

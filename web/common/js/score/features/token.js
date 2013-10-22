@@ -63,84 +63,26 @@ score.features.token = score.features.token || function(self, property) {
     self[property] = blackchip.Properties({
         is: null
     }, self.events, property);
+
+    /**
+     * The intial holder of the token. 
+     */
+    self[property].initial = null;
     
     var init = function() {
         
-        /**
-         * Triggered before a token is given to a player. "*" is the name of the 
-         * property given to this token.
-         * 
-         * @event before *
-         * 
-         * @param value {object} the new holder of the token or null
-         *        if the token is unassigned.
-         * @param property {string} the string "is".
-         * @param previous {object} the previous holder of the token or
-         *        null if it was not assigned.
-         * @param eventName {string} the value "before *"
-         */
-        
-        /**
-         * Triggered when a token is given to a player. "*" is the name of the
-         * property given to this token.
-         * 
-         * @event *
-         * 
-         * @param value {object} the new holder of the token or null
-         *        if the token is unassigned.
-         * @param property {string} the string "is".
-         * @param previous {object} the previous holder of the token or
-         *        null if it was not assigned.
-         * @param eventName {string} the value "before *"
-         */
-        
-        /**
-         * Triggered after all listeners have been notified of a token change.
-         * "*" is the name of the property given to this token.
-         * 
-         * @event after *
-         * 
-         * @param value {object} the new holder of the token or null
-         *        if the token is unassigned.
-         * @param property {string} the string "is".
-         * @param previous {object} the previous holder of the token or
-         *        null if it was not assigned.
-         * @param eventName {string} the value "after *"
-         */
-        self.events.on(property, function() {
+        self.events.on(property, function(value, is, previous) {
+            if ( _.isNull(previous) && _.isNull(self[property].initial) ) {
+                self[property].initial = value;
+            }
             self.record.apply(null, arguments);
         });
         
-        /**
-         * Triggered when an undo of a token event is requested. The handler
-         * will continue with the next item in the undo stack.
-         * 
-         * @event undo *
-         * 
-         * @param value {object} the new holder of the token or null
-         *        if the token is unassigned.
-         * @param property {string} the string "is".
-         * @param previous {object} the previous holder of the token or
-         *        null if it was not assigned.
-         * @param eventName {string} the value "undo *"
-         */
         self.events.on("undo " + property, function(playerId, property, previous) {
             self.server.is = previous;
             self.undo();        
         });
         
-        /**
-         * Triggered when an redo of a token event is requested. 
-         * 
-         * @event redo *
-         * 
-         * @param value {object} the new holder of the token or null
-         *        if the token is unassigned.
-         * @param property {string} the string "is".
-         * @param previous {object} the previous holder of the token or
-         *        null if it was not assigned.
-         * @param eventName {string} the value "redo *"
-         */
         self.events.on("redo " + property, function(playerId) {
             self.server.is = playerId;
         });
@@ -149,3 +91,72 @@ score.features.token = score.features.token || function(self, property) {
     init();    
     return self;
 };
+
+/**
+ * Triggered before a token is given to a player. "*" is the name of the 
+ * property given to this token.
+ * 
+ * @event before *
+ * 
+ * @param value {object} the new holder of the token or null
+ *        if the token is unassigned.
+ * @param property {string} the string "is".
+ * @param previous {object} the previous holder of the token or
+ *        null if it was not assigned.
+ * @param eventName {string} the value "before *"
+ */
+
+/**
+ * Triggered when a token is given to a player. "*" is the name of the
+ * property given to this token.
+ * 
+ * @event *
+ * 
+ * @param value {object} the new holder of the token or null
+ *        if the token is unassigned.
+ * @param property {string} the string "is".
+ * @param previous {object} the previous holder of the token or
+ *        null if it was not assigned.
+ * @param eventName {string} the value "before *"
+ */
+
+/**
+ * Triggered after all listeners have been notified of a token change.
+ * "*" is the name of the property given to this token.
+ * 
+ * @event after *
+ * 
+ * @param value {object} the new holder of the token or null
+ *        if the token is unassigned.
+ * @param property {string} the string "is".
+ * @param previous {object} the previous holder of the token or
+ *        null if it was not assigned.
+ * @param eventName {string} the value "after *"
+ */
+
+/**
+ * Triggered when an undo of a token event is requested. The handler
+ * will continue with the next item in the undo stack.
+ * 
+ * @event undo *
+ * 
+ * @param value {object} the new holder of the token or null
+ *        if the token is unassigned.
+ * @param property {string} the string "is".
+ * @param previous {object} the previous holder of the token or
+ *        null if it was not assigned.
+ * @param eventName {string} the value "undo *"
+ */
+
+/**
+ * Triggered when an redo of a token event is requested. 
+ * 
+ * @event redo *
+ * 
+ * @param value {object} the new holder of the token or null
+ *        if the token is unassigned.
+ * @param property {string} the string "is".
+ * @param previous {object} the previous holder of the token or
+ *        null if it was not assigned.
+ * @param eventName {string} the value "redo *"
+ */
