@@ -95,6 +95,7 @@
     };
         
     app.events
+        .on("player", onNameChange)
         .on("score", onScore)
         .on("server", onServer)
         .on("after gameWin", onGameWin)
@@ -128,6 +129,15 @@
     
     $("#talker").change(function() {
         app.talker = talkers[$(this).val()];
+    });
+    
+    $("#setNames input").keyup(function() {
+        var player = $(this).attr("data-player");
+        var name = $(this).val();
+        if ( /^ *$/.test(name) ) {
+            name = app.defaultPlayerName(player);
+        }
+        app.players[player] = name;
     });
            
 })();

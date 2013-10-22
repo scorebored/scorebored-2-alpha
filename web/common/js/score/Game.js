@@ -110,6 +110,11 @@ score.Game = score.Game || function(options) {
         }
     };
     
+    self.defaultPlayerName = function(id) {
+        playerNumber = parseInt(id) + 1;
+        return "Player " + playerNumber;
+    };
+    
     init();
     return self;
 };
