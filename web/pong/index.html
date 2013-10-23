@@ -5,14 +5,24 @@
 
     <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height, initial-scale=1.0" />
 
-    <link type="text/css" rel="stylesheet" href="../common/lib/bootstrap/css/bootstrap.css" />
-    <link type="text/css" rel="stylesheet" href="../common/css/scorebored.css" />
-    <link type="text/css" rel="stylesheet" href="css/pong.css" />
+    <!-- link.prod --> <!-- <link type="text/css" rel="stylesheet" href="../scorebored.css" /> -->
+    <!-- link.dev --> <link type="text/css" rel="stylesheet" href="../common/lib/bootstrap/css/bootstrap.css" />
+    <!-- link.dev --> <link type="text/css" rel="stylesheet" href="../common/css/scorebored.css" />
+    <!-- link.dev --> <link type="text/css" rel="stylesheet" href="css/pong.css" />
 
-    <script type="text/javascript" src="../common/lib/jquery.js"></script>
-    <script type="text/javascript" src="../common/lib/bootstrap/js/bootstrap.js"></script>
+    <!-- link.prod --> <!-- <script type="text/javascript" src="../scorebored.js"></script> -->
+    <!-- link.dev --> <script type="text/javascript" src="../common/lib/jquery.js"></script>
+    <!-- link.dev --> <script type="text/javascript" src="../common/lib/bootstrap/js/bootstrap.js"></script>
 
+    <!-- link.dev --> <script type="text/javascript" src="../common/js/blackchip/ScriptLoader.js"></script>
+    <!-- link.dev --> <script type="text/javascript"> score = {}; blackchip.SCRIPT_BASE_DIR = ".."; </script>
+    <!-- link.dev --> <script type="text/javascript" src="../common/Scripts.js"></script>
+    <!-- link.dev --> <script type="text/javascript" src="Scripts.js"></script>
+
+    <!-- link.dev --> <script type="text/javascript" src="js/jquery.fittext.js"></script>
+    <!-- link.dev --> <script type="text/javascript" src="js/score.pong.ui.js"></script>
 </head>
+
 <body>
     <header id="score_header" class="navbar navbar-inverse">
         <div class="score-logo">
@@ -135,20 +145,5 @@
             2013 Blackchip.org
         </div>
     </footer>
-
-
-    <script type="text/javascript" src="../common/js/blackchip/ScriptLoader.js"></script>
-    <script type="text/javascript">
-        score = {};
-        blackchip.SCRIPT_BASE_DIR = "..";
-    </script>
-    <script type="text/javascript" src="../common/Scripts.js"></script>
-    <script type="text/javascript" src="Scripts.js"></script>
-    <script type="text/javascript" src="Announcer.js"></script>
-    <script type="text/javascript" src="Game.js"></script>
-
-    <script type="text/javascript" src="js/jquery.fittext.js"></script>
-    <script type="text/javascript" src="js/score.pong.ui.js"></script>
-
 </body>
 </html>

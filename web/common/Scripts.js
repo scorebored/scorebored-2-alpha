@@ -35,7 +35,6 @@
         "common/js/blackchip/Logging.js",
         "common/js/blackchip/Properties.js",
 
-        "common/js/score/Announcer.js",
         "common/js/score/Game.js",
 
         "common/js/score/tts/changeServers.js",
@@ -58,7 +57,7 @@
         "common/js/score/features/server.js",
         "common/js/score/features/sides.js",
         "common/js/score/features/token.js",
-        "common/js/score/features/tokenRing.js",        
+        "common/js/score/features/tokenRing.js",
 
         "common/js/score/rules/gameWinServer.js",
         "common/js/score/rules/gameWinSwitchSides.js",

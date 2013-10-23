@@ -1,24 +1,24 @@
 /******************************************************************************
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2013 blackchip.org
  *
- * Permission is hereby granted, free of charge, to any person obtaining a 
- * copy of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
@@ -26,14 +26,14 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-    
+
         jshint: {
             main: [
-                "web/common/js/**/*.js", 
+                "web/common/js/**/*.js",
                 "web/pong/*.js"
             ]
         },
-        
+
         buster: {
             all: {}
         },
@@ -50,16 +50,122 @@ module.exports = function(grunt) {
                 }
             }
         },
-        
-        clean: ["build"]
-    });    
-            
-    grunt.loadNpmTasks("grunt-buster");  
+
+        copy: {
+            source: {
+                files: [
+                    {expand: true, cwd: "web",
+                        src: ["**", "!**/Scripts.js"],
+                        dest: "build/scorebored"},
+                    {expand: true, cwd: "web",
+                        src: ["**", "!**/Scripts.js"],
+                        dest: "build/scorebored-debug"}
+                ]
+            },
+            resources: {
+                files: [
+                    {expand: true,
+                        cwd: "build/scorebored/common/lib/bootstrap/fonts",
+                        src: ["**"],
+                        dest: "build/scorebored/fonts"}
+                ]
+            }
+        },
+
+        replace: {
+            links: {
+                src: [
+                    "build/scorebored/**/*.html",
+                    "build/scorebored-debug/**/*.html"
+                ],
+                overwrite: true,
+                replacements: [
+                    {from: /.*<!-- *link.dev *-->.*/g, to: ""} ,
+                    {from: /.*<!-- *link.prod *-->.*<!--(.*)-->/g, to: "$1"}
+                ]
+            }
+        },
+
+        concat: {
+            js: {
+                src: [
+                    "build/scorebored/common/lib/*.js",
+                    "build/scorebored/common/lib/bootstrap/**/*.js",
+                    "build/scorebored/common/js/**/*.js",
+                    "build/scorebored/pong/js/**/*.js"
+                ],
+                dest: "build/scorebored-debug/scorebored.js"
+            },
+            css: {
+                src: [
+                    "build/scorebored/common/lib/bootstrap/css/bootstrap.css",
+                    "build/scorebored/common/css/*.css",
+                    "build/scorebored/pong/css/*.css"
+                ],
+                dest: "build/scorebored-debug/scorebored.css"
+            }
+        },
+
+        uglify: {
+            js: {
+                files: {
+                    "build/scorebored/scorebored.js": [
+                        "build/scorebored-debug/scorebored.js"
+                    ]
+                }
+            }
+        },
+
+        cssmin: {
+            minify: {
+                src: ["build/scorebored-debug/scorebored.css"],
+                dest: "build/scorebored/scorebored.css"
+            }
+        },
+
+        clean: {
+            build: ["build"],
+            source: [
+                "build/**/*.js",
+                "!build/scorebored/scorebored.js",
+                "!build/scorebored-debug/scorebored.js",
+                "build/**/*.css",
+                "!build/scorebored/scorebored.css",
+                "!build/scorebored-debug/scorebored.css"
+             ]
+        },
+
+        exec: {
+            removeEmptyDirs: {
+                cmd: "find build -type d -empty -delete"
+            }
+        }
+    });
+
+    grunt.loadNpmTasks("grunt-buster");
     grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-concat");
+    grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
-      
-    grunt.registerTask("default", ["jshint", "yuidoc"]);
+    grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks("grunt-rename");
+    grunt.loadNpmTasks("grunt-text-replace");
+
+    grunt.registerTask("default", [
+        "clean:build",
+        "copy:source",
+        "copy:resources",
+        "replace",
+        "concat",
+        "uglify",
+        "cssmin",
+        "clean:source",
+        "exec:removeEmptyDirs"
+    ]);
+
     grunt.registerTask("doc", ["yuidoc"]);
     grunt.registerTask("lint", ["jshint"]);
     grunt.registerTask("test", ["buster"]);

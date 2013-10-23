@@ -76,6 +76,8 @@ score.pong.ui = score.pong.ui || {
     initGame: function() {
         this.game = score.pong.Game({matchLength: this.options.match_length,
                                      gameLength: this.options.game_length});
+        // FIXME
+        window.pong = this.game;
 
         var talkers = {
             mute: score.talkers.Mute(this.game.events),
