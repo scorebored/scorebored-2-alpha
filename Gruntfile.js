@@ -87,6 +87,9 @@ module.exports = function(grunt) {
         concat: {
             js: {
                 src: [
+                    "build/scorebored/lib/lodash.js",
+                    "build/scorebored/lib/jquery.js",
+                    "build/scorebored/lib/bootstrap/js/bootstrap.js",
                     "build/scorebored/common/js/**/*.js",
                     "build/scorebored/pong/js/**/*.js"
                 ],
@@ -124,7 +127,6 @@ module.exports = function(grunt) {
                 "build/**/*.js",
                 "!build/scorebored/scorebored.js",
                 "!build/scorebored-debug/scorebored.js",
-                "!build/**/lib/**/*.js",
                 "build/**/*.css",
                 "!build/scorebored/scorebored.css",
                 "!build/scorebored-debug/scorebored.css",
