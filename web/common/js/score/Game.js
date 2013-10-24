@@ -63,6 +63,7 @@ score.Game = score.Game || function(options) {
 
     self.start = function() {
         self.events.trigger("gameStart");
+        self.record("gameStart");
     };
 
     self.record = function() {

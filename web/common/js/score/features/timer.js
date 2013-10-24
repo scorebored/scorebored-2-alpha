@@ -72,6 +72,11 @@ score.features.timer = score.features.timer || function(self) {
         self.timer.start();
     });
 
+    self.events.on("undo gameStart", function() {
+        self.timer.reset();
+        self.timer.stop();
+    });
+
     self.events.on("gameWin", function() {
         self.timer.stop();
     });

@@ -91,8 +91,13 @@ score.pong.Game = score.pong.Game || function(options) {
         }
     };
 
+    var undoGameStart = function() {
+        self.server.initial = null;
+    };
+
     self.events.on("after score", changeServer);
     self.events.on("before server", startGame);
+    self.events.on("undo gameStart", undoGameStart);
     self.events.on("score", self.silence);
 
     score.tts.playerPoint(self, { noOverTime: true });
