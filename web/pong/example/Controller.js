@@ -144,4 +144,9 @@ $(function() {
         app.options.gameWinServer = $(this).val();
     });
 
+    setInterval(function() {
+        var elapsed = app.timer.elapsed();
+        $("#timer").html(score.util.elapsedString(elapsed));
+    }, 100);
+
 });

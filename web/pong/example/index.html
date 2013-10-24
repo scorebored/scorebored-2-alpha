@@ -4,14 +4,17 @@
 	<title>Scorebored - Pong</title>
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    	<link href="../common/lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
-    	<link href="application.css" rel="stylesheet" media="screen">	
+    	<link href="../../lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+    	<link href="application.css" rel="stylesheet" media="screen">
 	</head>
 
 	<body>
 		<h2>Scorebored - Pong</h2>
 
     	<div class="container scores">
+    	    <div class="row">
+    	        <div id="timer" class="col-xs-2"></div>
+    	    </div>
     		<div id="games" class="row">
 				<div class="col-xs-2" data-side="0" data-player="0">0</div>
 				<div class="col-xs-2" data-side="1" data-player="1">0</div>
@@ -62,13 +65,13 @@
 				<div class="row">
 					<div class="col-xs-4">
 						Player 1:
-						<input type='text' data-player='0' value="Player 1"></input>	
+						<input type='text' data-player='0' value="Player 1"></input>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-4">
 						Player 2:
-						<input type='text' data-player='1' value="Player 2"></input>	
+						<input type='text' data-player='1' value="Player 2"></input>
 					</div>
 				</div>
 			</div>
@@ -85,12 +88,12 @@
 				</div>
 			</div>
 		</div>
-			
-		<!-- link.dev --> <script src="../common/js/blackchip/ScriptLoader.js"></script>
-		<!-- link.dev --> <script>blackchip.SCRIPT_BASE_DIR = "..";</script>
-		<!-- link.dev --> <script src="../common/Scripts.js"></script>
-		<!-- link.dev --> <script src="Scripts.js"></script>
-		
+
+		<!-- link.dev --> <script src="../../common/js/blackchip/ScriptLoader.js"></script>
+		<!-- link.dev --> <script>blackchip.SCRIPT_BASE_DIR = "../..";</script>
+		<!-- link.dev --> <script src="../../common/Scripts.js"></script>
+		<!-- link.dev --> <script src="../Scripts.js"></script>
+
 	</body>
 
 </html>

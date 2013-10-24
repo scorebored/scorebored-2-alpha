@@ -25,9 +25,9 @@
 (function() {
 
     blackchip.ScriptLoader.load([
-        "common/lib/jquery.js",
-        "common/lib/lodash.js",
-        "common/lib/bootstrap/js/bootstrap.js",
+        "lib/jquery.js",
+        "lib/lodash.js",
+        "lib/bootstrap/js/bootstrap.js",
 
         "common/js/blackchip/module.js",
         "common/js/blackchip/console.js",
@@ -36,6 +36,7 @@
         "common/js/blackchip/Properties.js",
 
         "common/js/score/Game.js",
+        "common/js/score/util.js",
 
         "common/js/score/tts/changeServers.js",
         "common/js/score/tts/deuce.js",
@@ -56,6 +57,7 @@
         "common/js/score/features/seats.js",
         "common/js/score/features/server.js",
         "common/js/score/features/sides.js",
+        "common/js/score/features/timer.js",
         "common/js/score/features/token.js",
         "common/js/score/features/tokenRing.js",
 

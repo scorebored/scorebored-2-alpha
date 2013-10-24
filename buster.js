@@ -28,6 +28,7 @@ config["scorebored"] = {
     rootPath: "./",
     environment: "browser",
     libs: [
+        "web/lib/jquery.js",
         "web/lib/**/*.js",
     ],
     sources: [

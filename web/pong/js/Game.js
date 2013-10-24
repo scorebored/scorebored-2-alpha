@@ -64,6 +64,7 @@ score.pong.Game = score.pong.Game || function(options) {
     score.features.server(self);
     score.features.match(self);
     score.features.sides(self);
+    score.features.timer(self);
 
     score.rules.gameWinServer(self);
     score.rules.gameWinSwitchSides(self);
@@ -84,7 +85,14 @@ score.pong.Game = score.pong.Game || function(options) {
         }
     };
 
+    var startGame = function(player, is, previous) {
+        if ( _.isNull(previous) && _.isNull(self.server.initial) ) {
+            self.start();
+        }
+    };
+
     self.events.on("after score", changeServer);
+    self.events.on("before server", startGame);
     self.events.on("score", self.silence);
 
     score.tts.playerPoint(self, { noOverTime: true });

@@ -23,9 +23,22 @@
  *****************************************************************************/
 
 /**
- * Scorebored
- *
  * @module score
- * @static
  */
+var score = score || {};
 
+score.util = score.util || function() {
+
+    var self = {};
+
+    self.elapsedString = function(milliseconds) {
+        var d = new Date(milliseconds);
+        var seconds = "" + d.getSeconds();
+        var minutes = "" + d.getMinutes();
+        seconds = ( seconds.length === 1 ) ? "0" + seconds : seconds;
+        minutes = ( minutes.length === 1 ) ? "0" + minutes : minutes;
+        return minutes + ":" + seconds;
+    };
+
+    return self;
+}();

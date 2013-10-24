@@ -22,33 +22,67 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+/**
+ * @module score.features
+ */
 var score = score || {};
-score.tts = score.tts || {};
+score.features = score.features || {};
 
-score.tts.roundPoints = score.tts.roundPoints || function(self) {
+score.features.timer = score.features.timer || function(self) {
 
-    var allowed = function() {
-        if ( self.gameOver ) {
-            return false;
-        }
-        return true;
-    };
+    var mark = 0;
+    var add = 0;
 
-    self.events.on("after round", function(scores) {
-        if ( !allowed() ) {
+    self.timer = {};
+    self.timer.running = false;
+
+    self.timer.start = function() {
+        if ( self.timer.running ) {
             return;
         }
-        var text = [];
-        for ( var player = 0; player < self.players.count; player++ ) {
-            if ( scores[player] > 0 ) {
-                text.push(scores[player] + " for " + self.players[player]);
-            }
+        mark = Date.now();
+        self.timer.running = true;
+        self.events.trigger("timerStart");
+    };
+
+    self.timer.elapsed = function() {
+        if ( self.timer.running ) {
+            return Date.now() - mark + add;
+        } else {
+            return add;
         }
-        if ( text.length > 0 ) {
-            self.say(text.join(", "));
+    };
+
+    self.timer.stop = function() {
+        if ( !self.timer.running ) {
+            return;
         }
+        add = self.timer.elapsed();
+        self.timer.running = false;
+        self.events.trigger("timerStop");
+    };
+
+    self.timer.reset = function() {
+        mark = Date.now();
+        add = 0;
+    };
+
+    self.events.on("gameStart", function() {
+        self.timer.reset();
+        self.timer.start();
+    });
+
+    self.events.on("gameWin", function() {
+        self.timer.stop();
+    });
+
+    self.events.on("undo gameWin", function() {
+        self.timer.start();
+    });
+
+    self.events.on("nextGame", function() {
+        self.timer.start();
     });
 
     return self;
-
 };

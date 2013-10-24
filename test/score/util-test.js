@@ -22,10 +22,23 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-/**
- * Scorebored
- *
- * @module score
- * @static
- */
+buster.testCase("score.util", {
+
+    "Elapsed 00:00": function() {
+        assert.equals(score.util.elapsedString(0), "00:00");
+    },
+
+    "Elapsed 00:59": function() {
+        assert.equals(score.util.elapsedString(59 * 1000), "00:59");
+    },
+
+    "Elapsed 01:00": function() {
+        assert.equals(score.util.elapsedString(60 * 1000), "01:00");
+    },
+
+    "Elapsed 10:00": function() {
+        assert.equals(score.util.elapsedString(10 * 60 * 1000), "10:00");
+    }
+
+});
 
