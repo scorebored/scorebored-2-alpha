@@ -2,6 +2,12 @@
  * CSS for Ping-Pong scoreboard
  */
 
+@font-face {
+  font-family: 'DS-Digital';
+  /* link.prod */ /* src: url('common/fonts/DS-Digital.ttf'); */
+  /* link.dev */ src: url('../../common/fonts/DS-Digital.ttf');
+}
+
 .score-pong-toolbar {
     min-height: 24px;
 }
@@ -29,6 +35,10 @@
 .team-score {
     width: 50%;
     float: left;
+}
+
+.score {
+    font-family: 'DS-Digital';
 }
 
 .scoreboard-back {
@@ -67,3 +77,4 @@
 .text-align-left { text-align: left; }
 .text-align-center { text-align: center; }
 .text-align-right { text-align: right; }
+

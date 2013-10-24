@@ -61,14 +61,6 @@ module.exports = function(grunt) {
                         src: ["**", "!**/Scripts.js"],
                         dest: "build/scorebored-debug"}
                 ]
-            },
-            resources: {
-                files: [
-                    {expand: true,
-                        cwd: "build/scorebored/common/lib/bootstrap/fonts",
-                        src: ["**"],
-                        dest: "build/scorebored/fonts"}
-                ]
             }
         },
 
@@ -76,12 +68,18 @@ module.exports = function(grunt) {
             links: {
                 src: [
                     "build/scorebored/**/*.html",
-                    "build/scorebored-debug/**/*.html"
+                    "build/scorebored/common/css/**/*.css",
+                    "build/scorebored/pong/css/**/*.css",
+                    "build/scorebored-debug/**/*.html",
+                    "build/scorebored-debug/common/css/**/*.css",
+                    "build/scorebored-debug/pong/css/**/*.css"
                 ],
                 overwrite: true,
                 replacements: [
                     {from: /.*<!-- *link.dev *-->.*/g, to: ""} ,
-                    {from: /.*<!-- *link.prod *-->.*<!--(.*)-->/g, to: "$1"}
+                    {from: /.*\/\* *link.dev *\*\/.*/g, to: ""},
+                    {from: /.*<!-- *link.prod *-->.*<!--(.*)-->/g, to: "$1"},
+                    {from: /.*\/\* *link.prod *\*\/.*\/\*(.*)\*\//g, to: "$1"}
                 ]
             }
         },
@@ -89,8 +87,6 @@ module.exports = function(grunt) {
         concat: {
             js: {
                 src: [
-                    "build/scorebored/common/lib/*.js",
-                    "build/scorebored/common/lib/bootstrap/**/*.js",
                     "build/scorebored/common/js/**/*.js",
                     "build/scorebored/pong/js/**/*.js"
                 ],
@@ -98,7 +94,6 @@ module.exports = function(grunt) {
             },
             css: {
                 src: [
-                    "build/scorebored/common/lib/bootstrap/css/bootstrap.css",
                     "build/scorebored/common/css/*.css",
                     "build/scorebored/pong/css/*.css"
                 ],
@@ -129,9 +124,11 @@ module.exports = function(grunt) {
                 "build/**/*.js",
                 "!build/scorebored/scorebored.js",
                 "!build/scorebored-debug/scorebored.js",
+                "!build/**/lib/**/*.js",
                 "build/**/*.css",
                 "!build/scorebored/scorebored.css",
-                "!build/scorebored-debug/scorebored.css"
+                "!build/scorebored-debug/scorebored.css",
+                "!build/**/lib/**/*.css"
              ]
         },
 
@@ -157,7 +154,6 @@ module.exports = function(grunt) {
     grunt.registerTask("default", [
         "clean:build",
         "copy:source",
-        "copy:resources",
         "replace",
         "concat",
         "uglify",

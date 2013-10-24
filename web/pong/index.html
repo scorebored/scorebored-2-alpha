@@ -6,22 +6,28 @@
     <meta name="viewport" content="user-scalable=yes, width=device-width, height=device-height, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
+    <!-- link.prod --> <!-- <link type="text/css" rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" /> -->
+    <!-- link.dev -->       <link type="text/css" rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css" />
+
     <!-- link.prod --> <!-- <link type="text/css" rel="stylesheet" href="../scorebored.css" /> -->
-    <!-- link.dev --> <link type="text/css" rel="stylesheet" href="../common/lib/bootstrap/css/bootstrap.css" />
-    <!-- link.dev --> <link type="text/css" rel="stylesheet" href="../common/css/scorebored.css" />
-    <!-- link.dev --> <link type="text/css" rel="stylesheet" href="css/pong.css" />
+    <!-- link.dev -->       <link type="text/css" rel="stylesheet" href="../common/css/scorebored.css" />
+    <!-- link.dev -->       <link type="text/css" rel="stylesheet" href="css/pong.css" />
+
+    <!-- link.prod --> <!-- <script type="text/javascript" src="../lib/lodash/lodash.min.js"></script> -->
+    <!-- link.dev -->       <script type="text/javascript" src="../lib/lodash/lodash.js"></script>
+    <!-- link.prod --> <!-- <script type="text/javascript" src="../lib/jquery/jquery.min.js"></script> -->
+    <!-- link.dev -->       <script type="text/javascript" src="../lib/jquery/jquery.js"></script>
+    <!-- link.prod-->  <!-- <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.min.js"></script> -->
+    <!-- link.dev -->       <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.js"></script>
 
     <!-- link.prod --> <!-- <script type="text/javascript" src="../scorebored.js"></script> -->
-    <!-- link.dev --> <script type="text/javascript" src="../common/lib/jquery.js"></script>
-    <!-- link.dev --> <script type="text/javascript" src="../common/lib/bootstrap/js/bootstrap.js"></script>
+    <!-- link.dev -->       <script type="text/javascript" src="../common/js/blackchip/ScriptLoader.js"></script>
+    <!-- link.dev -->       <script type="text/javascript"> score = {}; blackchip.SCRIPT_BASE_DIR = ".."; </script>
+    <!-- link.dev -->       <script type="text/javascript" src="../common/Scripts.js"></script>
+    <!-- link.dev -->       <script type="text/javascript" src="Scripts.js"></script>
 
-    <!-- link.dev --> <script type="text/javascript" src="../common/js/blackchip/ScriptLoader.js"></script>
-    <!-- link.dev --> <script type="text/javascript"> score = {}; blackchip.SCRIPT_BASE_DIR = ".."; </script>
-    <!-- link.dev --> <script type="text/javascript" src="../common/Scripts.js"></script>
-    <!-- link.dev --> <script type="text/javascript" src="Scripts.js"></script>
-
-    <!-- link.dev --> <script type="text/javascript" src="js/jquery.fittext.js"></script>
-    <!-- link.dev --> <script type="text/javascript" src="js/score.pong.ui.js"></script>
+    <!-- link.dev -->       <script type="text/javascript" src="js/jquery.fittext.js"></script>
+    <!-- link.dev -->       <script type="text/javascript" src="js/score.pong.ui.js"></script>
 </head>
 
 <body>
@@ -57,13 +63,13 @@
 
                 <div class="row-fluid">
                     <div class="team-score">
-                        <div class="displayed-score team-0-score text-align-center">0</div>
+                        <div class="displayed-score team-0-score text-align-center score">0</div>
                         <div class="score-actions">
                           <button data-player="0" class="action-increment-score btn btn-lg btn-danger">+ Point!</button>
                         </div>
                     </div>
                     <div class="team-score">
-                        <div class="displayed-score team-1-score text-align-center">0</div>
+                        <div class="displayed-score team-1-score text-align-center score">0</div>
                         <div class="score-actions">
                           <button data-player="1" class="action-increment-score btn btn-lg btn-danger">+ Point!</button>
                         </div>
