@@ -65,6 +65,9 @@ score.features.timer = score.features.timer || function(self) {
     self.timer.reset = function() {
         mark = Date.now();
         add = 0;
+        if ( self.timer.running ) {
+            self.events.trigger("timerStart");
+        }
     };
 
     self.events.on("gameStart", function() {

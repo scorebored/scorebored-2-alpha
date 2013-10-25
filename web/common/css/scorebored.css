@@ -50,6 +50,10 @@ body {
     width: 100%;
 }
 
+.score-logo {
+    width: 150px;
+}
+
 .round {
     -webkit-border-radius: 10%;
     -moz-border-radius: 10%;

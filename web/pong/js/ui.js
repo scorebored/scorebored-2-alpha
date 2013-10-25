@@ -50,7 +50,8 @@ score.pong.ui = score.pong.ui || {
         // Start with new game settings
         this.openGameSettings();
 
-        $('.displayed-score').fitText(0.2);
+        $('.team-name').fitText(1.0);
+        $('.team-score').fitText(0.2);
 
         // Button bindings
         $('.score-pong-open-settings').click(function(e) {
@@ -63,7 +64,16 @@ score.pong.ui = score.pong.ui || {
             self.showScoreboard();
         });
 
-        $('.score-actions button').click(function(e) {
+        $('.score-actions .action-select-server').click(function(e) {
+            var player = $(this).attr('data-player');
+            if ( _.isNull(self.game.server.is) ) {
+                self.game.server.is = player;
+            }
+
+            $('.score-actions .action-select-server').hide();
+            $('.score-actions .action-increment-score').show();
+        });
+        $('.score-actions .action-increment-score').click(function(e) {
             var player = $(this).attr('data-player');
             if ( _.isNull(self.game.server.is) ) {
                 self.game.server.is = player;
@@ -74,22 +84,26 @@ score.pong.ui = score.pong.ui || {
     },
 
     initGame: function() {
-        this.game = score.pong.Game({matchLength: this.options.match_length,
+        self = score.pong.ui;
+        self.game = score.pong.Game({matchLength: this.options.match_length,
                                      gameLength: this.options.game_length});
         // FIXME
-        window.pong = this.game;
+//        window.pong = this.game;
 
         var talkers = {
-            mute: score.talkers.Mute(this.game.events),
-            google: score.talkers.Google(this.game.events)
+            mute: score.talkers.Mute(self.game.events),
+            google: score.talkers.Google(self.game.events)
         };
 
-        this.game.talker = talkers.google;
+        self.game.talker = talkers.google;
 
         // Event bindings
-        this.game.events
+        self.game.events
             .on("score", this.onScore)
             .on("server", this.onServer)
+            .on("gameStart", this.onGameStart)
+            .on("timerStart", this.onTimerStart)
+            .on("timerStop", this.onTimerStop)
             .on("after gameWin", this.onGameWin)
             .on("undo gameWin", this.onUndoGameWin)
             .on("game", this.onGame)
@@ -99,7 +113,7 @@ score.pong.ui = score.pong.ui || {
             .on("silence", this.onSilence);
 
         // DEBUG?
-        this.game.events.all(function() {
+        self.game.events.all(function() {
             console.log(arguments);
         });
 
@@ -108,6 +122,8 @@ score.pong.ui = score.pong.ui || {
     },
 
     openGameSettings: function(options) {
+        var self = score.pong.ui;
+
         options = options || {};
         var new_options = $.extend(true, {}, this.options, options);
 
@@ -124,7 +140,7 @@ score.pong.ui = score.pong.ui || {
 
         // Game button
         $('#score_settings_play_game').text(
-            (this.game) ? 'Resume Game' : 'Begin Game'
+            (self.game) ? 'Resume Game' : 'Begin Game'
         );
         this.showSettings();
 
@@ -135,6 +151,8 @@ score.pong.ui = score.pong.ui || {
      * Save and start/resume game with current settings
      */
     saveGameSettings: function() {
+        var self = score.pong.ui;
+
         // Read settings from DOM
         var set_settings = $.extend(true, {}, this.options, {
             'game_name': $('#pong_settings_game_name').val(),
@@ -149,13 +167,16 @@ score.pong.ui = score.pong.ui || {
         if (!set_settings.player_1) { set_settings.player_1 = 'Home Team'; }
         if (!set_settings.player_2) { set_settings.player_2 = 'Away Team'; }
 
-        this.options = set_settings;
+        self.options = set_settings;
 
-        $('.team-1-name').text( this.options.player_1 );
-        $('.team-2-name').text( this.options.player_2 );
+        $('.team-name[data-player="0"]').text( this.options.player_1 );
+        $('.team-name[data-player="1"]').text( this.options.player_2 );
+
+
+        self.updateMatchCountDisplay();
 
         // Initialize game
-        if (!(!!this.game)) {
+        if (!(!!self.game)) {
             this.initGame();
         } else {
             // Update game
@@ -167,8 +188,35 @@ score.pong.ui = score.pong.ui || {
         return true;
     },
 
+    onGameStart: function() {
+    },
+
+    onTimerStart: function() {
+        var self = score.pong.ui;
+
+        var count = 0;
+        if (!!self.game) { count = self.game.timer.elapsed(); }
+        count = isNaN(count) ? 0 : count;
+        var count_date = new Date(new Date() - count);
+
+        // In case clock is already running, destroy it
+        $('.score-match-clock').countdown('destroy');
+        $('.score-match-clock').countdown({
+            since: count_date,
+            compact: true,
+            format: "HMS"
+        });
+    },
+
+    onTimerStop: function() {
+        $('.score-match-clock').countdown('pause');
+    },
+
     onScore: function(value, player) {
-        $('.team-'+player+'-score').html(value);
+        var self = score.pong.ui;
+
+        $(".team-score[data-player='0']").html(self.game.scores[0]);
+        $(".team-score[data-player='1']").html(self.game.scores[1]);
     },
 
     onServer: function(player) {
@@ -194,6 +242,21 @@ score.pong.ui = score.pong.ui || {
     },
 
     onSilence: function(text) {
+    },
+
+    updateMatchCountDisplay: function() {
+        var self = score.pong.ui;
+
+        $('.score-match-count').html('<strong>Match Count: </strong>');
+        for (var i = 0; i < self.options.match_length; i++) {
+            if (i == 0) {   // FIXME
+                $('.score-match-count').append(
+                    $('<span class="score-game-label current-game">'+(i+1)+'</span>') );
+            } else {
+                $('.score-match-count').append(
+                    $('<span class="score-game-label">'+(i+1)+'</span>') );
+            }
+        }
     },
 
     // UI Control methods

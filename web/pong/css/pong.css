@@ -26,19 +26,16 @@
     color: #333333;
 }
 
-.team-1-name, .team-2-name {
+.team-name {
     width: 60%;
     margin: 10px auto;
     /*cursor: pointer;*/
 }
 
-.team-score {
+.team-name,
+.team-score-block {
     width: 50%;
     float: left;
-}
-
-.score {
-    font-family: 'DS-Digital';
 }
 
 .scoreboard-back {
@@ -52,7 +49,11 @@
     color: #FFFFFF;
 }
 
-.displayed-score {
+.team-name-block {
+    background: transparent;
+}
+
+.team-score {
     width: 80%;
     margin: 0 auto;
     background: #000000;
@@ -62,6 +63,7 @@
     -o-transform-origin: 0% 100%;
     -transform-origin: 0% 100%;
     white-space: nowrap;
+    font-family: 'DS-Digital';
 }
 
 .score-actions { text-align: center; }
@@ -70,11 +72,28 @@
     margin: 1.5em 0;
     border: 0;
     color: #FFFFFF;
-
     font-weight: bold;
 }
 
-.text-align-left { text-align: left; }
-.text-align-center { text-align: center; }
-.text-align-right { text-align: right; }
+.score-match-count {
+    margin: 18px auto 0;
+    color: #FFFFFF;
+    line-height: 36px;
+    font-weight: bold;
+    width: 250px;
+}
 
+.score-game-label {
+    font-size: 1.2em;
+    color: #666666;
+    margin-left: 12px;
+}
+.score-game-label.current-game {
+    color: #FFFFFF;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+.score-game-label.completed-game {
+    color: #009900;
+    cursor: pointer;
+}
