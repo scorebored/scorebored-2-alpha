@@ -85,6 +85,19 @@ score.pong.ui = score.pong.ui || {
         $('.score-pong-next-game').click(function(e) {
             self.game.games.next();
         });
+
+        $('.score-open-match-log').click(function(e) {
+            self.openMatchLog();
+        });
+
+        $('.match-log-modal').on('shown.bs.modal', function() {
+            self.renderMatchLog();
+            /*
+            var $mbody = $(this).find('.modal-body');
+            $mbody.animate({
+                scrollTop: $mbody[0].scrollHeight
+            }, 200);*/
+        });
     },
 
     initGame: function() {
@@ -92,15 +105,13 @@ score.pong.ui = score.pong.ui || {
         self.game = score.pong.Game({matchLength: this.options.match_length,
                                      gameLength: this.options.game_length});
 
-        // FIXME
-//        window.pong = this.game;
-
         var talkers = {
             mute: score.talkers.Mute(self.game.events),
             google: score.talkers.Google(self.game.events)
         };
 
-        self.game.talker = talkers.google;
+//        self.game.talker = talkers.google;
+        self.game.talker = talkers.mute;
 
         // Event bindings
         self.game.events
@@ -334,6 +345,72 @@ score.pong.ui = score.pong.ui || {
                     $('<span class="score-game-label">'+i+'</span>') );
             }
         }
+    },
+
+    openMatchLog: function() {
+        $('.match-log-modal').modal('show');
+
+        $('.match-log-modal .modal-body').html(
+            $('<h3 class="muted text-center">Loading...</h3>') );
+    },
+
+    /* Called *AFTER* modal has opened */
+    renderMatchLog: function () {
+        var self = score.pong.ui;
+        var $mbody = $('.match-log-modal .modal-body');
+
+        var $log = $('<div class="match-log-content">');
+        var game_log = self.game.history;
+
+        // FIXME: these should be listed in history log
+        var p1 = 0,
+            p2 = 0,
+            serve = null;
+
+        if (game_log.length === 0) {
+            $mbody.html( $('<h2 class="text-center">No activity yet</h2>') );
+            return;
+        }
+
+        for (var i = 0; i < game_log.length; i++) {
+            var e = game_log[i];
+            var $e = $('<div class="match-log-event row">');
+            if (e[0] == "server") {
+                server = e[1];
+
+                $e.append(
+                    $('<div class="col-md-offset-2">'
+                        + '<div>Server changed.</div>' ) );
+                $log.append( $e );
+
+            }
+            else if (e[0] == "score") {
+                $e.append( $('<div class="col-md-2">00:00</div>') );
+                if (e[2] == "0") {
+                    p1++;
+                } else {
+                    p2++;
+                }
+                $e.append(
+                    $('<div class="col-md-offset-2">'
+                        + '<div class="team-score-block">'
+                        +   '<div class="team-score text-center">'+p1 +'</div>'
+                        + '</div>'
+                        + '<div class="team-score-block">'
+                        +   '<div class="team-score text-center">'+ p2+'</div>'
+                        + '</div>'
+                    + '</div>') );
+                $log.append( $e );
+            }
+            else if (e[0] == "gameWin") {
+                p1 = 0;
+                p2 = 0;
+            }
+        }
+
+        $mbody.html( $log ).animate({
+            scrollTop: $mbody[0].scrollHeight
+        }, 200);
     },
 
     // UI Control methods

@@ -65,6 +65,12 @@
     white-space: nowrap;
     font-family: 'DS-Digital';
 }
+.match-log-modal .team-score {
+    font-size: 3em;
+}
+.match-log-modal .team-score-block {
+    width: 25%;
+}
 
 .score-actions { text-align: center; }
 .score-actions button {

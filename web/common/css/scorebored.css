@@ -3,7 +3,8 @@
  * Covers basic page elements for application
  */
 
-body {
+body,
+.match-log-modal .modal-content {
     background-color: #76A5AF;
     color: #EEEEEE;
 }
@@ -52,6 +53,14 @@ body {
 
 .score-logo {
     width: 150px;
+}
+
+.match-log-modal .modal-header {
+    background-color: #76757F;
+}
+.match-log-modal .modal-body {
+    height: 400px;
+    overflow-y: scroll;
 }
 
 .round {
