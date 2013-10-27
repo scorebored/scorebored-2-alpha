@@ -28,6 +28,7 @@ score.pong = score.pong || {};
 score.pong.ui = score.pong.ui || {
 
     game: null,     // Stores game instance
+    view_game: null,    // Allows for viewing an older game
 
     /**
      * Current game settings
@@ -75,11 +76,14 @@ score.pong.ui = score.pong.ui || {
         });
         $('.score-actions .action-increment-score').click(function(e) {
             var player = $(this).attr('data-player');
-            if ( _.isNull(self.game.server.is) ) {
-                self.game.server.is = player;
-            } else {
+            if ( !self.game.gameOver && !self.game.matchOver
+                    && !_.isNull(self.game.server.is) ) {
                 self.game.scores[player] += 1;
             }
+        });
+
+        $('.score-pong-next-game').click(function(e) {
+            self.game.games.next();
         });
     },
 
@@ -87,6 +91,7 @@ score.pong.ui = score.pong.ui || {
         self = score.pong.ui;
         self.game = score.pong.Game({matchLength: this.options.match_length,
                                      gameLength: this.options.game_length});
+
         // FIXME
 //        window.pong = this.game;
 
@@ -99,23 +104,31 @@ score.pong.ui = score.pong.ui || {
 
         // Event bindings
         self.game.events
+            .on("player", this.onPlayer)
             .on("score", this.onScore)
             .on("server", this.onServer)
+            .on("options", this.onOptions)
             .on("gameStart", this.onGameStart)
             .on("timerStart", this.onTimerStart)
             .on("timerStop", this.onTimerStop)
             .on("after gameWin", this.onGameWin)
             .on("undo gameWin", this.onUndoGameWin)
+            .on("nextGame", this.onNextGame)
+            .on("undo nextGame", this.onUndoNextGame)
             .on("game", this.onGame)
             .on("history", this.onHistory)
             .on("say", this.onSay)
             .on("after say", this.onSilence)
-            .on("silence", this.onSilence);
+            .on("silence", this.onSilence)
+            .on("seat", this.onSeat);
 
         // DEBUG?
         self.game.events.all(function() {
             console.log(arguments);
         });
+
+        self.game.players['0'] = this.options.player_1;
+        self.game.players['1'] = this.options.player_2;
 
         // Enable 'Cancel' button
         $('.cancel-settings').show();
@@ -169,12 +182,6 @@ score.pong.ui = score.pong.ui || {
 
         self.options = set_settings;
 
-        $('.team-name[data-player="0"]').text( this.options.player_1 );
-        $('.team-name[data-player="1"]').text( this.options.player_2 );
-
-
-        self.updateMatchCountDisplay();
-
         // Initialize game
         if (!(!!self.game)) {
             this.initGame();
@@ -182,13 +189,47 @@ score.pong.ui = score.pong.ui || {
             // Update game
         }
 
+        self.updateMatchDisplay();
+
         this.showScoreboard();
         $(window).resize();
 
         return true;
     },
 
+    onPlayer: function() {
+        var self = score.pong.ui;
+        $('.team-name[data-player="0"]').text( self.game.players[0] );
+        $('.team-name[data-player="1"]').text( self.game.players[1] );
+    },
+
+    onOptions: function() {
+    },
+
     onGameStart: function() {
+        self.updateGameButtons();
+    },
+
+    onNextGame: function() {
+        self = score.pong.ui;
+        self.updateMatchDisplay();
+        self.updateGameButtons();
+    },
+
+    onUndoNextGame: function() {
+        self = score.pong.ui;
+        self.updateMatchDisplay();
+        self.updateGameButtons();
+    },
+
+    onSeat: function() {
+        self = score.pong.ui;
+        $("[data-side='0']").attr("data-player", self.game.sides[0]);
+        $("[data-side='1']").attr("data-player", self.game.sides[1]);
+        self.onPlayer();
+        self.onScore();
+        self.onServer();
+        self.onGame();
     },
 
     onTimerStart: function() {
@@ -224,6 +265,7 @@ score.pong.ui = score.pong.ui || {
         if ( !_.isNull(pong.server.is) ) {
             $("#server ." + player).html("Server");
         }
+        self.updateGameButtons();
     },
 
     onGameWin: function() {
@@ -232,7 +274,10 @@ score.pong.ui = score.pong.ui || {
     onUndoGameWin: function() {
     },
 
-    onGame: function(games, player) {
+    onGame: function() {
+        self = score.pong.ui;
+        self.updateMatchDisplay();
+        self.updateGameButtons();
     },
 
     onHistory: function(history) {
@@ -244,17 +289,49 @@ score.pong.ui = score.pong.ui || {
     onSilence: function(text) {
     },
 
-    updateMatchCountDisplay: function() {
-        var self = score.pong.ui;
+    updateGameButtons: function() {
+        self = score.pong.ui;
+        if ( self.game.matchOver
+                || (!self.game.matchOver && self.game.gameOver) ) {
+            $('.action-select-server').attr({'disabled': true});
+            $('.action-increment-score').attr({'disabled': true});
+            $('.score-pong-next-game').attr({'disabled': self.game.matchOver });
+        } else {
 
-        $('.score-match-count').html('<strong>Match Count: </strong>');
-        for (var i = 0; i < self.options.match_length; i++) {
-            if (i == 0) {   // FIXME
+            if ( _.isNull(self.game.server.is) ) {
+                $('.action-increment-score').attr({'disabled': true}).hide();
+                $('.action-select-server').attr({'disabled': false}).show();
+            } else {
+                $('.action-select-server').attr({'disabled': true}).hide();
+                $('.action-increment-score').attr({'disabled': false}).show();
+            }
+
+            if ( self.game.gameOver ) {
+                $('.score-pong-next-game').attr({'disabled': false});
+            } else {
+                $('.score-pong-next-game').attr({'disabled': true});
+            }
+        }
+    },
+
+    updateMatchDisplay: function() {
+        var self = score.pong.ui;
+        var current_game = 1;
+        if ( self.game ) {
+            current_game = self.game.games.current;
+        }
+
+        $('.score-match-count').html('<strong>Games: </strong>');
+        for (var i = 1; i <= self.options.match_length; i++) {
+            if (i < current_game) {
                 $('.score-match-count').append(
-                    $('<span class="score-game-label current-game">'+(i+1)+'</span>') );
+                    $('<span class="score-game-label completed-game">'+i+'</span>') );
+            } else if (i == current_game) {
+                $('.score-match-count').append(
+                    $('<span class="score-game-label current-game">'+i+'</span>') );
             } else {
                 $('.score-match-count').append(
-                    $('<span class="score-game-label">'+(i+1)+'</span>') );
+                    $('<span class="score-game-label">'+i+'</span>') );
             }
         }
     },
@@ -268,6 +345,7 @@ score.pong.ui = score.pong.ui || {
     showScoreboard: function() {
         $('.score-pong').hide();
         $('.score-pong-board').show();
+        self.updateGameButtons();
     }
 };
 
