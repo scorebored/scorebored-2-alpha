@@ -207,6 +207,23 @@ score.pong.ui = score.pong.ui || {
             this.initGame();
         } else {
             // Update game
+            self.game.players['0'] = set_settings.player_1;
+            self.game.players['1'] = set_settings.player_2;
+
+            try {
+                self.game.options.matchLength = set_settings.match_length;
+            } catch (e) {
+                self.options.match_length = self.game.options.matchLength;
+                alert("Cannot change match length (it would end the match)");
+            }
+
+            try {
+                self.game.options.gameLength = set_settings.game_length;
+            } catch (e) {
+                self.options.game_length = self.game.options.gameLength;
+                alert("Cannot change game length (it would end current game)");
+            }
+
         }
 
         self.updateMatchDisplay();
