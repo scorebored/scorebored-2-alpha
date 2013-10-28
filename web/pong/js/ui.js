@@ -451,6 +451,7 @@ score.pong.ui = score.pong.ui || {
     showScoreboard: function() {
         $('.score-pong').hide();
         $('.score-pong-board').show();
+        window.scrollTo(0);
         self.updateGameButtons();
     }
 };
