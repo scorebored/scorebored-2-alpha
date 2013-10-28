@@ -81,6 +81,54 @@
     font-weight: bold;
 }
 
+@keyframes blink-button {
+    0% { box-shadow: 0 0 15px #000; }
+    50% { box-shadow: 0 0 0 #000; }
+    100% { box-shadow: 0 0 15px #000; }
+}
+
+@-webkit-keyframes blink-button {
+    0% { box-shadow: 0 0 15px #000; }
+    50% { box-shadow: 0 0 0 #000; }
+    100% { box-shadow: 0 0 15px #000; }
+}
+.blink-button {
+    -webkit-animation: blink-button 2.0s linear infinite;
+    -moz-animation: blink-button 2.0s linear infinite;
+    -ms-animation: blink-button 2.0s linear infinite;
+    -o-animation: blink-button 2.0s linear infinite;
+    animation: blink-button 2.0s linear infinite;
+}
+.score-pong-toolbar-buttons {
+    clear: none;
+}
+.score-pong-next-game {
+    text-decoration: none;
+    text-shadow: none;
+    outline: none;
+    margin-left: 80px;
+}
+
+@media (max-width: 560px) {
+    .score-pong-toolbar-buttons { clear: both; }
+    .score-pong-next-game { margin-left: 0px; }
+}
+/*
+.glow {
+    text-decoration: none;
+    text-shadow: none;
+    -webkit-transition: 500ms linear 0s;
+    -moz-transition: 500ms linear 0s;
+    -o-transition: 500ms linear 0s;
+    transition: 500ms linear 0s;
+    outline: 0 none;
+}
+.glow.on {
+    -moz-box-shadow: 1px 1px 10px 1px #000;
+    -webkit-box-shadow: 1px 1px 10px 1px #000;
+    box-shadow: 1px 1px 10px 1px #000;
+}*/
+
 .score-match-count {
     margin: 18px auto 0;
     color: #FFFFFF;

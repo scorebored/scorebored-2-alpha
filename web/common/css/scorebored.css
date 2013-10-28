@@ -57,6 +57,8 @@ body,
 
 .match-log-modal .modal-header {
     background-color: #76757F;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 .match-log-modal .modal-body {
     height: 400px;

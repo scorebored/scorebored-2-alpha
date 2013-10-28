@@ -83,7 +83,12 @@ score.pong.ui = score.pong.ui || {
         });
 
         $('.score-pong-next-game').click(function(e) {
-            self.game.games.next();
+            var self = score.pong.ui;
+            if ( self.game.matchOver ) {
+                self.initGame();
+            } else {
+                self.game.games.next();
+            }
         });
 
         $('.score-open-match-log').click(function(e) {
@@ -102,6 +107,7 @@ score.pong.ui = score.pong.ui || {
 
     initGame: function() {
         self = score.pong.ui;
+        if ( self.game ) { delete self.game; }
         self.game = score.pong.Game({matchLength: this.options.match_length,
                                      gameLength: this.options.game_length});
 
@@ -143,6 +149,9 @@ score.pong.ui = score.pong.ui || {
 
         // Enable 'Cancel' button
         $('.cancel-settings').show();
+
+        self.updateMatchDisplay();
+        self.updateGameButtons();
     },
 
     openGameSettings: function(options) {
@@ -306,7 +315,8 @@ score.pong.ui = score.pong.ui || {
                 || (!self.game.matchOver && self.game.gameOver) ) {
             $('.action-select-server').attr({'disabled': true});
             $('.action-increment-score').attr({'disabled': true});
-            $('.score-pong-next-game').attr({'disabled': self.game.matchOver });
+            $('.score-pong-next-game').attr({'disabled': false });
+            $('.score-pong-toolbar-buttons').show();
         } else {
 
             if ( _.isNull(self.game.server.is) ) {
@@ -319,8 +329,10 @@ score.pong.ui = score.pong.ui || {
 
             if ( self.game.gameOver ) {
                 $('.score-pong-next-game').attr({'disabled': false});
+                $('.score-pong-toolbar-buttons').show();
             } else {
                 $('.score-pong-next-game').attr({'disabled': true});
+                $('.score-pong-toolbar-buttons').hide();
             }
         }
     },
