@@ -8,10 +8,6 @@
 		"type": "git",
 		"url": "https://github.com/blackchip-org/scorebored"
 	},
-	"dependencies": {
-		"lodash":  "2.2.1",
-		"twitter-bootstrap-3.0.0": "3.0.0"
-	},
 	"devDependencies": {
 		"buster": "0.6.x",
 		"grunt": "0.4.x",
