@@ -39,23 +39,55 @@ $(function() {
         log.trace.apply(log.trace, arguments);
     });
 
-    var onNameChange = function() {
+    var updateNames = function() {
         $("#names [data-player='0']").html(app.players[0]);
         $("#names [data-player='1']").html(app.players[1]);
     };
 
-    var onScore = function() {
+    var updateScores = function() {
         $("#scores [data-player='0']").html(app.scores[0]);
         $("#scores [data-player='1']").html(app.scores[1]);
     };
 
-    var onServer = function() {
+    var updateServer = function() {
         $("#server div").html("&nbsp;");
         if ( !_.isNull(app.server.is) ) {
             $("#server [data-player='" + app.server.is + "']").html("Server");
         }
     };
 
+    var updateMatchStatus = function() {
+        if ( app.options.matchLength === 1 ) {
+            $("#matchStatus").html("&nbsp;");
+        } else {
+            $("#matchStatus").html("Game " + app.games.current + " of " + 
+                    app.options.matchLength);
+        }    
+    };
+    
+    var updateGameLength = function() {
+        $("#gameLength").html(app.options.gameLength + " point game");
+    };
+
+    var updateOptions = function() {
+        updateMatchStatus();
+        updateGameLength();
+    };
+    
+    var updateGames = function() {
+        $("#games [data-player='0']").html(app.games[0]);
+        $("#games [data-player='1']").html(app.games[1]);
+    };
+
+    var updateSides = function() {
+        $("[data-side='0']").attr("data-player", app.sides[0]);
+        $("[data-side='1']").attr("data-player", app.sides[1]);
+        updateNames();
+        updateScores();
+        updateServer();
+        updateGames();
+    };
+    
     var onGameWin = function() {
         if ( !app.matchOver ) {
             $("#nextGame").css("display", "inline");
@@ -66,20 +98,6 @@ $(function() {
     var onUndoGameWin = function() {
         $("#nextGame").css("display", "none");
         $("button.add").attr("disabled", false);
-    };
-
-    var onGame = function() {
-        $("#games [data-player='0']").html(app.games[0]);
-        $("#games [data-player='1']").html(app.games[1]);
-    };
-
-    var onSides = function() {
-        $("[data-side='0']").attr("data-player", app.sides[0]);
-        $("[data-side='1']").attr("data-player", app.sides[1]);
-        onNameChange();
-        onScore();
-        onServer();
-        onGame();
     };
 
     var onHistory = function(history) {
@@ -95,17 +113,20 @@ $(function() {
     };
 
     app.events
-        .on("player", onNameChange)
-        .on("score", onScore)
-        .on("server", onServer)
+        .on("player", updateNames)
+        .on("score", updateScores)
+        .on("server", updateServer)
+        .on("options", updateOptions)
         .on("after gameWin", onGameWin)
         .on("undo gameWin", onUndoGameWin)
-        .on("game", onGame)
+        .on("nextGame", updateMatchStatus)
+        .on("undo nextGame", updateMatchStatus)
+        .on("game", updateGames)
         .on("history", onHistory)
         .on("say", onSay)
         .on("after say", onSilence)
         .on("silence", onSilence)
-        .on("seat", onSides);
+        .on("seat", updateSides);
 
 
     $("button.add").click(function() {
@@ -140,6 +161,20 @@ $(function() {
         app.players[player] = name;
     });
 
+    $("#setMatchLength").keyup(function() {
+        var length = parseInt($(this).val());
+        if ( _.contains([1, 3, 5, 7], length) ) {
+            app.options.matchLength = length;
+        }
+    });
+
+    $("#setGameLength").keyup(function() {
+        var length = parseInt($(this).val());
+        if ( _.contains([11, 21], length) ) {
+            app.options.gameLength = length;
+        }
+    });
+        
     $("#setGameWinServer select").change(function() {
         app.options.gameWinServer = $(this).val();
     });

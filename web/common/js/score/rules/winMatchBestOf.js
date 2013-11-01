@@ -61,6 +61,16 @@ score.rules.winMatchBestOf = score.rules.winMatchBestOf || function(self) {
             }
         });
     
+        self.events.on("before options", function(value, name) {
+            if ( name === "matchLength" ) {
+                var newLength = value;
+                if ( isWinner(self.games[0], newLength) ||
+                        isWinner(self.games[1], newLength) ) {
+                    throw "matchOver";            
+                }      
+            }
+        });
+        
         self.events.on("undo matchWin", function() {
             self.matchOver = false;
             self.undo();
@@ -80,8 +90,9 @@ score.rules.winMatchBestOf = score.rules.winMatchBestOf || function(self) {
             ( isWinner(self.games[0] + 1) || isWinner(self.games[1] + 1) );
     };
     
-    var isWinner = function(games) {
-        return ( games / self.options.matchLength >= 0.5 ) ;
+    var isWinner = function(games, matchLength) {
+        matchLength = matchLength || self.options.matchLength;
+        return ( games / matchLength >= 0.5 ) ;
     };
     
     return self;

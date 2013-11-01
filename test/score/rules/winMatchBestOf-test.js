@@ -24,17 +24,25 @@
 
 buster.testCase("score.rules.winMatchBestOf", {
 
-    game: null,
+    app: null,
     
     setUp: function() {
-        game = score.Game({matchLength: 3});
-        score.features.match(game);
-        score.rules.winMatchBestOf(game);
+        app = score.Game({matchLength: 3});
+        score.features.match(app);
+        score.rules.winMatchBestOf(app);
     },
     
     "Match win on best of": function() {
-        game.games[0] = 2;
-        assert(game.matchOver);
-    }
+        app.games[0] = 2;
+        assert(app.matchOver);
+    },
+    
+    "Exception thrown when match length shortened": function() {
+        app.options.matchLength = 7;
+        app.games[0] = 2;
+        assert.exception(function() {
+            app.options.matchLength = 3;
+        });    
+    }        
 
 });

@@ -26,19 +26,16 @@
     color: #333333;
 }
 
-.team-1-name, .team-2-name {
+.team-name {
     width: 60%;
     margin: 10px auto;
     /*cursor: pointer;*/
 }
 
-.team-score {
+.team-name,
+.team-score-block {
     width: 50%;
     float: left;
-}
-
-.score {
-    font-family: 'DS-Digital';
 }
 
 .scoreboard-back {
@@ -52,7 +49,11 @@
     color: #FFFFFF;
 }
 
-.displayed-score {
+.team-name-block {
+    background: transparent;
+}
+
+.team-score {
     width: 80%;
     margin: 0 auto;
     background: #000000;
@@ -62,6 +63,13 @@
     -o-transform-origin: 0% 100%;
     -transform-origin: 0% 100%;
     white-space: nowrap;
+    font-family: 'DS-Digital';
+}
+.match-log-modal .team-score {
+    font-size: 3em;
+}
+.match-log-modal .team-score-block {
+    width: 25%;
 }
 
 .score-actions { text-align: center; }
@@ -70,11 +78,76 @@
     margin: 1.5em 0;
     border: 0;
     color: #FFFFFF;
-
     font-weight: bold;
 }
 
-.text-align-left { text-align: left; }
-.text-align-center { text-align: center; }
-.text-align-right { text-align: right; }
+@keyframes blink-button {
+    0% { box-shadow: 0 0 15px #000; }
+    50% { box-shadow: 0 0 0 #000; }
+    100% { box-shadow: 0 0 15px #000; }
+}
 
+@-webkit-keyframes blink-button {
+    0% { box-shadow: 0 0 15px #000; }
+    50% { box-shadow: 0 0 0 #000; }
+    100% { box-shadow: 0 0 15px #000; }
+}
+.blink-button {
+    -webkit-animation: blink-button 2.0s linear infinite;
+    -moz-animation: blink-button 2.0s linear infinite;
+    -ms-animation: blink-button 2.0s linear infinite;
+    -o-animation: blink-button 2.0s linear infinite;
+    animation: blink-button 2.0s linear infinite;
+}
+.score-pong-toolbar-buttons {
+    clear: none;
+}
+.score-pong-next-game {
+    text-decoration: none;
+    text-shadow: none;
+    outline: none;
+    margin-left: 80px;
+}
+
+@media (max-width: 560px) {
+    .score-pong-toolbar-buttons { clear: both; }
+    .score-pong-next-game { margin-left: 0px; }
+}
+/*
+.glow {
+    text-decoration: none;
+    text-shadow: none;
+    -webkit-transition: 500ms linear 0s;
+    -moz-transition: 500ms linear 0s;
+    -o-transition: 500ms linear 0s;
+    transition: 500ms linear 0s;
+    outline: 0 none;
+}
+.glow.on {
+    -moz-box-shadow: 1px 1px 10px 1px #000;
+    -webkit-box-shadow: 1px 1px 10px 1px #000;
+    box-shadow: 1px 1px 10px 1px #000;
+}*/
+
+.score-match-count {
+    margin: 18px auto 0;
+    color: #FFFFFF;
+    line-height: 36px;
+    font-weight: bold;
+    width: 250px;
+}
+
+.score-game-label {
+    font-size: 1.2em;
+    color: #666666;
+    margin-left: 12px;
+}
+.score-game-label.current-game {
+    color: #FFFFFF;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+.score-game-label.completed-game {
+    color: #009900;
+    cursor: pointer;
+}

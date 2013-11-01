@@ -12,6 +12,12 @@
 		<h2>Scorebored - Pong</h2>
 
     	<div class="container scores">
+    		<div class="row">
+    			<div id="matchStatus" class="col-xs-2">Game 1 of 3</div>			
+    		</div>
+    		<div class="row">
+    			<div id="gameLength" class="col-xs-2">11 point game</div>			
+    		</div>
     	    <div class="row">
     	        <div id="timer" class="col-xs-2"></div>
     	    </div>
@@ -73,6 +79,18 @@
 						Player 2:
 						<input type='text' data-player='1' value="Player 2"></input>
 					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4">
+					Game Length:
+					<input id="setGameLength" type='text' value="11"></input>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4">
+					Match Length:
+					<input id="setMatchLength" type='text' value="3"></input>
 				</div>
 			</div>
 			<div id="setGameWinServer">

@@ -3,7 +3,8 @@
  * Covers basic page elements for application
  */
 
-body {
+body,
+.match-log-modal .modal-content {
     background-color: #76A5AF;
     color: #EEEEEE;
 }
@@ -48,6 +49,22 @@ body {
 .score-select-game-icon {
     height: 100%;
     width: 100%;
+}
+
+.score-logo {
+    width: 150px;
+}
+
+.match-log-modal .modal-header {
+    background-color: #76757F;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+.match-log-modal .modal-header h2 { margin-top: 0px; margin-bottom: 0px; }
+.match-log-modal .close { font-size: 2em; }
+.match-log-modal .modal-body {
+    height: 400px;
+    overflow-y: scroll;
 }
 
 .round {

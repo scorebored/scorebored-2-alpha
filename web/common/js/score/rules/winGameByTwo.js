@@ -79,6 +79,16 @@ score.rules.winGameByTwo = score.rules.winGameByTwo || function(self, options) {
             }
         });
     
+        self.events.on("before options", function(value, name) {
+            if ( name === "gameLength" ) {
+                var newLength = value;
+                if ( self.scores[0] >= newLength || 
+                        self.scores[1] >= newLength ) {
+                    throw "gameOver";            
+                }
+            }            
+        });
+        
         self.events.on("before nextGame", function() {
             self.undoing = true;
         });

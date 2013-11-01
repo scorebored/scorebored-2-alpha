@@ -24,58 +24,58 @@
 
 buster.testCase("score.rules.winGameByTwo", {
 
-    game: null,
+    app: null,
     
     setUp: function() {
-        game = score.Game({gameLength: 11});
+        app = score.Game({gameLength: 11});
         
-        score.features.scores(game);
-        score.rules.winGameByTwo(game);
+        score.features.scores(app);
+        score.rules.winGameByTwo(app);
     },
     
     "Win at game length": function() {
-        game.scores[0] = 11;
-        assert(game.gameOver);
+        app.scores[0] = 11;
+        assert(app.gameOver);
     },
     
     "No win when less than two": function() {
-        game.scores[0] = 10;
-        game.scores[1] = 10;
-        game.scores[0]++;
-        refute(game.gameOver);
+        app.scores[0] = 10;
+        app.scores[1] = 10;
+        app.scores[0]++;
+        refute(app.gameOver);
     },
     
     "Is overtime": function() {
-        game.scores[0] = 10;
-        game.scores[1] = 10;
-        game.scores[0]++;
-        assert(game.isOverTime());      
+        app.scores[0] = 10;
+        app.scores[1] = 10;
+        app.scores[0]++;
+        assert(app.isOverTime());      
     },
     
     "Is overtime next": function() {
-        game.scores[0] = 10;
-        game.scores[1] = 10;
-        assert(game.isOverTimeNext());            
+        app.scores[0] = 10;
+        app.scores[1] = 10;
+        assert(app.isOverTimeNext());            
     },
     
     "Game point": function() {
-        game.scores[1] = 10;
-        assert(game.isGamePoint());            
+        app.scores[1] = 10;
+        assert(app.isGamePoint());            
     },
     
     "No game point when tied": function() {
-        game.scores[0] = 10;
-        game.scores[1] = 10;
-        refute(game.isGamePoint());        
+        app.scores[0] = 10;
+        app.scores[1] = 10;
+        refute(app.isGamePoint());        
     },
     
     "Win by two": function() {
-        game.scores[0] = 10;
-        game.scores[1] = 10;
-        game.scores[1]++;
-        refute(game.gameOver);  
-        game.scores[1]++;
-        assert(game.gameOver);        
+        app.scores[0] = 10;
+        app.scores[1] = 10;
+        app.scores[1]++;
+        refute(app.gameOver);  
+        app.scores[1]++;
+        assert(app.gameOver);        
     },
     
     "Events triggered on a win": function() {
@@ -83,16 +83,24 @@ buster.testCase("score.rules.winGameByTwo", {
         var as = this.stub();
         var after = this.stub();
         
-        game.events.on("before gameWin", before);
-        game.events.on("gameWin", as);
-        game.events.on("after gameWin", after);
+        app.events.on("before gameWin", before);
+        app.events.on("gameWin", as);
+        app.events.on("after gameWin", after);
         
-        game.scores[1] = 11;
+        app.scores[1] = 11;
         
         assert.calledWith(before, "1", "before gameWin");
         assert.calledWith(as, "1", "gameWin");
         assert.calledWith(after, "1", "after gameWin");       
     },
+    
+    "Exception thrown when game length shortened": function() {
+        app.options.gameLength = 21;
+        app.scores[0] = 11;
+        assert.exception(function() {
+            app.options.gameLength = 11;
+        });    
+    }
         
 });
 
