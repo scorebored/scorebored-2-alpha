@@ -22,11 +22,22 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-(function() {
+/* jshint -W060 */ // allow document.write
 
-    blackchip.ScriptLoader.load([
-        "../demo/DemoPong.js",
-        "../demo/DemoShoes.js",
-    ]);
+/**
+ * @module sb
+ */
+var sb = sb || {};
 
-})();
+sb.load = sb.load || function(bundle) {
+
+    var baseDir = sb.SCRIPT_BASE_DIR || ".";
+    var tags = [];
+
+    for ( var i = 0; i < bundle.length; i++ ) {
+        path = bundle[i];
+        tags.push("<script src='" + baseDir + "/" + path + "'></script>");
+    }
+    document.write(tags.join(""));
+
+};

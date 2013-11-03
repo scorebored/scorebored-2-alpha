@@ -22,11 +22,54 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-(function() {
+/**
+ * @module score.features
+ */
+var sb = sb || {};
 
-    blackchip.ScriptLoader.load([
-        "pong/js/Game.js",
-        "pong/example/Controller.js"
-    ]);
+sb.timer = sb.timer || function() {
 
-})();
+    var mark = 0;
+    var add = 0;
+
+    var self = {};
+
+    self.events = sb.events();
+    self.running = false;
+
+    self.start = function() {
+        if ( self.running ) {
+            return;
+        }
+        mark = Date.now();
+        self.running = true;
+        self.events.trigger("start");
+    };
+
+    self.elapsed = function() {
+        if ( self.running ) {
+            return Date.now() - mark + add;
+        } else {
+            return add;
+        }
+    };
+
+    self.stop = function() {
+        if ( !self.running ) {
+            return;
+        }
+        add = self.elapsed();
+        self.running = false;
+        self.events.trigger("stop");
+    };
+
+    self.reset = function() {
+        mark = Date.now();
+        add = 0;
+        if ( self.running ) {
+            self.events.trigger("start");
+        }
+    };
+
+    return self;
+};

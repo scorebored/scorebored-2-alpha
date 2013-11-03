@@ -1,0 +1,21 @@
+
+@font-face {
+    font-family: DS-Digital;
+    src: url('common/fonts/DS-Digital.ttf');
+}
+
+body {
+	padding:20px;
+}
+
+.score {
+    font-family: "DS-Digital";
+}
+
+#history td {
+    text-align: center;
+}
+
+#history .server {
+    font-weight: bold;
+}

@@ -22,7 +22,7 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-score = score || {};
+var score = score || {};
 score.pong = score.pong || {};
 
 score.pong.ui = score.pong.ui || {
@@ -299,7 +299,7 @@ score.pong.ui = score.pong.ui || {
 
     onServer: function(player) {
         $("#server div").html("&nbsp;");
-        if ( !_.isNull(pong.server.is) ) {
+        if ( !_.isNull(player) ) {
             $("#server ." + player).html("Server");
         }
         self.updateGameButtons();
