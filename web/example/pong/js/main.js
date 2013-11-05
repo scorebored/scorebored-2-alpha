@@ -24,7 +24,7 @@
 
 $(function() {
 
-    var app = sb.pong.standard.app();
+    var app = sb.pong.app();
     window.pong = app;
 
     sb.pong.ui(app);

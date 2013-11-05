@@ -24,9 +24,8 @@
 
 var sb = sb || {};
 sb.pong = sb.pong || {};
-sb.pong.standard = sb.pong.standard || {};
 
-sb.pong.standard.app = sb.pong.standard.app || function() {
+sb.pong.app = sb.pong.app || function() {
 
     var self = sb.app("pong.standard");
 

@@ -25,8 +25,7 @@
 (function() {
 
     sb.load([
-        "pong/js/pong.app.js",
-        "pong/js/ui.js"
+        "pong/js/app.js"
     ]);
 
 })();
