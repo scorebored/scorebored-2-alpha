@@ -1,0 +1,73 @@
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-1">
+            <a href=".." class="btn btn-default">Back</a>
+        </div>
+        <div class="col-sm-1">
+            <button class="btn btn-danger">Reset</a>
+        </div>
+        <div class="col-sm-3 col-sm-offset-3 text-center heading">
+            Options
+        </div>
+        <div class="col-sm-1 col-sm-offset-3 text-right">
+            <button id="scorebored" class="btn btn-primary">Start</a>
+        </div>
+    </div>
+
+    <form role="form" class="options">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="form-group">
+                    <label for="setTitle">Title</label>
+                    <input id="setTitle" class="form-control" type="text">
+                </div>
+            </div>
+        </div>
+
+        <div id="setNames" class="row">
+            <div class="col-sm-4 col-sm-offset-2">
+                <div class="form-group">
+                    <label for="setName0">Player 1</label>
+                    <input id="setName0" class="form-control" type="text" data-player="0">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="setName1">Player 2</label>
+                    <input id="setName1" class="form-control" type="text" data-player="1">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-2">
+                <div class="form-group">
+                    <label for="setGameLength">Game Length</label>
+                    <select id="setGameLength" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="setMatchLength">Match Length</label>
+                    <select id="setMatchLength" class="form-control"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="form-group">
+                    <label for="setNextServer">Server on next game</label>
+                    <select class="form-control">
+                        <option value="alternate">Alternates</option>
+                        <option value="loser">Loser</option>
+                        <option value="winner">Winner</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>

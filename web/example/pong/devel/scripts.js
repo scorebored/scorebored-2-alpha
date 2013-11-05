@@ -22,41 +22,11 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-/**
- * @module sb
- */
-var sb = sb || {};
+(function() {
 
-sb.util = sb.util || function() {
+    sb.load([
+        "example/pong/js/app.js",
+        "example/pong/js/ui.js"
+    ]);
 
-    var self = {};
-
-    self.total = function(numberArray) {
-        return _.reduce(numberArray, function(sum, value) {
-            return sum + value;
-        });
-    };
-
-    self.other = function(index) {
-        return index === 0 ? 1 : 0;
-    };
-
-    self.swap = function(array) {
-        var e1 = array[1];
-        array[1] = array[0];
-        array[0] = e1;
-        return array;
-    };
-
-    self.elapsedString = function(milliseconds) {
-        var d = new Date(milliseconds);
-        var seconds = "" + d.getSeconds();
-        var minutes = "" + d.getMinutes();
-        seconds = ( seconds.length === 1 ) ? "0" + seconds : seconds;
-        minutes = ( minutes.length === 1 ) ? "0" + minutes : minutes;
-        return minutes + ":" + seconds;
-    };
-
-    return self;
-
-}();
+})();

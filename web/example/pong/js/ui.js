@@ -22,64 +22,31 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-$(function() {
+sb = sb || {};
+sb.pong = sb.pong || {};
 
-    var app = sb.pong.app();
-    window.pong = app;
+sb.pong.ui = sb.pong.ui || function(app) {
 
-    // From the settings page, go to the scorebored page
+    var self = {};
+
+    // From the options page, go to the scorebored page
     $("#scorebored").click(function() {
-        $("#settings-page").hide();
+        $("#options-page").hide();
         $("#scorebored-page").show();
     });
 
-    // From the scorebored page, go back to the settings page
-    $("#settings").click(function() {
-        $("#scorebored-page").hide();
-        $("#settings-page").show();
+    // Cancel current game and reset
+    $("#reset").click(function() {
+        app.reset();
     });
 
-    // From the scorebored page, go to the match log page
-    $("#log").click(function() {
-        $("#scorebored-page").hide();
-        displayLog();
-        $("#log-page").show();
+    // Set the match title
+    $("#setTitle").keyup(function() {
+        app.options.title = $(this).val();
+        app.events.trigger("options");
     });
 
-    // From the match log page, go back to the scorebored page
-    $("#logBack").click(function() {
-        $("#log-page").hide();
-        $("#scorebored-page").show();
-    });
-
-    // Award a point for the player. If the game hasn't started, use this
-    // to select the first server.
-    $("button.add").click(function() {
-        var player = _.parseInt($(this).attr("data-player"));
-        if ( app.state.status === "setup" ) {
-            app.selectServer(player);
-        } else {
-            app.awardPoint(player);
-        }
-    });
-
-    // Undo the last scoring event
-    $("#undo").click(function() {
-        app.undo();
-    });
-
-    // Either continue to the next game, or end and reset the match
-    $("#continue").click(function() {
-        if ( app.state.status === "next" ) {
-            app.nextGame();
-        } else if ( app.state.status === "end" ) {
-            app.reset();
-        } else {
-            throw new Error("Invalid status: " + app.state.status);
-        }
-    });
-
-    // Update the player name
+    // Set the player name
     $("#setNames input").keyup(function() {
         var player = $(this).attr("data-player");
         var name = $(this).val();
@@ -87,28 +54,28 @@ $(function() {
             name = app.defaultPlayerName(player);
         }
         app.options.players[player].name = name;
-        updateState();
+        app.events.trigger("options");
     });
 
     // Select the rule that will be used to decide who serves first after
     // a game win. Either alternate, winner, or loser.
     $("#setNextServer select").change(function() {
         app.options.nextServer = $(this).val();
+        app.events.trigger("options");
     });
 
     // Sets the match length to the best out of 1, 3, 5, or 7.
     $("#setMatchLength").change(function() {
         app.options.matchLength = _.parseInt($(this).val());
-        updateState();
+        app.events.trigger("options");
     });
 
     // Sets the game length to either 11 or 21 points
     $("#setGameLength").change(function() {
         app.options.gameLength = _.parseInt($(this).val());
-        updateState();
+        app.events.trigger("options");
     });
 
-    // Update the UI based on a change of game state
     var updateState = function() {
         var state = app.state;
 
@@ -118,13 +85,38 @@ $(function() {
         // Update the names
         sb.ui.names(app.options.players);
 
-        // Update the game length
-        $("#gameLength").html(app.options.gameLength + " point game");
+        // At the beginning of the game, show "Start" as the button to
+        // take you to the scorebored. If the game is in progress, show
+        // "Continue"
+        if ( app.state.phase === "setup" ) {
+            $("#scorebored").html("Start");
+        } else {
+            $("#scorebored").html("Continue");
+        }
+
+        // Show reset button if the game is in progress
+        if ( app.state.phase === "setup" ) {
+            $("#reset").hide();
+        } else {
+            $("#reset").show();
+        }
+
+        // Disable game lengths in the settings combo box that are
+        // no longer valid (game has already reached 11 points)
+        sb.ui.validateGameLength(app.gameLengths, function(length) {
+            return app.state.scores[0] < length && app.state.scores[1] < length;
+        });
+
+        // Disable match lengths in the settings combob box that are
+        // no longer valid (3 cannot be picked while in game 3)
+        sb.ui.validateMatchLength(app.matchLengths, function(length) {
+            return app.state.games[0] + app.state.games[1] < length;
+        });
 
         // Show who is serving
-        $("#server div").html("&nbsp;");
+        $(".name").removeClass("server");
         if ( !_.isNull(state.server) ) {
-            $("#server [data-player='" + state.server + "']").html("Server");
+            $(".name[data-player='" + state.server + "']").addClass("server");
         }
 
         // Update the scores
@@ -144,7 +136,7 @@ $(function() {
         }
 
         // Enable to undo button unless this is the setup phase
-        if ( state.status !== "setup" ) {
+        if ( state.phase !== "setup" ) {
             $("#undo").removeAttr("disabled");
         } else {
             $("#undo").attr("disabled", "disabled");
@@ -152,29 +144,76 @@ $(function() {
 
         // If at the game or end of match, show the continue button
         // and disabled the "plus" buttons for each player.
-        if ( state.status === "next" || state.status === "end" ) {
+        if ( state.phase === "next" || state.phase === "end" ) {
             $("#continue").css("visibility", "visible");
             $("button.add").attr("disabled", "disabled");
         } else {
             $("#continue").css("visibility", "hidden");
             $("button.add").removeAttr("disabled");
         }
-
-        // Disable game lengths in the settings combo box that are
-        // no longer valid (game has already reached 11 points)
-        sb.ui.validateGameLength(app.gameLengths, function(length) {
-            return app.state.scores[0] < length && app.state.scores[1] < length;
-        });
-
-        // Disable match lengths in the settings combob box that are
-        // no longer valid (3 cannot be picked while in game 3)
-        sb.ui.validateMatchLength(app.matchLengths, function(length) {
-            return app.state.games[0] + app.state.games[1] < length;
-        });
     };
-
-    // Listen for state change events
     app.events.on("state", updateState);
+
+    // Populates the game length combo with the appropriate values
+    sb.ui.gameLength(app.options.gameLength, app.gameLengths);
+
+    // Populates the match length combo with the appropriate values
+    sb.ui.matchLength(app.options.matchLength, app.matchLengths);
+
+    var updateOptions = function() {
+        $("#setTitle").val(app.options.title);
+        $("#setNames input[data-player='0']").val(app.playerName(0));
+        $("#setNames input[data-player='1']").val(app.playerName(1));
+        $("#setNextServer select").val(app.options.nextServer);
+        $("#setMatchLength").val(app.options.matchLength);
+        $("#setGameLength").val(app.options.gameLength);
+
+        // Update the title
+        $("#title").html(app.options.title);
+
+        updateState();
+    };
+    app.events.on("options", updateOptions);
+
+    // From the scorebored page, go back to the settings page
+    $("#back-options").click(function() {
+        $("#scorebored-page").hide();
+        $("#options-page").show();
+    });
+
+    // From the scorebored page, go to the match log page
+    $("#history").click(function() {
+        $("#scorebored-page").hide();
+        refreshHistory();
+        $("#history-page").show();
+    });
+
+    // Award a point for the player. If the game hasn't started, use this
+    // to select the first server.
+    $("button.add").click(function() {
+        var player = _.parseInt($(this).attr("data-player"));
+        if ( app.state.phase === "setup" ) {
+            app.initialServer(player);
+        } else {
+            app.point(player);
+        }
+    });
+
+    // Undo the last scoring event
+    $("#undo").click(function() {
+        app.undo();
+    });
+
+    // Either continue to the next game, or end and reset the match
+    $("#continue").click(function() {
+        if ( app.state.phase === "next" ) {
+            app.next();
+        } else if ( app.state.phase === "end" ) {
+            app.reset();
+        } else {
+            throw new Error("Invalid status: " + app.state.status);
+        }
+    });
 
     // Update the timer
     setInterval(function() {
@@ -185,18 +224,18 @@ $(function() {
     // Handles display of the subtitles
     sb.ui.subtitles(app.settings.talker);
 
-    // Populates the game length combo with the appropriate values
-    sb.ui.gameLength(app.options.gameLength, app.gameLengths);
-
-    // Populates the match length combo with the appropriate values
-    sb.ui.matchLength(app.options.matchLength, app.matchLengths);
+    // From the match log page, go back to the scorebored page
+    $("#back-scorebored").click(function() {
+        $("#history-page").hide();
+        $("#scorebored-page").show();
+    });
 
     // Populate the match log
-    var displayLog = function() {
-        var $target = $("#history").empty();
+    var refreshHistory = function() {
+        var $target = $("#history-table").empty();
         var contents = [];
         _.each(app.history, function(games, index) {
-            contents.push("<table>");
+            contents.push("<table class='table table-condensed'>");
 
             // Only show the game heading if this is a multi game match.
             if ( !app.isSingleGameMatch() ) {
@@ -216,7 +255,7 @@ $(function() {
                         sb.util.elapsedString(state.time) + "</td>");
 
                 // Bold if server
-                server = state.served === 0 ? "class='server'": "";
+                server = state.served === 0 ? "class='served'": "";
                 contents.push("<td " + server + ">" + state.scores[0] + "</td>");
 
                 // Mark with < or > who earned the point
@@ -226,7 +265,7 @@ $(function() {
                     contents.push("<td>&gt</td>");
                 }
 
-                server = state.served === 1 ? "class='server'": "";
+                server = state.served === 1 ? "class='served'": "";
                 contents.push("<td " + server + ">" + state.scores[1] + "</td>");
                 contents.push("</tr>");
             });
@@ -235,6 +274,7 @@ $(function() {
         $target.append(contents.join(""));
     };
 
-    updateState();
+    updateOptions();
 
-});
+};
+

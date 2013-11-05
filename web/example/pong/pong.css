@@ -1,0 +1,43 @@
+body {
+	padding:20px;
+}
+
+form.options {
+    margin-top: 20px;
+}
+
+.name {
+    font-size: 32pt;
+    font-weight: bold;
+}
+
+.score {
+    font-size: 98pt;
+    font-weight: bold;
+}
+
+.games {
+    font-size: 16pt;
+}
+
+#announcement {
+    font-size: 24pt;
+    height: 50px;
+}
+
+.server {
+    background-color: black;
+    color: white;
+}
+
+.served {
+    font-weight: bold;
+}
+
+#history-table th {
+    text-align: center;
+}
+
+#history-table td {
+    text-align: center;
+}

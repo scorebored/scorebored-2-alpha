@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+    <head>
+    <title>Scorebored - Darts - x01</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="../../../lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="x01.css" rel="stylesheet" media="screen">
+    </head>
+
+    <body>
+        <div id="scorebored-page" class="container scores" style="display: none">
+            <div class="row">
+                <div id="matchStatus" class="col-xs-2"></div>
+            </div>
+            <div class="row">
+                <div id="gameLength" class="col-xs-2"></div>
+            </div>
+            <div class="row">
+                <div id="timer" class="col-xs-2">&nbsp;</div>
+            </div>
+            <div id="games" class="row">
+                <div class="col-xs-2" data-side="0" data-player="0">&nbsp;</div>
+                <div class="col-xs-2" data-side="1" data-player="1">&nbsp;</div>
+            </div>
+            <div id="names" class="row">
+                <div class="col-xs-2" data-side="0" data-player="0">&nbsp;</div>
+                <div class="col-xs-2" data-side="1" data-player="1">&nbsp;</div>
+            </div>
+            <div id="scores" class="row">
+                <div class="col-xs-2" data-side="0" data-player="0">&nbsp;</div>
+                <div class="col-xs-2" data-side="1" data-player="1">&nbsp;</div>
+            </div>
+            <div id="server" class="row">
+                <div class="col-xs-2" data-side="0" data-player="0">&nbsp;</div>
+                <div class="col-xs-2" data-side="1" data-player="1">&nbsp;</div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <button class="add" data-side="0" data-player="0">+</button>
+                </div>
+                <div class="col-xs-2">
+                    <button class="add" data-side="1" data-player="1">+</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <button id="undo" disabled="true">Undo</button>
+                </div>
+            </div>
+            <div class="row">
+                <div id="announcement" class="col-xs-4">&nbsp;</div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <button id="continue" style="visiblity: none">Continue</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <button id="settings">Settings</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <input id="log" type="button" value="Match Log"></input>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings-page">
+            <h4>Scorebored - x01 Settings</h4>
+            <div id="setNames">
+                <div class="row">
+                    <div class="col-xs-4">
+                        Player 1:
+                        <input type='text' data-player='0' value="Player 1"></input>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        Player 2:
+                        <input type='text' data-player='1' value="Player 2"></input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    Game Length:
+                    <select id="setGameLength"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    Match Length:
+                    <select id="setMatchLength"></select>
+                </div>
+            </div>
+            <div id="setNextServer">
+                <div class="row">
+                    <div class="col-xs-4">
+                        Server on next game:
+                        <select>
+                            <option value="alternate">Alternates</option>
+                            <option value="loser">Loser</option>
+                            <option value="winner">Winner</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <input id="scorebored" type="button" value="Start"></input>
+            </div>
+            <div class="row">
+                <a href="..">Back</a>
+            </div>
+        </div>
+
+        <div id="log-page" style="display: none">
+            <h5>Match Log</h5>
+            <div id="history"></div>
+            <div class="row">
+                <input id="logBack" type="button" value="Back"></input>
+            </div>
+        </div>
+
+        <!-- link.dev --> <script src="../../../common/js/devel/load.js"></script>
+        <!-- link.dev --> <script>sb.SCRIPT_BASE_DIR = "../../..";</script>
+        <!-- link.dev --> <script src="../../../common/js/devel/scripts.js"></script>
+        <!-- link.dev --> <script src="../../../darts/x01/js/darts.x01.app.js"></script>
+        <!-- link.dev --> <script src="darts.x01.ui.js"></script>
+    </body>
+
+</html>

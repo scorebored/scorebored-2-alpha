@@ -22,41 +22,28 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-/**
- * @module sb
- */
 var sb = sb || {};
+sb.darts = sb.darts || {};
+sb.darts.x01 = sb.darts.x01 = {};
+sb.darts.x01.standard = sb.darts.x01.standard = {};
 
-sb.util = sb.util || function() {
+sb.darts.x01.standard.app = sb.darts.x01.standard.app || function() {
 
-    var self = {};
+    var self = sb.app("darts.x01");
 
-    self.total = function(numberArray) {
-        return _.reduce(numberArray, function(sum, value) {
-            return sum + value;
-        });
+    self.options = {
+        title: "",
+        players: [
+            { id: 0, name: "Player 1" },
+            { id: 1, name: "Player 2" }
+        ],
+        gameLength: 301,
+        setLength: 1,
+        matchLength: 1
     };
 
-    self.other = function(index) {
-        return index === 0 ? 1 : 0;
-    };
+    self.gameLengths = [301, 501];
+    self.setLengths = [1, 3, 5];
+    self.matchLengths = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21];
 
-    self.swap = function(array) {
-        var e1 = array[1];
-        array[1] = array[0];
-        array[0] = e1;
-        return array;
-    };
-
-    self.elapsedString = function(milliseconds) {
-        var d = new Date(milliseconds);
-        var seconds = "" + d.getSeconds();
-        var minutes = "" + d.getMinutes();
-        seconds = ( seconds.length === 1 ) ? "0" + seconds : seconds;
-        minutes = ( minutes.length === 1 ) ? "0" + minutes : minutes;
-        return minutes + ":" + seconds;
-    };
-
-    return self;
-
-}();
+};

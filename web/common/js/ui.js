@@ -32,27 +32,30 @@ sb.ui = sb.ui || function() {
     var self = {};
 
     self.names = function(players) {
-        _.each(players, function(player, index) {
-            $("#names [data-player='" + index + "']").html(player.name);
+        $(".name").each(function() {
+            var index = _.parseInt($(this).attr("data-player"));
+            $(this).html(players[index].name);
         });
     };
 
     self.points = function(scores) {
-        _.each(scores, function(score, index) {
-            $("#scores [data-player='" + index + "']").html(score);
+        $(".score").each(function() {
+            var index = _.parseInt($(this).attr("data-player"));
+            $(this).html(scores[index]);
         });
     };
 
     self.games = function(games, length) {
-        _.each(games, function(game, index) {
-            var value = ( length === 1 ) ? "&nbsp;" : game;
-            $("#games [data-player='" + index + "']").html(value);
+        $(".games").each(function() {
+            var index = _.parseInt($(this).attr("data-player"));
+            $(this).html(games[index]);
         });
     };
 
     self.sides = function(sides) {
-        _.each(sides, function(player, index) {
-            $("[data-side='" + index + "']").attr("data-player", player);
+        $("[data-side]").each(function() {
+            var side = _.parseInt($(this).attr("data-side"));
+            $(this).attr("data-player", sides[side]);
         });
     };
 
