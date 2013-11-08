@@ -27,43 +27,102 @@
                     <button id="scorebored" class="btn btn-primary">Start</a>
                 </div>
             </div>
-
+                
             <form role="form" class="options">
+	            <div class="row">
+	                <div class="col-sm-8 col-sm-offset-2">
+	                    <div class="form-group">
+	                        <select id="variant" class="form-control">
+	                            <option value="singles">Singles</option>
+	                            <option value="doubles">Doubles</option>
+	                            <option value="hook">Hook</option>
+	                        </select>
+	                    </div>
+	                </div>
+	            </div>
+            
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2">
                         <div class="form-group">
-                            <label for="setTitle">Title</label>
-                            <input id="setTitle" class="form-control" type="text">
+                            <input id="option-title" class="form-control" type="text" placeHolder="Title">
                         </div>
                     </div>
                 </div>
 
-                <div id="setNames" class="row">
+				<div class="row hidden" data-variant="team">		
                     <div class="col-sm-4 col-sm-offset-2">
                         <div class="form-group">
-                            <label for="setName0">Player 1</label>
-                            <input id="setName0" class="form-control" type="text" data-player="0">
+                            <input data-control="option-team-name" class="form-control" type="text" data-team="0" placeHolder="Team 1">
                         </div>
-                    </div>
+                    </div> 
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="setName1">Player 2</label>
-                            <input id="setName1" class="form-control" type="text" data-player="1">
+                            <input data-control="option-team-name" class="form-control" type="text" data-team="1" placeHolder="Team 2">
                         </div>
-                    </div>
-                </div>
-
+                    </div> 
+				</div>
+				
                 <div class="row">
                     <div class="col-sm-4 col-sm-offset-2">
                         <div class="form-group">
-                            <label for="setGameLength">Game Length</label>
-                            <select id="setGameLength" class="form-control"></select>
+                            <input data-control="option-player-name" class="form-control" type="text" data-player="0" placeHolder="Player 1">
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="setMatchLength">Match Length</label>
-                            <select id="setMatchLength" class="form-control"></select>
+                            <input data-control="option-player-name" class="form-control" type="text" data-player="1" placeHolder="Player 2">
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="row hidden" data-variant="team">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <div class="form-group">
+                            <input data-control="option-player-name" class="form-control" type="text" data-player="2" placeHolder="Player 3">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <input data-control="option-player-name" class="form-control" type="text" data-player="3" placeHolder="Player 4">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row hidden" data-variant="hook">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <div class="form-group">
+                            <input data-control="option-player-name" class="form-control" type="text" data-player="4" placeHolder="Player 5">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <input data-control="option-player-name" class="form-control" type="text" data-player="5" placeHolder="Player 6">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row hidden" data-variant="hook">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <div class="form-group">
+                            <input data-control="option-player-name" class="form-control" type="text" data-player="6" placeHolder="Player 7">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <input data-control="option-player-name" class="form-control" type="text" data-player="7" placeHolder="Player 8">
+                        </div>
+                    </div>
+                </div>
+                                                   
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <div class="form-group">
+                            <select id="option-game-length" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <select id="option-match-length" class="form-control"></select>
                         </div>
                     </div>
                 </div>

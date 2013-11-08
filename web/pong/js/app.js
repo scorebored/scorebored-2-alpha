@@ -29,23 +29,35 @@ sb.pong.app = sb.pong.app || function() {
 
     var self = sb.app("pong.standard");
 
+    self.variant = "singles";
+    
     self.options = {
         title: "",
-        players: [
-            { id: 0, name: "Player 1" },
-            { id: 1, name: "Player 2" }
-        ],
+        players: self.defaultPlayers(8),
+        teams: self.defaultTeams(2),
         gameLength: 11,
         matchLength: 3,
         nextServer: "alternate",
         skunkRule: false
     };
 
-    self.gameLengths = [11, 21];
-    self.matchLengths = [1, 3, 5, 7];
-
+    self.gameLengths = [
+        { value: 11, description: "11 point game" }, 
+        { value: 21, description: "21 point game" }
+    ];
+    self.matchLengths = [
+        { value: 1, description: "Single game" }, 
+        { value: 3, description: "Best 2 out of 3" },
+        { value: 5, description: "Best 3 out of 5" },
+        { value: 7, description: "Best 4 out of 7" }
+    ];
+     
     var init = function() {
         self.reset();
+    };
+    
+    self.setVariant = function(variant) {
+        self.variant = variant;
     };
 
     var reset = function() {

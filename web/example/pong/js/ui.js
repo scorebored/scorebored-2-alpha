@@ -40,6 +40,12 @@ sb.pong.ui = sb.pong.ui || function(app) {
         app.reset();
     });
 
+    // Change the variant
+    $("#variant").change(function() {
+        app.setVariant($(this).val());
+        updateOptions();    
+    });
+    
     // Set the match title
     $("#setTitle").keyup(function() {
         app.options.title = $(this).val();
@@ -83,7 +89,7 @@ sb.pong.ui = sb.pong.ui || function(app) {
         sb.ui.sides(state.sides);
 
         // Update the names
-        sb.ui.names(app.options.players);
+        sb.ui.playerNames(app.options.players);
 
         // At the beginning of the game, show "Start" as the button to
         // take you to the scorebored. If the game is in progress, show
@@ -103,13 +109,13 @@ sb.pong.ui = sb.pong.ui || function(app) {
 
         // Disable game lengths in the settings combo box that are
         // no longer valid (game has already reached 11 points)
-        sb.ui.validateGameLength(app.gameLengths, function(length) {
+        sb.ui.validate.optionGameLength(app.gameLengths, function(length) {
             return app.state.scores[0] < length && app.state.scores[1] < length;
         });
 
         // Disable match lengths in the settings combob box that are
         // no longer valid (3 cannot be picked while in game 3)
-        sb.ui.validateMatchLength(app.matchLengths, function(length) {
+        sb.ui.validate.optionMatchLength(app.matchLengths, function(length) {
             return app.state.games[0] + app.state.games[1] < length;
         });
 
@@ -155,15 +161,27 @@ sb.pong.ui = sb.pong.ui || function(app) {
     app.events.on("state", updateState);
 
     // Populates the game length combo with the appropriate values
-    sb.ui.gameLength(app.options.gameLength, app.gameLengths);
+    sb.ui.fill.optionGameLength(app.options.gameLength, app.gameLengths);
 
     // Populates the match length combo with the appropriate values
-    sb.ui.matchLength(app.options.matchLength, app.matchLengths);
+    sb.ui.fill.optionMatchLength(app.options.matchLength, app.matchLengths);
 
     var updateOptions = function() {
-        $("#setTitle").val(app.options.title);
-        $("#setNames input[data-player='0']").val(app.playerName(0));
-        $("#setNames input[data-player='1']").val(app.playerName(1));
+        if ( app.variant === "singles" ) {
+            $("[data-variant='team']").addClass("hidden");
+            $("[data-variant='hook']").addClass("hidden");
+        } else if ( app.variant === "doubles" ) {
+            $("[data-variant='hook']").addClass("hidden");
+            $("[data-variant='team']").removeClass("hidden");
+        } else if ( app.variant === "hook" ) {
+            $("[data-variant='hook']").removeClass("hidden");
+            $("[data-variant='team']").removeClass("hidden");            
+        }
+
+        sb.ui.update.optionTitle(app.options.title);
+        sb.ui.update.optionPlayerNames(app.options.players);        
+        sb.ui.update.optionTeamNames(app.options.teams);
+        
         $("#setNextServer select").val(app.options.nextServer);
         $("#setMatchLength").val(app.options.matchLength);
         $("#setGameLength").val(app.options.gameLength);

@@ -137,6 +137,11 @@ sb.app = sb.app || function(name) {
         return "Player " + number;
     };
 
+    self.defaultTeamName = function(index) {
+        var number = index + 1;
+        return "Team " + number;
+    };
+    
     self.loadOptions = function() {
         name = "scorebored_" + self.name;
         if ( localStorage[name] ) {
@@ -149,19 +154,29 @@ sb.app = sb.app || function(name) {
         localStorage[name] = JSON.stringify(self.options);
     };
 
-    self.initialPlayers = function(count) {
-        if ( !options.players ) {
-            for ( var i = 0; i < count; i++ ) {
-                options.players[i] = {
-                    id: i,
-                    index: i,
-                    name: self.defaultPlayerName(i)
-                };
-            }
+    self.defaultPlayers = function(count) {
+        var players = [];
+        for ( var i = 0; i < count; i++ ) {
+            players[i] = {
+                id: i,
+                index: i,
+                name: self.defaultPlayerName(i)
+            };
         }
+        return players;
     };
 
-
+    self.defaultTeams = function(count) {
+        var teams = [];
+        for ( var i = 0; i < count; i++ ) {
+            teams[i] = {
+                id: i,
+                index: i,
+                name: self.defaultTeamName(i)
+            };
+        }
+        return teams;
+    };
 
     init();
     return self;
