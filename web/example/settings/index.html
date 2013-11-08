@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Scorebored - Pong</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link href="../../lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+		<link href="../example.css" rel="stylesheet" media="screen">
+
+		<!-- link.dev --><script src="../../common/js/devel/load.js"></script>
+		<!-- link.dev --><script>sb.SCRIPT_BASE_DIR = "../..";</script>
+		<!-- link.dev --><script src="../../common/js/devel/scripts.js"></script>
+		
+		<script>sb.settings.ui();</script>
+	</head>
+
+	<body>
+		<!-- OPTIONS PAGE -->
+		<div id="options-page" class="conatiner">
+
+			<div class="row">
+				<div class="col-sm-1">
+					<a href=".." class="btn btn-default">Back</a>
+				</div>
+				<div class="col-sm-3 col-sm-offset-4 text-center heading">
+					Settings
+				</div>
+			</div>
+
+			<form role="form" class="options">
+				<div class="row">
+					<div class="col-sm-8 col-sm-offset-2">
+						<div class="form-group">
+							<label for="talker">Announcer</label>
+							<select id="talker" class="form-control"></select>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-8 col-sm-offset-2">
+						<div class="checkbox">
+							<label>
+								<input id="subtitles" type="checkbox">
+								Subtitles</label>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

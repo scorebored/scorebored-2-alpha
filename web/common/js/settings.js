@@ -34,11 +34,15 @@ sb.settings = sb.settings || function() {
 
     self.load = function() {
         if ( localStorage.scoreBored ) {
-            var settings = JSON.parse(localStorage.scoreBored);
+            settings = JSON.parse(localStorage.scoreBored);
         } else {
             settings = {};
-            settings.talker = sb.talker();
         }
+        
+        settings.talker = sb.talker(settings.talker);
+        settings.subtitles = ( _.isUndefined(settings.subtitles) ) ?
+            true: settings.subtitles;
+            
         return settings;
     };
 
@@ -48,10 +52,36 @@ sb.settings = sb.settings || function() {
 
     self.save = function() {
         var save = _.clone(settings);
-        save.talker = save.talker.name;
+        save.talker = save.talker.type.id;
         localStorage.scoreBored = JSON.stringify(save);
     };
 
+    self.ui = function() {
+        $(function() { ui(); });
+    };
+    
+    var ui = function() {
+        self.load();
+        var $talker = $("#talker");
+        _.each(settings.talker.types, function(type) {
+            var $option = $("<option></option>")
+                .attr("value", type.id)
+                .html(type.name);
+            if ( type.id === settings.talker.id ) {
+                $option.attr("selected", "selected");
+            }
+            $talker.append($option);
+        });
+        if ( settings.subtitles ) {
+            $("#subtitles").attr("checked", "checked");
+        }
+        
+        $("#subtitles").click(function() {
+            settings.subtitles = $(this).is(":checked");
+            self.save();    
+        });
+    };
+    
     return self;
 
 }();

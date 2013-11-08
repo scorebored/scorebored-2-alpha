@@ -27,15 +27,19 @@
  */
 var sb = sb || {};
 
-sb.talker = sb.talker || function() {
+sb.talker = sb.talker || function(id) {
 
     var self = {};
 
     self.events = sb.events();
     self.type = null;
-
+    self.types = {
+        mute: sb.talker.mute(self.events)
+    };
+    
     var init = function() {
-        self.type = sb.talker.mute(self.events);
+        id = id || "mute";
+        self.set(id);
     };
 
     self.say = function(text) {
@@ -50,6 +54,10 @@ sb.talker = sb.talker || function() {
         }
     };
 
+    self.set = function(id) {
+        self.type = self.types[id];
+    };
+    
     init();
     return self;
 };
@@ -62,7 +70,8 @@ sb.talker.mute = sb.talker.mute || function(events) {
 
     var self = {};
 
-    self.name = "mute";
+    self.id = "mute";
+    self.name = "Mute";
     self.delay = 1000;
     self.events = events || sb.events();
 
