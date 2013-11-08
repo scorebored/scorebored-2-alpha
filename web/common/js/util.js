@@ -48,6 +48,15 @@ sb.util = sb.util || function() {
         return array;
     };
 
+    self.lpad = function(str, length) {
+        str = ""+str;
+        length = length || 0;
+        if (lpad.length < length) {
+            return Array(length - str.length + 1).join('0') + str;
+        }
+        return str;
+    };
+
     self.elapsedString = function(milliseconds) {
         var d = new Date(milliseconds);
         var seconds = "" + d.getSeconds();
@@ -55,6 +64,24 @@ sb.util = sb.util || function() {
         seconds = ( seconds.length === 1 ) ? "0" + seconds : seconds;
         minutes = ( minutes.length === 1 ) ? "0" + minutes : minutes;
         return minutes + ":" + seconds;
+    };
+
+    // May be a duplicate of above method, but intended for
+    // larger durations (includes hours by default)
+    self.duration = function(milliseconds) {
+        milliseconds = parseInt(milliseconds);
+        if (isNaN(milliseconds)) { return "-"; }
+        if (milliseconds < 0) { return "-"; }
+        var secs = milliseconds / 1000;
+
+        var hours = ~~(secs / (60*60));
+        secs %= (60*60);
+        var mins = ~~(secs / 60);
+        secs %= 60;
+
+        return self.lpad(hours, 2) + ":"
+                + self.lpad(mins, 2) + ":"
+                + self.lpad(secs, 2);
     };
 
     return self;

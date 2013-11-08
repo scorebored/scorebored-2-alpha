@@ -51,7 +51,7 @@ score.pong.ui = score.pong.ui || {
         // Start with new game settings
         this.openGameSettings();
 
-        $('.team-name').fitText(1.0);
+        $('.team-name').fitText(1.15);
         $('.team-score').fitText(0.2);
 
         // Button bindings
