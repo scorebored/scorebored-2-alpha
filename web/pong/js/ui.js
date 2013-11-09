@@ -321,6 +321,7 @@ score.pong.ui = score.pong.ui || {
     },
 
     onSay: function(text) {
+    	meSpeak.speak(text);
     },
 
     onSilence: function(text) {
