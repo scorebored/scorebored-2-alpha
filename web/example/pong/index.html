@@ -11,14 +11,14 @@
 
 	<body>
         <!-- OPTIONS PAGE -->
-        <div id="options-page" class="conatiner">
+        <div id="options-page" class="container">
 
             <div class="row">
                 <div class="col-sm-1">
                     <a href=".." class="btn btn-default">Back</a>
                 </div>
                 <div class="col-sm-1">
-                    <button class="btn btn-danger">Reset</a>
+                    <button id="reset" class="btn btn-danger">Reset</a>
                 </div>
                 <div class="col-sm-3 col-sm-offset-3 text-center heading">
                     Options
@@ -32,10 +32,7 @@
 	            <div class="row">
 	                <div class="col-sm-8 col-sm-offset-2">
 	                    <div class="form-group">
-	                        <select id="variant" class="form-control">
-	                            <option value="singles">Singles</option>
-	                            <option value="doubles">Doubles</option>
-	                            <option value="hook">Hook</option>
+	                        <select id="option-variant" class="form-control">
 	                        </select>
 	                    </div>
 	                </div>
@@ -52,12 +49,14 @@
 				<div class="row hidden" data-variant="team">		
                     <div class="col-sm-4 col-sm-offset-2">
                         <div class="form-group">
-                            <input data-control="option-team-name" class="form-control" type="text" data-team="0" placeHolder="Team 1">
+                        	<label data-variant="team" for="option-team-name-0">Team 1</label>
+                            <input id="option-team-name-0" data-control="option-team-name" class="form-control" type="text" data-team="0" placeHolder="Team 1">
                         </div>
                     </div> 
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <input data-control="option-team-name" class="form-control" type="text" data-team="1" placeHolder="Team 2">
+                        	<label data-variant="team" for="option-team-name-1">Team 2</label>
+                            <input id="option-team-name-1" data-control="option-team-name" class="form-control" type="text" data-team="1" placeHolder="Team 2">
                         </div>
                     </div> 
 				</div>
@@ -65,12 +64,14 @@
                 <div class="row">
                     <div class="col-sm-4 col-sm-offset-2">
                         <div class="form-group">
-                            <input data-control="option-player-name" class="form-control" type="text" data-player="0" placeHolder="Player 1">
+                        	<label data-variant="team" for="option-player-name-0">Players</label>
+                            <input id="option-player-name-0" data-control="option-player-name" class="form-control" type="text" data-player="0" placeHolder="Player 1">
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <input data-control="option-player-name" class="form-control" type="text" data-player="1" placeHolder="Player 2">
+                        	<label data-variant="team" for="option-player-name-1">Players</label>
+                            <input id-"option-player-name-1" data-control="option-player-name" class="form-control" type="text" data-player="1" placeHolder="Player 2">
                         </div>
                     </div>
                 </div>
@@ -84,32 +85,6 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <input data-control="option-player-name" class="form-control" type="text" data-player="3" placeHolder="Player 4">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row hidden" data-variant="hook">
-                    <div class="col-sm-4 col-sm-offset-2">
-                        <div class="form-group">
-                            <input data-control="option-player-name" class="form-control" type="text" data-player="4" placeHolder="Player 5">
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <input data-control="option-player-name" class="form-control" type="text" data-player="5" placeHolder="Player 6">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row hidden" data-variant="hook">
-                    <div class="col-sm-4 col-sm-offset-2">
-                        <div class="form-group">
-                            <input data-control="option-player-name" class="form-control" type="text" data-player="6" placeHolder="Player 7">
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <input data-control="option-player-name" class="form-control" type="text" data-player="7" placeHolder="Player 8">
                         </div>
                     </div>
                 </div>
@@ -130,11 +105,7 @@
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2">
                         <div class="form-group">
-                            <label for="setNextServer">Server on next game</label>
-                            <select class="form-control">
-                                <option value="alternate">Alternates</option>
-                                <option value="loser">Loser</option>
-                                <option value="winner">Winner</option>
+                            <select id="option-next-server" class="form-control">
                             </select>
                         </div>
                     </div>
@@ -159,31 +130,40 @@
             </div>
 
             <div class="row">
-                <div id="matchStatus" class="col-sm-4 col-sm-offset-4 text-center">
+                <div id="match-status" class="col-sm-4 col-sm-offset-4 text-center">
                 </div>
             </div>
 
             <div class="row">
-                <div class="name col-sm-4 col-sm-offset-1 text-center" data-side="0" data-player="0"></div>
-                <div class="games col-sm-1 text-center" data-side="0" data-player"0"></div>
-                <div class="games col-sm-1 text-center" data-side="1" data-player"1"></div>
-                <div class="name col-sm-4 text-center" data-side="1" data-player="1"></div>
+                <div class="team-name col-sm-4 col-sm-offset-1 text-center hidden" data-variant="singles" data-display="player-name" data-side-player="0" data-side-index="0" data-player="0"></div>
+                <div class="team-name col-sm-4 col-sm-offset-1 text-center hidden" data-variant="team" data-display="team-name" data-side-team="0" data-team="0"></div>
+                <div class="games col-sm-1 text-center" data-side-team="0" data-games="0"></div>
+                <div class="games col-sm-1 text-center" data-side-team="1" data-games="1"></div>
+                <div class="team-name col-sm-4 text-center hidden" data-variant="singles" data-display="player-name" data-side-player="1" data-side-index="0" data-player="1"></div>
+                <div class="team-name col-sm-4 text-center hidden" data-variant="team" data-display="team-name" data-side-team="1" data-team="1"></div>
             </div>
 
+			<div class="row hidden" data-variant="team">
+				<div class="player-name col-sm-2 col-sm-offset-1 text-center" data-display="player-name" data-side-player="0" data-side-index="0" data-player="0"></div>
+				<div class="player-name col-sm-2 text-center" data-display="player-name" data-side-player="0" data-side-index="1" data-player="2"></div>
+				<div class="player-name col-sm-2 col-sm-offset-2 text-center" data-display="player-name" data-side-player="1" data-side-index="0" data-player="1"></div>
+				<div class="player-name col-sm-2 text-center" data-display="player-name" data-side-player="1" data-side-index="1" data-player="3"></div>
+			</div>
+			
             <div class="row">
-                <div class="score col-sm-6 text-center" data-side="0" data-player="0"></div>
-                <div class="score col-sm-6 text-center" data-side="1" data-player="1"></div>
+                <div class="score col-sm-6 text-center" data-display="score" data-side-team="0" data-team="0"></div>
+                <div class="score col-sm-6 text-center" data-display="score" data-side-team="1" data-team="1"></div>
             </div>
 
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-1 text-center">
-                    <button class="add btn btn-default" data-side="0" data-player="0">+</button>
+                    <button class="add btn btn-default" data-control="team" data-side-team="0" data-team="0">+</button>
                 </div>
                 <div class="col-sm-2 text-center">
                     <button id="undo" class="btn btn-default">Undo</button>
                 </div>
                 <div class="col-sm-4 text-center">
-                    <button class="add btn btn-default" data-side="1" data-player="1">+</button>
+                    <button class="add btn btn-default" data-control="team" data-side-team="1" data-team="1">+</button>
                 </div>
             </div>
 

@@ -41,56 +41,66 @@ sb.pong.ui = sb.pong.ui || function(app) {
     });
 
     // Change the variant
-    $("#variant").change(function() {
-        app.setVariant($(this).val());
-        updateOptions();    
+    $("#option-variant").change(function() {
+        var variant = _.find(app.variants, {value: $(this).val()});
+        app.setVariant(variant.value);
+        app.changeOptions();   
     });
     
     // Set the match title
-    $("#setTitle").keyup(function() {
+    $("#option-title").blur(function() {
         app.options.title = $(this).val();
-        app.events.trigger("options");
+        app.changeOptions();
     });
 
+    // Set the team name
+    $("[data-control='option-team-name']").blur(function() {
+        var team = $(this).attr("data-team");
+        app.options.teams[team].name = $(this).val();
+        app.changeOptions();   
+    });
+    
     // Set the player name
-    $("#setNames input").keyup(function() {
+    $("[data-control='option-player-name']").blur(function() {
         var player = $(this).attr("data-player");
-        var name = $(this).val();
-        if ( /^ *$/.test(name) ) {
-            name = app.defaultPlayerName(player);
-        }
-        app.options.players[player].name = name;
-        app.events.trigger("options");
-    });
-
-    // Select the rule that will be used to decide who serves first after
-    // a game win. Either alternate, winner, or loser.
-    $("#setNextServer select").change(function() {
-        app.options.nextServer = $(this).val();
-        app.events.trigger("options");
-    });
-
-    // Sets the match length to the best out of 1, 3, 5, or 7.
-    $("#setMatchLength").change(function() {
-        app.options.matchLength = _.parseInt($(this).val());
-        app.events.trigger("options");
+        app.options.players[player].name = $(this).val();
+        app.changeOptions();
     });
 
     // Sets the game length to either 11 or 21 points
-    $("#setGameLength").change(function() {
+    $("#option-game-length").change(function() {
         app.options.gameLength = _.parseInt($(this).val());
-        app.events.trigger("options");
+        app.changeOptions();
+    });
+
+    // Sets the match length to the best out of 1, 3, 5, or 7.
+    $("#option-match-length").change(function() {
+        app.options.matchLength = _.parseInt($(this).val());
+        app.changeOptions();
+    });
+        
+    // Select the rule that will be used to decide who serves first after
+    // a game win. Either alternate, winner, or loser.
+    $("#option-next-server").change(function() {
+        app.options.nextServer = $(this).val();
+        app.changeOptions();
     });
 
     var updateState = function() {
         var state = app.state;
 
         // Move the players to different sides if necessary.
-        sb.ui.sides(state.sides);
+        sb.ui.updateSides(state.sides);
 
         // Update the names
-        sb.ui.playerNames(app.options.players);
+        sb.ui.updateDisplays("[data-display='player-name']", 
+                "data-player", app.options.players, "name");
+        sb.ui.updateDisplays("[data-display='team-name']", 
+                "data-team", app.options.teams, "name");
 
+        sb.ui.updateDisplays("[data-display='score']", 
+                "data-team", app.state.scores);
+                
         // At the beginning of the game, show "Start" as the button to
         // take you to the scorebored. If the game is in progress, show
         // "Continue"
@@ -109,36 +119,42 @@ sb.pong.ui = sb.pong.ui || function(app) {
 
         // Disable game lengths in the settings combo box that are
         // no longer valid (game has already reached 11 points)
-        sb.ui.validate.optionGameLength(app.gameLengths, function(length) {
+        sb.ui.validateOptionGameLength(app.gameLengths, function(length) {
             return app.state.scores[0] < length && app.state.scores[1] < length;
         });
 
         // Disable match lengths in the settings combob box that are
         // no longer valid (3 cannot be picked while in game 3)
-        sb.ui.validate.optionMatchLength(app.matchLengths, function(length) {
+        sb.ui.validateOptionMatchLength(app.matchLengths, function(length) {
             return app.state.games[0] + app.state.games[1] < length;
         });
 
         // Show who is serving
-        $(".name").removeClass("server");
-        if ( !_.isNull(state.server) ) {
-            $(".name[data-player='" + state.server + "']").addClass("server");
+        $(".team-name").removeClass("server");
+        $(".player-name").removeClass("server");
+
+        if ( !_.isNull(state.serverTeam) ) {
+            if ( app.options.team ) {
+                $(".player-name[data-player='" + state.serverPlayer + "']")
+                        .addClass("server");
+            } else {
+                $(".team-name[data-player='" + state.serverTeam + "']")
+                        .addClass("server");
+            }
         }
 
-        // Update the scores
-        sb.ui.points(state.scores);
-
         // Update the number of games won by each player in the match
-        sb.ui.games(state.games, app.options.matchLength);
+        sb.ui.updateDisplays("[data-display='score']", 
+                "data-team", state.games, "name");
 
         // If this is a multi game match, show which game is currently
         // being played. Otherwise, leave this blank
         if ( !app.isSingleGameMatch() ) {
             var current = app.state.currentGame + 1;
-            $("#matchStatus").html("Game " + current + " of " +
+            $("#match-status").html("Game " + current + " of " +
                     app.options.matchLength);
         } else {
-            $("#matchStatus").html("&nbsp;");
+            $("#match-status").html("&nbsp;");
         }
 
         // Enable to undo button unless this is the setup phase
@@ -157,36 +173,35 @@ sb.pong.ui = sb.pong.ui || function(app) {
             $("#continue").css("visibility", "hidden");
             $("button.add").removeAttr("disabled");
         }
+        
+        if ( state.phase === "setup" ) {
+            $("#option-variant").removeAttr("disabled");
+        } else {
+            $("#option-variant").attr("disabled", "disabled");
+        }
     };
     app.events.on("state", updateState);
 
-    // Populates the game length combo with the appropriate values
-    sb.ui.fill.optionGameLength(app.options.gameLength, app.gameLengths);
-
-    // Populates the match length combo with the appropriate values
-    sb.ui.fill.optionMatchLength(app.options.matchLength, app.matchLengths);
+    sb.ui.fillOptions("#option-variant", app.variants);
+    sb.ui.fillOptions("#option-game-length", app.gameLengths);
+    sb.ui.fillOptions("#option-match-length", app.matchLengths);
+    sb.ui.fillOptions("#option-next-server", app.nextServerOptions);    
 
     var updateOptions = function() {
-        if ( app.variant === "singles" ) {
-            $("[data-variant='team']").addClass("hidden");
-            $("[data-variant='hook']").addClass("hidden");
-        } else if ( app.variant === "doubles" ) {
-            $("[data-variant='hook']").addClass("hidden");
-            $("[data-variant='team']").removeClass("hidden");
-        } else if ( app.variant === "hook" ) {
-            $("[data-variant='hook']").removeClass("hidden");
-            $("[data-variant='team']").removeClass("hidden");            
-        }
-
-        sb.ui.update.optionTitle(app.options.title);
-        sb.ui.update.optionPlayerNames(app.options.players);        
-        sb.ui.update.optionTeamNames(app.options.teams);
         
-        $("#setNextServer select").val(app.options.nextServer);
-        $("#setMatchLength").val(app.options.matchLength);
-        $("#setGameLength").val(app.options.gameLength);
-
-        // Update the title
+        var variant = _.find(app.variants, { value: app.options.variant });
+        $("#option-variant").val(variant.value);
+        sb.ui.toggleDisplay("data-variant", variant.show, variant.hide);
+        
+        sb.ui.updateInputs("[data-control='option-player-name']", 
+                "data-player", app.options.players, "name");
+        sb.ui.updateInputs("[data-control='option-team-name']", 
+                "data-team", app.options.teams, "name");
+        
+        $("#option-game-length").val(app.options.gameLength);
+        $("#option-match-length").val(app.options.matchLength);
+        $("#option-next-server").val(app.options.nextServer);        
+        $("#option-title").val(app.options.title);
         $("#title").html(app.options.title);
 
         updateState();
@@ -208,12 +223,12 @@ sb.pong.ui = sb.pong.ui || function(app) {
 
     // Award a point for the player. If the game hasn't started, use this
     // to select the first server.
-    $("button.add").click(function() {
-        var player = _.parseInt($(this).attr("data-player"));
+    $("[data-control='team']").click(function() {
+        var team = _.parseInt($(this).attr("data-team"));
         if ( app.state.phase === "setup" ) {
-            app.initialServer(player);
+            app.initialServer(team);
         } else {
-            app.point(player);
+            app.point(team);
         }
     });
 

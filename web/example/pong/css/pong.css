@@ -6,9 +6,14 @@ form.options {
     margin-top: 20px;
 }
 
-.name {
+.team-name {
     font-size: 32pt;
     font-weight: bold;
+}
+
+.player-name {
+	font-size: 16pt;
+	font-weight: bold;
 }
 
 .score {

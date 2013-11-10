@@ -33,12 +33,12 @@ sb.app = sb.app || function(name) {
 
     self.events = sb.events();
 
+    self.name = name;
     self.settings = sb.settings.get();
     self.options = {};
-    self.state = {};
+    self.state = null;
     self.timer = sb.timer();
     self.history = [];
-    self.rules = {};
 
     var init = function() {
         self.actions = {
@@ -62,23 +62,33 @@ sb.app = sb.app || function(name) {
     };
 
     self.command = function(event) {
-        self.state.changes = {};
-        self.state.changes.speech = [];
-        var func = self.rules[event.action];
+        if ( self.state ) {
+            self.state.changes = {};
+            self.state.changes.speech = [];
+        }
+        var func = self.actions[event.action];
         if ( !func ) {
-            throw new Error("No such rule: " + event.action);
+            throw new Error("No such action: " + event.action);
         }
         func.apply(self, arguments);
+        self.saveState();
     };
 
     self.next = function() {
         self.command({action: "next"});
     };
 
-    self.playerName = function(index) {
+    self.teamName = function(index) {
+        if ( self.options.team ) {
+            return self.options.teams[index].name;
+        }
         return self.options.players[index].name;
     };
 
+    self.playerName = function(index) {
+        return self.options.players[index].name;
+    };
+    
     self.addSpeech = function(text) {
         self.state.changes.speech.push(text);
     };
@@ -142,18 +152,48 @@ sb.app = sb.app || function(name) {
         return "Team " + number;
     };
     
-    self.loadOptions = function() {
-        name = "scorebored_" + self.name;
-        if ( localStorage[name] ) {
-            self.options = JSON.parse(localStorage[name]);
+    self.loadOptions = function(variant) {
+        variant = ( self.variant ) ? "_" + self.variant : "";
+        name = "scorebored_" + self.name + variant + "_options";
+        if ( localStorage.getItem(name) ) {
+            self.options = JSON.parse(localStorage.getItem(name));
+        } else { 
+            self.options = {};
         }
+        return self.options;
     };
 
     self.saveOptions = function() {
-        name = "scorebored_" + self.name;
-        localStorage[name] = JSON.stringify(self.options);
+        variant = ( self.variant ) ? "_" + self.variant : "";        
+        var name = "scorebored_" + self.name + variant + "_options";
+        localStorage.setItem(name, JSON.stringify(self.options));
     };
 
+    self.loadGlobals = function() { 
+        var load = localStorage.getItem("scorebored_" + self.name);
+        load = ( load ) ? JSON.parse(load) : {};
+        self.variant = load.variant;
+        return load;
+    };
+        
+    self.saveGlobals = function(object) {
+        var save = _.extend({}, {variant: self.variant}, object);
+        localStorage.setItem("scorebored_" + self.name, JSON.stringify(save));    
+    };
+    
+    self.loadState = function() {
+        var name = "scorebored_" + self.name + self.variant + "_state";
+        var state = localStorage.getItem(name);
+        if ( state ) {
+            self.state = JSON.parse(state);
+        }            
+    };
+    
+    self.saveState = function() {
+        var name = "scorebored_" + self.name + self.variant + "_state";
+        localStorage.setItem(name, JSON.stringify(self.state));    
+    };
+    
     self.defaultPlayers = function(count) {
         var players = [];
         for ( var i = 0; i < count; i++ ) {
@@ -178,6 +218,14 @@ sb.app = sb.app || function(name) {
         return teams;
     };
 
+    self.changeOptions = function(options) {
+        options = options || self.options;
+        self.options = options;
+        self.events.trigger("options", self.options);
+        self.saveGlobals();
+        self.saveOptions();
+    };
+    
     init();
     return self;
 };

@@ -31,64 +31,60 @@ sb.ui = sb.ui || function() {
 
     var self = {};
 
-    self.playerNames = function(players) {
-        $(".name").each(function() {
-            var index = _.parseInt($(this).attr("data-player"));
-            $(this).html(players[index].name);
-        });
-    };
-
-    self.update = {};
-    
-    self.update.optionTitle = function(title) {
-        $("[data-control='set-team-name']").val(title);
+    self.toggleDisplay = function(attribute, shows, hides) {
+        _.each(hides, function(hide) {
+            $("[" + attribute + "='" + hide + "']").addClass("hidden");
+        });    
+        _.each(shows, function(show) {
+            $("[" + attribute + "='" + show + "']").removeClass("hidden");
+        });  
     };
     
-    self.update.optionPlayerNames = function(players) {
-        $("[data-control='set-player-name']").each(function() {
-            var index = _.parseInt($(this).attr("data-player"));
-            $(this).val(players[index].name); 
+    self.updateDisplays = function(selector, indexAttr, values, attribute) {
+        $(selector).each(function() {
+            var index = _.parseInt($(this).attr(indexAttr));
+            if ( !_.isUndefined(values[index]) ) {
+                if ( !_.isUndefined(attribute) ) {
+                    $(this).html(values[index][attribute]);
+                } else {
+                    $(this).html(values[index]);
+                }
+            }
+        });            
+    };
+        
+    self.updateInputs = function(selector, indexAttr, values, attribute) {
+        $(selector).each(function() {
+            var index = _.parseInt($(this).attr(indexAttr));
+            if ( !_.isUndefined(values[index]) ) {
+                $(this).val(values[index][attribute]);
+            }   
         });    
     };
-
-    self.update.optionTeamNames = function(teams) {
-        $("[data-control='set-team-name']").each(function() {
-            var index = _.parseInt($(this).attr("data-team"));
-            $(this).val(teams[index].name); 
+    
+    self.updateSides = function(sides) {
+        $("[data-side-team]").each(function() {
+            var side = _.parseInt($(this).attr("data-side-team"));
+            $(this).attr("data-team", sides.teams[side]);
+        });
+        $("[data-side-player]").each(function() {
+            var side = _.parseInt($(this).attr("data-side-player"));
+            var index = _.parseInt($(this).attr("data-side-index"));
+            $(this).attr("data-player", sides.players[side][index]);
+        });
+    };
+            
+    self.fillOptions = function(selector, options) {
+        var $target = $(selector);
+        _.each(options, function(option) {
+            var $option = $("<option></option>")
+                    .attr("value", option.value)
+                    .html(option.description);
+            $target.append($option);    
         });    
     };
         
-    self.fill = {};
-    
-    self.fill.optionGameLength = function(gameLength, gameLengths) {
-        var $target = $("#option-game-length");
-        _.each(gameLengths, function(length) {
-            var $option = $("<option></option>")
-                    .attr("value", length.value)
-                    .html(length.description);
-            if ( length.value === gameLength ) {
-                $option.attr("selected", "selected");
-            }
-            $target.append($option);
-        });
-    };
-
-    self.fill.optionMatchLength = function(matchLength, matchLengths) {
-        var $target = $("#option-match-length");
-        _.each(matchLengths, function(length) {
-            var $option = $("<option></option>")
-                    .attr("value", length.value)
-                    .html(length.description);
-            if ( length === matchLength ) {
-                $option.attr("selected", "selected");
-            }
-            $target.append($option);
-        });
-    };
-
-    self.validate = {};
-    
-    self.validate.optionGameLength = function(gameLengths, isValid) {
+    self.validateOptionGameLength = function(gameLengths, isValid) {
         _.each(gameLengths, function(length) {
             var $target = $("#option-game-length option[value='" + length + "']");
             var valid = isValid(length.value);
@@ -100,7 +96,7 @@ sb.ui = sb.ui || function() {
         });
     };
         
-    self.validate.optionMatchLength = function(matchLengths, isValid) {
+    self.validateOptionMatchLength = function(matchLengths, isValid) {
         _.each(matchLengths, function(length) {
             var $target = $("#option-match-length option[value='" + length + "']");
             var valid = isValid(length);
@@ -112,27 +108,6 @@ sb.ui = sb.ui || function() {
         });
     };
     
-    self.points = function(scores) {
-        $(".score").each(function() {
-            var index = _.parseInt($(this).attr("data-player"));
-            $(this).html(scores[index]);
-        });
-    };
-
-    self.games = function(games, length) {
-        $(".games").each(function() {
-            var index = _.parseInt($(this).attr("data-player"));
-            $(this).html(games[index]);
-        });
-    };
-
-    self.sides = function(sides) {
-        $("[data-side]").each(function() {
-            var side = _.parseInt($(this).attr("data-side"));
-            $(this).attr("data-player", sides[side]);
-        });
-    };
-
     self.subtitles = function(talker) {
         talker.events.on("say", function(text) {
             $("#announcement").html(text);
@@ -142,12 +117,6 @@ sb.ui = sb.ui || function() {
             $("#announcement").html("&nbsp");
         });
     };
-
-
-
-
-
-
 
     return self;
 
