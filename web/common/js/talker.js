@@ -34,7 +34,8 @@ sb.talker = sb.talker || function(id) {
     self.events = sb.events();
     self.type = null;
     self.types = {
-        mute: sb.talker.mute(self.events)
+        mute: sb.talker.mute(self.events),
+        mespeak: sb.talker.mespeak(self.events)
     };
     
     var init = function() {
@@ -112,3 +113,49 @@ sb.talker.mute = sb.talker.mute || function(events) {
 
 };
 
+sb.talker.mespeak = sb.talker.mespeak || function(events) {
+	
+	var talking = false;
+	var self = {};
+
+    self.id = "mespeak";
+    self.name = "meSpeak";
+    self.events = events || sb.events();
+
+	var init = function() {
+    	meSpeak.loadConfig("/scorebored/lib/mespeak/mespeak_config.json");
+    	meSpeak.loadVoice("/scorebored/lib/mespeak/voices/en/en-rp.json");
+	};
+	
+    self.say = function(text) {
+        if ( talking ) {
+            queue.push(text);
+        } else {
+            speak(text);
+        }
+    };
+
+    self.silence = function() {
+        queue = [];
+    };
+    
+    var speak = function(text) {
+        self.events.trigger("say", text);
+        talking = true;
+		meSpeak.speak(text, {}, function() {
+			self.events.trigger("silence");
+			talking = false;
+			processQueue();
+		});
+    };
+    
+    var processQueue = function() {
+        if ( queue.length === 0 ) {
+            return;
+        }
+        speak(queue.shift());
+    };
+    
+    init();
+    return self;
+};

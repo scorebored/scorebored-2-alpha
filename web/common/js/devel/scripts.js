@@ -30,6 +30,7 @@
         "lib/bootstrap/js/bootstrap.js",
         "lib/jquery.countdown.js",
         "lib/jquery.fittext.js",
+        "lib/mespeak/mespeak.js",
 
         "common/js/app.js",
         "common/js/events.js",

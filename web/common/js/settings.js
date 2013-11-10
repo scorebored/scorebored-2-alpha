@@ -33,8 +33,8 @@ sb.settings = sb.settings || function() {
     var settings = null;
 
     self.load = function() {
-        if ( localStorage.scoreBored ) {
-            settings = JSON.parse(localStorage.scoreBored);
+        if ( localStorage.getItem("scorebored") ) {
+            settings = JSON.parse(localStorage.getItem("scorebored"));
         } else {
             settings = {};
         }
@@ -53,7 +53,7 @@ sb.settings = sb.settings || function() {
     self.save = function() {
         var save = _.clone(settings);
         save.talker = save.talker.type.id;
-        localStorage.scoreBored = JSON.stringify(save);
+        localStorage.setItem("scorebored", JSON.stringify(save));
     };
 
     self.ui = function() {
@@ -67,7 +67,7 @@ sb.settings = sb.settings || function() {
             var $option = $("<option></option>")
                 .attr("value", type.id)
                 .html(type.name);
-            if ( type.id === settings.talker.id ) {
+            if ( type.id === settings.talker.type.id ) {
                 $option.attr("selected", "selected");
             }
             $talker.append($option);
@@ -75,6 +75,11 @@ sb.settings = sb.settings || function() {
         if ( settings.subtitles ) {
             $("#subtitles").attr("checked", "checked");
         }
+        
+        $("#talker").change(function() {
+        	settings.talker.set($(this).val());
+        	self.save();	
+        });
         
         $("#subtitles").click(function() {
             settings.subtitles = $(this).is(":checked");
