@@ -69,7 +69,7 @@ sb.util = sb.util || function() {
     // May be a duplicate of above method, but intended for
     // larger durations (includes hours by default)
     self.duration = function(milliseconds) {
-        milliseconds = parseInt(milliseconds);
+        milliseconds = _.parseInt(milliseconds);
         if (isNaN(milliseconds)) { return "-"; }
         if (milliseconds < 0) { return "-"; }
         var secs = milliseconds / 1000;
@@ -79,9 +79,9 @@ sb.util = sb.util || function() {
         var mins = ~~(secs / 60);
         secs %= 60;
 
-        return self.lpad(hours, 2) + ":"
-                + self.lpad(mins, 2) + ":"
-                + self.lpad(secs, 2);
+        return self.lpad(hours, 2) + ":" +
+                self.lpad(mins, 2) + ":" +
+                self.lpad(secs, 2);
     };
 
     return self;

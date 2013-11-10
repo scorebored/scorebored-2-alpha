@@ -77,8 +77,8 @@ sb.settings = sb.settings || function() {
         }
         
         $("#talker").change(function() {
-        	settings.talker.set($(this).val());
-        	self.save();	
+            settings.talker.set($(this).val());
+            self.save();	
         });
         
         $("#subtitles").click(function() {

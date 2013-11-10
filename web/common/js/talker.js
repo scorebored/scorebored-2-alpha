@@ -123,8 +123,8 @@ sb.talker.mespeak = sb.talker.mespeak || function(events) {
     self.events = events || sb.events();
 
 	var init = function() {
-    	meSpeak.loadConfig("/scorebored/lib/mespeak/mespeak_config.json");
-    	meSpeak.loadVoice("/scorebored/lib/mespeak/voices/en/en-rp.json");
+        meSpeak.loadConfig("/scorebored/lib/mespeak/mespeak_config.json");
+        meSpeak.loadVoice("/scorebored/lib/mespeak/voices/en/en-rp.json");
 	};
 	
     self.say = function(text) {
