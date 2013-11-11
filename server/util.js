@@ -23,37 +23,21 @@
  *****************************************************************************/
 
 /*
- * server.js - Server component for ScoreBored app
+ * util.js - module to provide utility methods for server-side app.
  */
 
 'use strict';
 
-var http = require('http');
-var express = require('express');
-var routes = require('./routes');
+/**
+ * Create new "randomized" game URL code based on game type and new game ID.
+ * Works by converting ID to base 36 (alphanumeric conversion)
+ */
+var makeNewGameCode = function( id ) {
+    var the_id = parseInt(id);
+    if (isNaN(the_id) || the_id < 0) {
+        throw "Invalid ID: "+id;
+    }
+    return (the_id).toString(36);
+};
 
-var app = express();
-var server = http.createServer( app );
-
-app.configure(function() {
-    app.use( express.bodyParser() );
-    app.use( express.methodOverride() );
-    app.use( express.logger() );
-
-    app.use( express.static( __dirname + '/web') );
-    app.use( app.router );
-});
-
-app.configure('development', function() {
-    app.use( express.errorHandler({
-        dumpExceptions: true,
-        showStack: true
-    }) );
-});
-
-routes.configRoutes( app, server );
-server.listen(8000);
-console.log(
-    'ScoreBored listening on port %d in %s mode',
-     server.address().port, app.settings.env
-);
+module.exports = { makeNewGameCode: makeNewGameCode };
