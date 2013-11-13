@@ -29,46 +29,39 @@
 'use strict';
 
 var configRoutes;
+var configIO;
 var util = require('./server/util');
-var mongodb = require('mongodb');
 
-// - Setup MongoDB connection
-var mongoServer = new mongodb.Server(
-    'localhost',
-    mongodb.Connection.DEFAULT_PORT
-);
-var dbHandle = new mongodb.Db(
-    'sb', mongoServer, { safe: true }
-);
-dbHandle.open(function() {
-    console.log( "** Connected to MongoDB **" );
-});
-
-
-var GameMap = function( game ) {
-    var created = Date.now();
-    return {
-        game: game,
-        gameCode: util.makeNewGameCode( created ),
-        gameOwner: {},
-        created: created,
-        history: [],
-        options: {},
-        state: {}
-    };
-};
 
 // - Setup app routes
-configRoutes = function(app, server) {
+configRoutes = function(app, io, db) {
+    var crud = require('./server/crud').crud(db);
 
     app.all('/:game/?', function( req, res, next ) {
         var game = req.params.game;     // Game type
 
         if (req.method === 'POST') {
             res.contentType( 'json' );
+
+            try {
+                // Create new game from settings
+                crud.createGame(game, req.body, function(err, result) {
+                    if (err) {
+                        console.log(err);
+                        res.send({ created: false, error: err.message ? err.message : err });   // FIXME
+                    } else {
+                        console.log("Game created: "+result.gameCode);
+                        res.send({ created: true, id: result.gameCode });
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+                res.send({ created: false, error: err });   // FIXME
+            }
+/*
             try {
                 // - CREATE NEW GAME
-                dbHandle.collection(
+                db.collection(
                     game,
                     function( outer_error, collection ) {
                         var options_map = { safe: true };
@@ -101,15 +94,17 @@ configRoutes = function(app, server) {
                 console.log(e);
                 res.send({ created: false, error: e });
             }
+*/
         } else {
             next();
         }
     });
 
-    app.all('/:game/:code', function( req, res, next ) {
+    app.all('/:game/:code/?', function( req, res, next ) {
         var game = req.params.game;     // Game type
         var code = req.params.code;     // Unique game code
 
+        // REMOVE ME? (do everything over WebSockets)
         if (req.method === 'POST') {
             res.contentType( 'json' );
 
@@ -130,6 +125,55 @@ configRoutes = function(app, server) {
         }
     });
 
+    app.get('/:game/:code/log/?', function( req, res, next ) {
+        var game = req.params.game;     // Game type
+        var code = req.params.code;     // Game code
+
+        res.contentType( 'json' );
+
+        try {
+            // Create new game from settings
+            crud.getGameByCode(game, code, function(err, result) {
+                if (err) {
+                    console.log(err);
+                    res.send({ error: true, response: err.message ? err.message : err});   // FIXME
+                } else {
+                    res.send({ error: false, response: result.history });
+                }
+            });
+        } catch (e) {
+            console.log("log->getGameByCode: e => "+e);
+            res.send({ error: true, response: e });     // FIXME
+        }
+
+    });
 };
 
-module.exports = { configRoutes: configRoutes };
+var game_rooms = {};
+
+configIO = function(io, db) {
+    var crud = require('./server/crud').crud(db);
+
+    io.sockets.on('connection', function(socket) {
+        socket.on('join', function(game, code) {
+            var room_name = game+":"+code;
+
+            crud.getGameByCode(game, code, function(err, result) {
+                if (err) {
+                    socket.emit('join failed', err);
+                } else {
+                    socket.room = room_name;
+                    socket.join(room_name);
+                    socket.emit('join success');
+                }
+            });
+        });
+        socket.on('disconnect', function() {
+            socket.leave(socket.room);
+            delete socket.room;
+        });
+    });
+};
+
+module.exports = { configRoutes: configRoutes,
+                   configIO: configIO };

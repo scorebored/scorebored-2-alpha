@@ -30,10 +30,14 @@
 
 var http = require('http');
 var express = require('express');
+var io = require('socket.io');
+var mongodb = require('mongodb');
 var routes = require('./routes');
 
 var app = express();
 var server = http.createServer( app );
+var socket = io.listen(server);
+
 
 app.configure(function() {
     app.use( express.bodyParser() );
@@ -51,7 +55,22 @@ app.configure('development', function() {
     }) );
 });
 
-routes.configRoutes( app, server );
+// - Setup MongoDB connection
+var mongoServer = new mongodb.Server(
+    'localhost',
+    mongodb.Connection.DEFAULT_PORT
+);
+var db = new mongodb.Db(
+    'sb', mongoServer, { safe: true }
+);
+db.open(function() {
+    console.log( "** Connected to MongoDB **" );
+});
+
+
+routes.configRoutes( app, socket, db );
+routes.configIO( socket, db );
+
 server.listen(8000);
 console.log(
     'ScoreBored listening on port %d in %s mode',
