@@ -229,7 +229,6 @@ score.pong.ui = score.pong.ui || {
         self.updateMatchDisplay();
 
         this.showScoreboard();
-        $(window).resize();
 
         return true;
     },
@@ -452,8 +451,9 @@ score.pong.ui = score.pong.ui || {
     showScoreboard: function() {
         $('.score-pong').hide();
         $('.score-pong-board').show();
-        window.scrollTo(0);
+        document.body.scrollTop = 0;
         self.updateGameButtons();
+        $(window).resize();
     }
 };
 
