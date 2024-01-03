@@ -3,7 +3,7 @@
 <head>
     <title>Scorebored - Pong</title>
 
-    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <!-- link.prod-->  <!-- <link type="text/css" rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" /> -->
@@ -41,9 +41,15 @@
         <!-- Main board -->
         <div class="score-pong score-pong-board" style="display:none;">
             <div class="score-pong-toolbar text-center clearfix">
-                <button class="score-pong-open-settings btn btn-default btn-sm pull-left" style="margin-right:24px">
-                    <i class="glyphicon glyphicon-cog"></i>
-                </button>
+                <div class="btn-group pull-left" style="margin-left:24px">
+                    <button class="score-pong-open-settings btn btn-default btn-sm">
+                        <i class="glyphicon glyphicon-cog"></i>
+                    </button>
+                    <button class="score-open-match-log btn btn-default btn-sm">
+                        <i class="glyphicon glyphicon-time"></i>
+                        View Match Log
+                    </button>
+                </div>
 
                 <div class="score-match-clock-wrapper pull-right">
                     <strong>Match Time:</strong>
@@ -65,14 +71,16 @@
                 </div>
 
                 <div class="row-fluid">
-                    <div class="team-score-block">
+                    <div class="team-score-block" data-player="0">
+                        <div class="server-indicator" title="Currently serving">&nbsp;</div>
                         <div class="team-score text-center" data-player="0">0</div>
                         <div class="score-actions">
                             <button data-player="0" class="action-select-server btn btn-lg btn-primary">&lt; Server</button>
                             <button data-player="0" class="action-increment-score btn btn-lg btn-danger" style="display:none">+ Point!</button>
                         </div>
                     </div>
-                    <div class="team-score-block">
+                    <div class="team-score-block" data-player="1">
+                        <div class="server-indicator" title="Currently serving">&nbsp;</div>
                         <div class="team-score text-center" data-player="1">0</div>
                         <div class="score-actions">
                             <button data-player="1" class="action-select-server btn btn-lg btn-primary">Server &gt;</button>
@@ -80,15 +88,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            <div class="row-fluid">
-                <button class="score-open-match-log btn btn-mini">
-                    View Match Log
-                </button>
-            </div>
-
         </div>
 
 

@@ -29,6 +29,7 @@ score.pong.ui = score.pong.ui || {
 
     game: null,     // Stores game instance
     view_game: null,    // Allows for viewing an older game
+    debug: false,   // Enable debugging
 
     /**
      * Current game settings
@@ -110,6 +111,8 @@ score.pong.ui = score.pong.ui || {
         if ( self.game ) { delete self.game; }
         self.game = score.pong.Game({matchLength: this.options.match_length,
                                      gameLength: this.options.game_length});
+        // Reset scores
+        $('.team-score').text('0');
 
         var talkers = {
             mute: score.talkers.Mute(self.game.events),
@@ -139,9 +142,9 @@ score.pong.ui = score.pong.ui || {
             .on("silence", this.onSilence)
             .on("seat", this.onSeat);
 
-        // DEBUG?
+        // DEBUG: log game events
         self.game.events.all(function() {
-            console.log(arguments);
+            self.debug && console.log(arguments);
         });
 
         self.game.players['0'] = this.options.player_1;
@@ -175,6 +178,14 @@ score.pong.ui = score.pong.ui || {
         $('#score_settings_play_game').text(
             (self.game) ? 'Resume Game' : 'Begin Game'
         );
+        // Disable fixed game settings after initialization
+        if (self.game) {
+            $('#pong_settings_game_length').attr('disabled', true);
+            $('#pong_settings_match_length').attr('disabled', true);
+        } else {
+            $('#pong_settings_game_length').attr('disabled', false);
+            $('#pong_settings_match_length').attr('disabled', false);
+        }
         this.showSettings();
 
         return true;
@@ -189,8 +200,8 @@ score.pong.ui = score.pong.ui || {
         // Read settings from DOM
         var set_settings = $.extend(true, {}, this.options, {
             'game_name': $('#pong_settings_game_name').val(),
-            'game_length': $('#pong_settings_game_length').val(),
-            'match_length': $('#pong_settings_match_length').val(),
+            'game_length': parseInt($('#pong_settings_game_length').val()),
+            'match_length': parseInt($('#pong_settings_match_length').val()),
             'mode': $('#pong_settings_game_type').val(),
             'player_1': $('#pong_settings_player_1_name').val(),
             'player_2': $('#pong_settings_player_2_name').val()
@@ -292,14 +303,14 @@ score.pong.ui = score.pong.ui || {
     onScore: function(value, player) {
         var self = score.pong.ui;
 
-        $(".team-score[data-player='0']").html(self.game.scores[0]);
-        $(".team-score[data-player='1']").html(self.game.scores[1]);
+        $(".team-score[data-player='0']").text(self.game.scores[0]);
+        $(".team-score[data-player='1']").text(self.game.scores[1]);
     },
 
     onServer: function(player) {
-        $("#server div").html("&nbsp;");
+        $('.team-score-block.server').removeClass('server');
         if ( !_.isNull(player) ) {
-            $("#server ." + player).html("Server");
+            $('.team-score-block[data-player="'+player+'"]').addClass('server');
         }
         self.updateGameButtons();
     },
@@ -359,6 +370,10 @@ score.pong.ui = score.pong.ui || {
         var current_game = 1;
         if ( self.game ) {
             current_game = self.game.games.current;
+            // Mark current server
+            if (! _.isNull(self.game.server.is)) {
+                self.onServer(self.game.server.is);
+            }
         }
 
         $('.score-match-count').html('<strong>Games: </strong>');
@@ -407,21 +422,23 @@ score.pong.ui = score.pong.ui || {
             if (e[0] == "server") {
                 server = e[1];
 
+                $e.append( $('<div class="col-xs-2"></div>') );
                 $e.append(
-                    $('<div class="col-md-offset-2">'
+                    $('<div class="col-xs-offset-2">'
                         + '<div>Server changed.</div>' ) );
                 $log.append( $e );
 
             }
             else if (e[0] == "score") {
-                $e.append( $('<div class="col-md-2">00:00</div>') );
+                // FIXME: real timestamp
+                $e.append( $('<div class="col-xs-2">00:00</div>') );
                 if (e[2] == "0") {
                     p1++;
                 } else {
                     p2++;
                 }
                 $e.append(
-                    $('<div class="col-md-offset-2">'
+                    $('<div class="col-xs-offset-2">'
                         + '<div class="team-score-block">'
                         +   '<div class="team-score text-center">'+p1 +'</div>'
                         + '</div>'

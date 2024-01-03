@@ -11,7 +11,6 @@
 .score-pong-toolbar {
     min-height: 24px;
 }
-.score-pong-open-settings { margin-left: 24px; }
 .score-match-clock-wrapper { margin-right: 24px; color: #FFFFFF; }
 .score-match-clock-wrapper strong { color: #DDDDDD; }
 
@@ -30,12 +29,31 @@
     width: 60%;
     margin: 10px auto;
     /*cursor: pointer;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.team-score-block {
+    user-select: none;
 }
 
 .team-name,
 .team-score-block {
     width: 50%;
     float: left;
+    position: relative;
+}
+.team-score-block .server-indicator {
+    display: none;
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 10px;
+    height: 20px;
+    width: 20px;
+    top: 4%;
+    right: 13%;
+}
+.team-score-block.server .server-indicator {
+    display: block;
 }
 
 .scoreboard-back {
@@ -78,6 +96,7 @@
     border: 0;
     color: #FFFFFF;
     font-weight: bold;
+    touch-action: manipulation; /* Prevent double-tap zoom on some devices */
 }
 
 @keyframes blink-button {
@@ -105,12 +124,11 @@
     text-decoration: none;
     text-shadow: none;
     outline: none;
-    margin-left: 80px;
 }
 
 @media (max-width: 560px) {
     .score-pong-toolbar-buttons { clear: both; }
-    .score-pong-next-game { margin-left: 0px; }
+    .score-pong-next-game { margin-top: 4px; }
 }
 /*
 .glow {
