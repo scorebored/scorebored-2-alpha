@@ -71,6 +71,7 @@ score.Game = score.Game || function(options) {
             undoHistory = [];
             var args = Array.prototype.slice.call(arguments, 0);
             args.unshift(args.pop());
+            args.unshift(new Date());   // Prefix with event time
             self.history.push(args);
             self.events.trigger("history", self.history);
         }

@@ -409,29 +409,62 @@ score.pong.ui = score.pong.ui || {
         // FIXME: these should be listed in history log
         var p1 = 0,
             p2 = 0,
+            w1 = 0,
+            w2 = 0,
             serve = null;
 
         if (game_log.length === 0) {
             $mbody.html( $('<h2 class="text-center">No activity yet</h2>') );
             return;
         }
+        var game_start = null;  // Timestamp when game was started
+        var game_end = null;    // Timestamp when last game ended (clock stops)
+        var pause_time = 0;     // Overall pause time between games
+        var player_label = self.options.mode == 'single' ? 'Player' : 'Team';
 
         for (var i = 0; i < game_log.length; i++) {
-            var e = game_log[i];
+            var e = game_log[i].slice(0);   // Copy log item
+            // First element is event time; pop off
+            var event_time = e.shift(0);
+            if (e[0] == "gameStart") {
+                if (_.isNull(game_start)) {
+                    game_start = event_time;
+                }
+            } else if (e[0] == "gameWin") {
+                game_win = event_time;
+                if (e[1] == "0") {
+                    w1++;
+                } else {
+                    w2++;
+                }
+            } else if (e[0] == "nextGame") {
+                if (!_.isNull(game_win)) {
+                    pause_time += (event_time - game_win);
+                    game_win = null;    // Reset
+                }
+            }
+
             var $e = $('<div class="match-log-event row">');
             if (e[0] == "server") {
                 server = e[1];
-
-                $e.append( $('<div class="col-xs-2"></div>') );
-                $e.append(
-                    $('<div class="col-xs-offset-2">'
-                        + '<div>Server changed.</div>' ) );
-                $log.append( $e );
-
+                if (!_.isNull(server)) {
+                    var server_text = '(' + player_label + ' ' + (parseInt(server)+1) + ')';
+                    $e.append( $('<div class="col-xs-2"></div>') );
+                    $e.append(
+                        $('<div class="col-xs-offset-2">'
+                            + '<div>Server changed. ' + server_text + '</div>' ) );
+                    $log.append( $e );
+                }
             }
             else if (e[0] == "score") {
-                // FIXME: real timestamp
-                $e.append( $('<div class="col-xs-2">00:00</div>') );
+                // Display 'HH:MM' timestamp of event since start
+                let duration = '--:--';
+                if (!_.isNull(game_start)) {
+                    let event_diff = (event_time - game_start) - pause_time;
+                    duration = self.getDuration(event_diff, true);
+                }
+                $e.append( $('<div class="col-xs-2"></div>').text(duration) );
+
                 if (e[2] == "0") {
                     p1++;
                 } else {
@@ -440,10 +473,10 @@ score.pong.ui = score.pong.ui || {
                 $e.append(
                     $('<div class="col-xs-offset-2">'
                         + '<div class="team-score-block">'
-                        +   '<div class="team-score text-center">'+p1 +'</div>'
+                        +   '<div class="team-score text-center">'+ p1 +'</div>'
                         + '</div>'
                         + '<div class="team-score-block">'
-                        +   '<div class="team-score text-center">'+ p2+'</div>'
+                        +   '<div class="team-score text-center">'+ p2 +'</div>'
                         + '</div>'
                     + '</div>') );
                 $log.append( $e );
@@ -451,6 +484,15 @@ score.pong.ui = score.pong.ui || {
             else if (e[0] == "gameWin") {
                 p1 = 0;
                 p2 = 0;
+
+                // Announce winner and current match score
+                var win_text = player_label + ' ' + (parseInt(e[1])+1) + ' Wins';
+                var match_score = '('+w1+' - '+w2+')';
+                $e.append( $('<div class="col-xs-2"></div>') );
+                $e.append(
+                    $('<div class="col-xs-offset-2">'
+                        + '<div>' + win_text + '. ' + match_score + '</div>' ) );
+                $log.append( $e );
             }
         }
 
@@ -471,6 +513,30 @@ score.pong.ui = score.pong.ui || {
         document.body.scrollTop = 0;
         self.updateGameButtons();
         $(window).resize();
+    },
+
+    // Convert seconds into [HH:]MM:SS display
+    getDuration: function(seconds, isMilliseconds) {
+        // Allow for millisecond input
+        if (isMilliseconds) {
+            seconds = parseInt(seconds / 1000);
+        }
+        // Handle negative duration
+        let sign = '';
+        if (seconds < 0) {
+            sign = '-';
+        }
+        let sec_num = Math.abs(parseInt(seconds, 10));
+        let hours   = Math.floor(sec_num / 3600);
+        let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        return sign
+               +(hours!='00' ? hours+':' : '')
+               +minutes+':'+seconds;
     }
 };
 
